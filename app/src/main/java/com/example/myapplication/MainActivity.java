@@ -255,9 +255,10 @@ public class MainActivity extends Activity {
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
+            int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
             //Log.e("asd",String.valueOf(convertView.getTag()));
             holder.tvItemGridView.setText("" + getItem(position));
-            if (position>=7){
+            if (position-dayNum2>=6){
                 holder.tvItemGridView2.setText("test1");
                 holder.tvItemGridView3.setText("test2");
             }
@@ -271,6 +272,12 @@ public class MainActivity extends Activity {
             String sToday_m = sdf_m.format(date_selected);
             if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH)+1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
                 holder.tvItemGridView.setTextColor(Color.parseColor("#0000FF"));
+            }
+            if(position % 7 == 0){
+                convertView.setBackgroundColor(Color.rgb(255,0,0));
+            }
+            else if(position % 7 == 6){
+                convertView.setBackgroundColor(Color.rgb(0,0,255));
             }
 
             return convertView;
