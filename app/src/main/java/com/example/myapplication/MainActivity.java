@@ -9,18 +9,22 @@ import java.util.List;
 import java.util.Locale;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
+
 
     /**
      * 연/월 텍스트뷰
@@ -45,6 +49,14 @@ public class MainActivity extends Activity {
      * 캘린더 변수
      */
     private Calendar mCal;
+
+    private Date date_selected = new Date();
+
+    public void mOnPopup(View v){
+        Intent intent = new Intent(this,PopupActivity.class);
+        intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
+        startActivityForResult(intent,1);
+    }
 
     private final String [] days = new String[]{"일","월","화","수","목","금","토"};
 
@@ -86,6 +98,7 @@ public class MainActivity extends Activity {
         tv1.setText(String.valueOf(month));*/
 
         //이번달 1일 무슨요일인지 판단 mCal.set(Year,Month,Day)
+
         mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1, 1);
         final int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
         //1일 - 요일 매칭 시키기 위해 공백 add
@@ -96,6 +109,19 @@ public class MainActivity extends Activity {
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
+            TextView kk = (TextView) findViewById(R.id.textView3);
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
+                kk.setText("position : " + (position-dayNum2-5));
+
+                //Log.e("asd",String.valueOf(mCal.get(Calendar.YEAR))+"년"+String.valueOf(mCal.get(Calendar.MONTH)+1)+"월"+String.valueOf(position-dayNum2-5)+"일");
+                //Log.e("asd2",date_selected.toString());
+            }
+        });
 
         Button bt1 = (Button)findViewById(R.id.button);
         bt1.setOnClickListener(new OnClickListener() {
@@ -150,6 +176,18 @@ public class MainActivity extends Activity {
 
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==1){
+            if(resultCode==RESULT_OK){
+                //데이터 받기
+                TextView kk = (TextView) findViewById(R.id.textView3);
+                String result = data.getStringExtra("result");
+                kk.setText(result);
+            }
+        }
+    }
     /**
      * 해당 월에 표시할 일 수 구함
      *
@@ -210,27 +248,38 @@ public class MainActivity extends Activity {
                 holder = new ViewHolder();
 
                 holder.tvItemGridView = (TextView)convertView.findViewById(R.id.tv_item_gridview);
+                holder.tvItemGridView2 = (TextView)convertView.findViewById(R.id.tv_item2_gridview);
+                holder.tvItemGridView3 = (TextView)convertView.findViewById(R.id.tv_item3_gridview);
 
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
+            //Log.e("asd",String.valueOf(convertView.getTag()));
             holder.tvItemGridView.setText("" + getItem(position));
-/*
+            if (position>=7){
+                holder.tvItemGridView2.setText("test1");
+                holder.tvItemGridView3.setText("test2");
+            }
+
             //해당 날짜 텍스트 컬러,배경 변경
-            mCal = Calendar.getInstance();
+            //mCal = Calendar.getInstance();
             //오늘 day 가져옴
-            Integer today = mCal.get(Calendar.DAY_OF_MONTH);
-            String sToday = String.valueOf(today);
-            if (sToday.equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
+            SimpleDateFormat sdf_d = new SimpleDateFormat("d");
+            SimpleDateFormat sdf_m = new SimpleDateFormat("M");
+            String sToday_d = sdf_d.format(date_selected);
+            String sToday_m = sdf_m.format(date_selected);
+            if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH)+1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
                 holder.tvItemGridView.setTextColor(Color.parseColor("#0000FF"));
             }
-*/
+
             return convertView;
         }
     }
 
     private class ViewHolder {
         TextView tvItemGridView;
+        TextView tvItemGridView2;
+        TextView tvItemGridView3;
     }
 }
