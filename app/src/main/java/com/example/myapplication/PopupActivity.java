@@ -22,6 +22,8 @@ public class PopupActivity extends Activity {
 
     SQLiteDatabase sqliteDB;
 
+    ContactDBHelper dbHelper = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,25 +108,13 @@ public class PopupActivity extends Activity {
         return db;
     }
     private void init_tables(){
-        if(sqliteDB != null){
-            String sqlCreateTbl = "CREATE TABLE IF NOT EXISTS CONTACT_T (" +
-                    "NO "           + "INTEGER NOT NULL," +
-                    "NAME "         + "TEXT," +
-                    "PHONE "        + "TEXT," +
-                    "OVER20 "       + "INTEGER" + ")";
-            System.out.println(sqlCreateTbl);
-
-            sqliteDB.execSQL(sqlCreateTbl);
-        }
+        dbHelper = new ContactDBHelper(this);
     }
     private void load_values() {
 
         if (sqliteDB != null) {
-            String sqlQueryTbl = "SELECT * FROM CONTACT_T" ;
-            Cursor cursor = null ;
-
-            // 쿼리 실행
-            cursor = sqliteDB.rawQuery(sqlQueryTbl, null) ;
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor cursor = db.rawQuery(ContactDBCtrct.SQL_SELECT, null);
 
             if (cursor.moveToNext()) { // 레코드가 존재한다면,
                 // no (INTEGER) 값 가져오기.
@@ -155,56 +145,51 @@ public class PopupActivity extends Activity {
     }
 
     private void save_values() {
-        if (sqliteDB != null) {
+        // delete
 
-            // delete
-            sqliteDB.execSQL("DELETE FROM CONTACT_T") ;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-            EditText editTextNo = (EditText) findViewById(R.id.editTextNo) ;
-            String noText = editTextNo.getText().toString() ;
-            int no = 0 ;
-            if (noText != null && !noText.isEmpty()) {
-                no = Integer.parseInt(noText) ;
-            }
+        db.execSQL(ContactDBCtrct.SQL_DELETE);
 
-            EditText editTextName = (EditText) findViewById(R.id.editTextName) ;
-            String name = editTextName.getText().toString() ;
+        EditText editTextNo = (EditText) findViewById(R.id.editTextNo) ;
+        int no = Integer.parseInt(editTextNo.getText().toString());
 
-            EditText editTextPhone = (EditText) findViewById(R.id.editTextPhone) ;
-            String phone = editTextPhone.getText().toString() ;
+        EditText editTextName = (EditText) findViewById(R.id.editTextName) ;
+        String name = editTextName.getText().toString() ;
 
-            CheckBox checkBoxOver20 = (CheckBox) findViewById(R.id.checkBoxOver20) ;
-            boolean isOver20 = checkBoxOver20.isChecked() ;
+        EditText editTextPhone = (EditText) findViewById(R.id.editTextPhone) ;
+        String phone = editTextPhone.getText().toString() ;
 
-            String sqlInsert = "INSERT INTO CONTACT_T " +
-                    "(NO, NAME, PHONE, OVER20) VALUES (" +
-                    Integer.toString(no) + "," +
-                    "'" + name + "'," +
-                    "'" + phone + "'," +
-                    ((isOver20 == true) ? "1" : "0") + ")" ;
+        CheckBox checkBoxOver20 = (CheckBox) findViewById(R.id.checkBoxOver20) ;
+        boolean isOver20 = checkBoxOver20.isChecked() ;
 
-            System.out.println(sqlInsert) ;
+        String sqlInsert = "INSERT INTO CONTACT_T " +
+                "(NO, NAME, PHONE, OVER20) VALUES (" +
+                Integer.toString(no) + "," +
+                "'" + name + "'," +
+                "'" + phone + "'," +
+                ((isOver20 == true) ? "1" : "0") + ")" ;
 
-            sqliteDB.execSQL(sqlInsert) ;
-        }
+        db.execSQL(sqlInsert);
     }
+
     private void delete_values() {
-        if (sqliteDB != null) {
-            String sqlDelete = "DELETE FROM CONTACT_T" ;
 
-            sqliteDB.execSQL(sqlDelete) ;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-            EditText editTextNo = (EditText) findViewById(R.id.editTextNo) ;
-            editTextNo.setText("") ;
+        db.execSQL(ContactDBCtrct.SQL_DELETE);
 
-            EditText editTextName = (EditText) findViewById(R.id.editTextName) ;
-            editTextName.setText("") ;
+        EditText editTextNo = (EditText) findViewById(R.id.editTextNo) ;
+        editTextNo.setText("") ;
 
-            EditText editTextPhone = (EditText) findViewById(R.id.editTextPhone) ;
-            editTextPhone.setText("") ;
+        EditText editTextName = (EditText) findViewById(R.id.editTextName) ;
+        editTextName.setText("") ;
 
-            CheckBox checkBoxOver20 = (CheckBox) findViewById(R.id.checkBoxOver20) ;
-            checkBoxOver20.setChecked(false) ;
-        }
+        EditText editTextPhone = (EditText) findViewById(R.id.editTextPhone) ;
+        editTextPhone.setText("") ;
+
+        CheckBox checkBoxOver20 = (CheckBox) findViewById(R.id.checkBoxOver20) ;
+        checkBoxOver20.setChecked(false) ;
+
     }
 }

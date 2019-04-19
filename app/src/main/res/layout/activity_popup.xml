@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="No" />
 
         <EditText
             android:id="@+id/editTextName"
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="Name" />
 
         <EditText
             android:id="@+id/editTextPhone"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="Phone" />
 
         <CheckBox
             android:id="@+id/checkBoxOver20"
