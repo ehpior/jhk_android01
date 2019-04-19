@@ -40,12 +40,12 @@
     <GridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        android:listSelector="#800000"
         android:layout_weight="1"
-        android:listSelector="#80000000"
         android:numColumns="7"></GridView>
-
+        <!-- android:listSelector="@drawable/gridview_selector" -->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
