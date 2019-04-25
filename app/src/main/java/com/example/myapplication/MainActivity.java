@@ -33,6 +33,8 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 
+
+                ContactDBHelper dbHelper = new ContactDBHelper(this);
     /**
      * 연/월 텍스트뷰
      */
@@ -174,6 +176,8 @@ public class MainActivity extends Activity {
         });
 
 
+
+
     }
 
 
@@ -282,7 +286,7 @@ public class MainActivity extends Activity {
             String sToday_d = sdf_d.format(date_selected);
             String sToday_m = sdf_m.format(date_selected);
             if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH)+1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
-                holder.tvItemGridView.setTextColor(Color.parseColor("#0000FF"));
+                holder.tvItemGridView.setTextColor(Color.parseColor("#00AAAA"));
             }
             if((position % 7) == 0){
                 convertView.setBackgroundColor(Color.rgb(255,0,0));
@@ -290,6 +294,31 @@ public class MainActivity extends Activity {
             else if((position % 7) == 6){
                 convertView.setBackgroundColor(Color.rgb(0,0,255));
             }
+
+
+                File file = new File(getFilesDir(),"contact.db");
+                SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
+
+            if (sqliteDB != null) {
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                Cursor cursor = db.rawQuery(ContactDBCtrct.SQL_SELECT, null);
+                cursor.moveToFirst();
+                //if (cursor.moveToNext()) { // 레코드가 존재한다면,
+                    // no (INTEGER) 값 가져오기.
+                    int no = cursor.getInt(0) ;
+                    if(no == (position-dayNum2-5)) {
+                        // name (TEXT) 값 가져오기
+                        String name = cursor.getString(1);
+                        holder.tvItemGridView2.setText(name);
+
+                        // phone (TEXT) 값 가져오기
+                        String phone = cursor.getString(2);
+                        holder.tvItemGridView3.setText(phone);
+                    }
+               //     cursor.moveToFirst();
+                //}
+            }
+
 
             return convertView;
         }
