@@ -14,27 +14,29 @@
 
         <Button
             android:id="@+id/button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="last" />
+            android:text="last"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_date"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_gravity="center"
             android:textAlignment="center"
-            android:paddingLeft="10dp"
             android:textColor="#000000"
-            android:textSize="20sp" />
+            android:textSize="17sp" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="next" />
+            android:text="next"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <GridView

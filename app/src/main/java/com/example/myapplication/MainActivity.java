@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
         final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
 
         //현재 날짜 텍스트뷰에 뿌려줌
-        tvDate.setText(curYearFormat.format(date) + "/" + curMonthFormat.format(date));
+        tvDate.setText(curYearFormat.format(date) + " / " + String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
 
         //gridview 요일 표시
         dayList = new ArrayList<String>();
@@ -267,6 +267,7 @@ public class MainActivity extends Activity {
                 holder.tvItemGridView = (TextView) convertView.findViewById(R.id.tv_item_gridview);
                 holder.tvItemGridView2 = (TextView) convertView.findViewById(R.id.tv_item2_gridview);
                 holder.tvItemGridView3 = (TextView) convertView.findViewById(R.id.tv_item3_gridview);
+                holder.tvItemGridView4 = (TextView) convertView.findViewById(R.id.tv_item4_gridview);
 
 
                 convertView.setTag(holder);
@@ -278,21 +279,18 @@ public class MainActivity extends Activity {
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             if(position<7){
                 layoutParams.height = gridviewH / 13;
+                holder.tvItemGridView2.setVisibility(View.GONE);
+                holder.tvItemGridView3.setVisibility(View.GONE);
+                holder.tvItemGridView4.setVisibility(View.GONE);
             }
             else{
                 layoutParams.height = gridviewH * 2 / 13;
-            }
-
-
-            if(position<7){
-                holder.tvItemGridView2.setVisibility(View.GONE);
-                holder.tvItemGridView3.setVisibility(View.GONE);
-            }
-            else {
+                holder.tvItemGridView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                holder.tvItemGridView.setPadding(15,0,0,0);
                 holder.tvItemGridView2.setVisibility(View.INVISIBLE);
                 holder.tvItemGridView3.setVisibility(View.INVISIBLE);
+                holder.tvItemGridView4.setVisibility(View.INVISIBLE);
             }
-
 
             int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
             //Log.e("asd",String.valueOf(convertView.getTag()));
@@ -353,6 +351,11 @@ public class MainActivity extends Activity {
                         holder.tvItemGridView3.setVisibility(View.VISIBLE);
                         holder.tvItemGridView3.setText(phone);
                         //holder.tvItemGridView3.setBackgroundColor(Color.parseColor("#00BBBB"));
+
+                        int over = cursor.getInt(3);
+                        holder.tvItemGridView4.setVisibility(View.VISIBLE);
+                        holder.tvItemGridView4.setText(String.valueOf(over));
+
                     }
                 }
             }
@@ -367,5 +370,6 @@ public class MainActivity extends Activity {
         TextView tvItemGridView;
         TextView tvItemGridView2;
         TextView tvItemGridView3;
+        TextView tvItemGridView4;
     }
 }
