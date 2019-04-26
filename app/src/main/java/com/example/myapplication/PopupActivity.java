@@ -32,7 +32,7 @@ public class PopupActivity extends Activity {
         setContentView(R.layout.activity_popup);
 
         //UI 객체생성
-        txtText = (TextView)findViewById(R.id.txtText);
+        txtText = (EditText)findViewById(R.id.popup_et);
 
         //데이터 가져오기
         Intent intent = getIntent();

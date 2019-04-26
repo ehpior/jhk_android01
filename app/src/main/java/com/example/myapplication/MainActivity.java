@@ -65,8 +65,10 @@ public class MainActivity extends Activity {
     private Date date_selected = new Date();
 
     public void mOnPopup(View v){
+        TextView tkk3 = (TextView)findViewById(R.id.textView3);
         Intent intent = new Intent(this,PopupActivity.class);
-        intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
+        //intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
+        intent.putExtra("data",tkk3.getText());
         startActivityForResult(intent,1);
     }
 
@@ -129,8 +131,6 @@ public class MainActivity extends Activity {
                 dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
                 kk.setText("position : " + (position-dayNum2-5) +"    " +position);
 
-                //Log.e("asd",String.valueOf(mCal.get(Calendar.YEAR))+"년"+String.valueOf(mCal.get(Calendar.MONTH)+1)+"월"+String.valueOf(position-dayNum2-5)+"일");
-                //Log.e("asd2",date_selected.toString());
             }
         });
 
@@ -152,7 +152,7 @@ public class MainActivity extends Activity {
 
                 int year_tmp = mCal.get(Calendar.YEAR);
                 int month_tmp = mCal.get(Calendar.MONTH)+1;
-                tvDate.setText(String.valueOf(year_tmp) + "/" + String.valueOf(month_tmp));
+                tvDate.setText(String.valueOf(year_tmp) + " / " + String.format("%02d",month_tmp));
 
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridView.setAdapter(gridAdapter);
@@ -177,7 +177,7 @@ public class MainActivity extends Activity {
 
                 int year_tmp = mCal.get(Calendar.YEAR);
                 int month_tmp = mCal.get(Calendar.MONTH)+1;
-                tvDate.setText(String.valueOf(year_tmp) + "/" + String.valueOf(month_tmp));
+                tvDate.setText(String.valueOf(year_tmp) + " / " + String.format("%02d",month_tmp));
 
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridView.setAdapter(gridAdapter);
