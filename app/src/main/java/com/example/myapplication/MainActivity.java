@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends Activity {
 
@@ -108,6 +111,16 @@ public class MainActivity extends Activity {
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
 
+        gridView.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                    return true;
+                }
+                return false;
+            }
+        });
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
             TextView kk = (TextView) findViewById(R.id.textView3);
@@ -141,9 +154,9 @@ public class MainActivity extends Activity {
                 int month_tmp = mCal.get(Calendar.MONTH)+1;
                 tvDate.setText(String.valueOf(year_tmp) + "/" + String.valueOf(month_tmp));
 
-                //gridAdapter.notifyDataSetChanged();
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridView.setAdapter(gridAdapter);
+                gridAdapter.notifyDataSetChanged();
             }
         });
         Button bt2 = (Button)findViewById(R.id.button2);
@@ -167,17 +180,10 @@ public class MainActivity extends Activity {
                 tvDate.setText(String.valueOf(year_tmp) + "/" + String.valueOf(month_tmp));
 
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
-                gridAdapter.notifyDataSetChanged();
                 gridView.setAdapter(gridAdapter);
-                gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridAdapter.notifyDataSetChanged();
-                gridView.setAdapter(gridAdapter);
             }
         });
-
-
-
-
     }
 
 
@@ -189,6 +195,7 @@ public class MainActivity extends Activity {
                 TextView kk = (TextView) findViewById(R.id.textView3);
                 String result = data.getStringExtra("result");
                 kk.setText(result);
+                gridAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -266,17 +273,35 @@ public class MainActivity extends Activity {
             } else{
                 holder = (ViewHolder)convertView.getTag();
             }
+
+
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
-            layoutParams.height = gridviewH / 7;
+            if(position<7){
+                layoutParams.height = gridviewH / 13;
+            }
+            else{
+                layoutParams.height = gridviewH * 2 / 13;
+            }
+
+
+            if(position<7){
+                holder.tvItemGridView2.setVisibility(View.GONE);
+                holder.tvItemGridView3.setVisibility(View.GONE);
+            }
+            else {
+                holder.tvItemGridView2.setVisibility(View.INVISIBLE);
+                holder.tvItemGridView3.setVisibility(View.INVISIBLE);
+            }
+
 
             int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
             //Log.e("asd",String.valueOf(convertView.getTag()));
             holder.tvItemGridView.setText("" + getItem(position));
 
-            if (position-dayNum2>=6 && position-dayNum2-5<=mCal.getActualMaximum(Calendar.DATE)){
-            holder.tvItemGridView2.setText("test1");
-            holder.tvItemGridView3.setText("test2");
-            }
+            //if (position-dayNum2>=6 && position-dayNum2-5<=mCal.getActualMaximum(Calendar.DATE)){
+            //holder.tvItemGridView2.setText("test1");
+            //holder.tvItemGridView3.setText("test2");
+            //}
 
             //해당 날짜 텍스트 컬러,배경 변경
             //mCal = Calendar.getInstance();
@@ -288,36 +313,50 @@ public class MainActivity extends Activity {
             if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH)+1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
                 holder.tvItemGridView.setTextColor(Color.parseColor("#00AAAA"));
             }
-            if((position % 7) == 0){
+            /*if((position % 7) == 0){
                 convertView.setBackgroundColor(Color.rgb(255,0,0));
             }
             else if((position % 7) == 6){
                 convertView.setBackgroundColor(Color.rgb(0,0,255));
+            else{
+                //convertView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            }*/
+            if((position % 7) == 0){
+                holder.tvItemGridView.setTextColor(Color.rgb(255,0,0));
+            }
+            else if((position % 7) == 6){
+                holder.tvItemGridView.setTextColor(Color.rgb(0,0,255));
             }
 
 
-                File file = new File(getFilesDir(),"contact.db");
-                SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
+
+            File file = new File(getFilesDir(),"contact.db");
+            SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
+
 
             if (sqliteDB != null) {
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
                 Cursor cursor = db.rawQuery(ContactDBCtrct.SQL_SELECT, null);
                 cursor.moveToFirst();
-                //if (cursor.moveToNext()) { // 레코드가 존재한다면,
+                if (cursor.moveToFirst()) { // 레코드가 존재한다면,
                     // no (INTEGER) 값 가져오기.
                     int no = cursor.getInt(0) ;
                     if(no == (position-dayNum2-5)) {
                         // name (TEXT) 값 가져오기
                         String name = cursor.getString(1);
+                        holder.tvItemGridView2.setVisibility(View.VISIBLE);
                         holder.tvItemGridView2.setText(name);
+                        //holder.tvItemGridView2.setBackgroundColor(Color.parseColor("#00AAAA"));
 
                         // phone (TEXT) 값 가져오기
                         String phone = cursor.getString(2);
+                        holder.tvItemGridView3.setVisibility(View.VISIBLE);
                         holder.tvItemGridView3.setText(phone);
+                        //holder.tvItemGridView3.setBackgroundColor(Color.parseColor("#00BBBB"));
                     }
-               //     cursor.moveToFirst();
-                //}
+                }
             }
+
 
 
             return convertView;

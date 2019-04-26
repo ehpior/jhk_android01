@@ -41,11 +41,14 @@
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
-        android:listSelector="#800000"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
         android:layout_weight="1"
+        android:overScrollMode="never"
+        android:background="#000000"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
         android:numColumns="7"></GridView>
-        <!-- android:listSelector="@drawable/gridview_selector" -->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
