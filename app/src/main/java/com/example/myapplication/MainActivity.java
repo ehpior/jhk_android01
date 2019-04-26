@@ -35,9 +35,10 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends Activity {
 
-
-
-                ContactDBHelper dbHelper = new ContactDBHelper(this);
+    /**
+     * db선언
+     */
+    ContactDBHelper dbHelper = new ContactDBHelper(this);
     /**
      * 연/월 텍스트뷰
      */
@@ -130,6 +131,7 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
                 kk.setText("position : " + (position-dayNum2-5) +"    " +position);
+                mOnPopup(view);
 
             }
         });
@@ -293,13 +295,14 @@ public class MainActivity extends Activity {
             }
 
             int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
-            //Log.e("asd",String.valueOf(convertView.getTag()));
             holder.tvItemGridView.setText("" + getItem(position));
 
-            //if (position-dayNum2>=6 && position-dayNum2-5<=mCal.getActualMaximum(Calendar.DATE)){
-            //holder.tvItemGridView2.setText("test1");
-            //holder.tvItemGridView3.setText("test2");
-            //}
+            if((position % 7) == 0){
+                holder.tvItemGridView.setTextColor(Color.rgb(255,0,0));
+            }
+            else if((position % 7) == 6){
+                holder.tvItemGridView.setTextColor(Color.rgb(0,0,255));
+            }
 
             //해당 날짜 텍스트 컬러,배경 변경
             //mCal = Calendar.getInstance();
@@ -319,12 +322,6 @@ public class MainActivity extends Activity {
             else{
                 //convertView.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }*/
-            if((position % 7) == 0){
-                holder.tvItemGridView.setTextColor(Color.rgb(255,0,0));
-            }
-            else if((position % 7) == 6){
-                holder.tvItemGridView.setTextColor(Color.rgb(0,0,255));
-            }
 
 
 
