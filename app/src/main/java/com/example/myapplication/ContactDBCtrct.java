@@ -13,7 +13,7 @@ public class ContactDBCtrct {
     public static final String SQL_CREATE_TBL = "CREATE TABLE IF NOT EXISTS " +TBL_CONTACT+ " "+
             "(" +
                 COL_NO+         " INTEGER NOT NULL" +", "+
-                COL_NAME+       " TEXT"             +", "+
+                COL_NAME+       " DATE"             +", "+
                 COL_PHONE+      " TEXT"             +", "+
                 COL_OVER20+     " INTEGER"          +
             ")";

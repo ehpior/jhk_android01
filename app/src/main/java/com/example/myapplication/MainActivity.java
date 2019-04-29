@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -80,6 +81,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+
 
         tvDate = (TextView)findViewById(R.id.tv_date);
         gridView = (GridView)findViewById(R.id.gridview);
@@ -328,32 +331,40 @@ public class MainActivity extends Activity {
             File file = new File(getFilesDir(),"contact.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
 
+            if(position>7 && position<41) {
+                String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", (position - dayNum2 - 5));
+                Log.e("asd", thisday);
 
-            if (sqliteDB != null) {
-                SQLiteDatabase db = dbHelper.getReadableDatabase();
-                Cursor cursor = db.rawQuery(ContactDBCtrct.SQL_SELECT, null);
-                cursor.moveToFirst();
-                if (cursor.moveToFirst()) { // 레코드가 존재한다면,
-                    // no (INTEGER) 값 가져오기.
-                    int no = cursor.getInt(0) ;
-                    if(no == (position-dayNum2-5)) {
-                        // name (TEXT) 값 가져오기
-                        String name = cursor.getString(1);
-                        holder.tvItemGridView2.setVisibility(View.VISIBLE);
-                        holder.tvItemGridView2.setText(name);
-                        //holder.tvItemGridView2.setBackgroundColor(Color.parseColor("#00AAAA"));
 
-                        // phone (TEXT) 값 가져오기
-                        String phone = cursor.getString(2);
-                        holder.tvItemGridView3.setVisibility(View.VISIBLE);
-                        holder.tvItemGridView3.setText(phone);
-                        //holder.tvItemGridView3.setBackgroundColor(Color.parseColor("#00BBBB"));
+                if (sqliteDB != null) {
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+                    // cursor = db.rawQuery("SELECT * FROM CONTACT_T WHERE NAME = Date(" + thisday + ")", null);
+                    Cursor cursor = db.rawQuery("SELECT * FROM CONTACT_T WHERE NAME = Date('" + thisday + "')", null);
 
-                        int over = cursor.getInt(3);
-                        holder.tvItemGridView4.setVisibility(View.VISIBLE);
-                        holder.tvItemGridView4.setText(String.valueOf(over));
+                    if (cursor.moveToFirst()) { // 레코드가 존재한다면,
+                        // no (INTEGER) 값 가져오기.
+                        //int no = cursor.getInt(0);
+                        //if (no == (position - dayNum2 - 5)) {
+                            // name (TEXT) 값 가져오기
+                            String name = cursor.getString(1);
+                            holder.tvItemGridView2.setVisibility(View.VISIBLE);
+                            holder.tvItemGridView2.setText(name);
+                            //holder.tvItemGridView2.setBackgroundColor(Color.parseColor("#00AAAA"));
 
+                            // phone (TEXT) 값 가져오기
+                            String phone = cursor.getString(2);
+                            holder.tvItemGridView3.setVisibility(View.VISIBLE);
+                            holder.tvItemGridView3.setText(phone);
+                            //holder.tvItemGridView3.setBackgroundColor(Color.parseColor("#00BBBB"));
+
+                            //int over = cursor.getInt(3);
+                            String over = cursor.getString(3);
+                            holder.tvItemGridView4.setVisibility(View.VISIBLE);
+                            holder.tvItemGridView4.setText(String.valueOf(over));
+
+                        //}
                     }
+                    cursor.close();
                 }
             }
 
