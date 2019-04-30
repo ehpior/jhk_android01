@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.app.Activity;
@@ -33,6 +34,9 @@ public class PopupActivity extends Activity {
 
     private ArrayList<HashMap<String,String>> contentList = new ArrayList<HashMap<String,String>>();
     private ListView listView;
+    private ScrollView qwe;
+    private int scroll_height = 0;
+
 
     ContactDBHelper dbHelper = null;
     String thisdate;
@@ -43,7 +47,7 @@ public class PopupActivity extends Activity {
         //타이틀바 없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
-
+        qwe =  (ScrollView)findViewById(R.id.scrollView);
 
         //UI 객체생성
         txtText = (EditText)findViewById(R.id.popup_et);
@@ -139,7 +143,7 @@ public class PopupActivity extends Activity {
         if (sqliteDB != null) {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisdate + "')", null);
-
+            scroll_height = 0;
             while (cursor.moveToNext()) { // 레코드가 존재한다면,
                 HashMap<String,String> hashMap = new HashMap<>();
                 // no (INTEGER) 값 가져오기.
@@ -147,10 +151,15 @@ public class PopupActivity extends Activity {
                 hashMap.put("Date",cursor.getString(1));
 
                 contentList.add(hashMap);
+                if(scroll_height<510) {
+                    scroll_height += 170;
+                }
             }
             cursor.close();
         }
+
         listView = (ListView)findViewById(R.id.schedule_list);
+        qwe.setMinimumHeight(scroll_height);
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(this,contentList,android.R.layout.simple_list_item_1,new String[]{"Content","Date"},new int[]{android.R.id.text2,android.R.id.text1}){
             @Override
