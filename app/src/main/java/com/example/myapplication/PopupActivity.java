@@ -4,17 +4,26 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.app.Activity;
 import android.os.Bundle;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PopupActivity extends Activity {
 
@@ -22,7 +31,11 @@ public class PopupActivity extends Activity {
 
     SQLiteDatabase sqliteDB;
 
+    private ArrayList<HashMap<String,String>> contentList = new ArrayList<HashMap<String,String>>();
+    private ListView listView;
+
     ContactDBHelper dbHelper = null;
+    String thisdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +44,21 @@ public class PopupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
 
+
         //UI 객체생성
         txtText = (EditText)findViewById(R.id.popup_et);
 
         //데이터 가져오기
         Intent intent = getIntent();
-        String data = intent.getStringExtra("data");
-        txtText.setText(data);
+        thisdate = intent.getStringExtra("date");
+        txtText.setText(thisdate);
 
 
         sqliteDB = init_database();
         init_tables();
         load_values();
+
+
         Button buttonSave = (Button)findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -57,10 +73,18 @@ public class PopupActivity extends Activity {
                 delete_values() ;
             }
         });
+
+        Button buttonclose = (Button)findViewById(R.id.close);
+        buttonclose.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                finish();
+            }
+        });
     }
 
     //확인 버튼 클릭
-    public void mOnClose(View v){
+    public void mOnClose(){
         //데이터 전달하기
         Intent intent = new Intent();
         EditText et1 = (EditText)findViewById(R.id.popup_et);
@@ -95,7 +119,7 @@ public class PopupActivity extends Activity {
 
     private SQLiteDatabase init_database(){
         SQLiteDatabase db = null;
-        File file = new File(getFilesDir(),"contact.db");
+        File file = new File(getFilesDir(),"schedule.db");
         System.out.println("PATH : " + file.toString());
         try{
             db = SQLiteDatabase.openOrCreateDatabase(file,null);
@@ -111,37 +135,34 @@ public class PopupActivity extends Activity {
         dbHelper = new ContactDBHelper(this);
     }
     private void load_values() {
-
+        contentList = new ArrayList<HashMap<String,String>>();
         if (sqliteDB != null) {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery(ContactDBCtrct.SQL_SELECT, null);
+            Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisdate + "')", null);
 
-            if (cursor.moveToNext()) { // 레코드가 존재한다면,
+            while (cursor.moveToNext()) { // 레코드가 존재한다면,
+                HashMap<String,String> hashMap = new HashMap<>();
                 // no (INTEGER) 값 가져오기.
-                int no = cursor.getInt(0) ;
-                EditText editTextNo = (EditText) findViewById(R.id.editTextNo) ;
-                editTextNo.setText(Integer.toString(no)) ;
+                hashMap.put("Content",cursor.getString(0));
+                hashMap.put("Date",cursor.getString(1));
 
-                // name (TEXT) 값 가져오기
-                String name = cursor.getString(1) ;
-                EditText editTextName = (EditText) findViewById(R.id.editTextName) ;
-                editTextName.setText(name) ;
-
-                // phone (TEXT) 값 가져오기
-                String phone = cursor.getString(2) ;
-                EditText editTextPhone = (EditText) findViewById(R.id.editTextPhone) ;
-                editTextPhone.setText(phone) ;
-
-                // over20 (INTEGER) 값 가져오기.
-                int over20 = cursor.getInt(3) ;
-                CheckBox checkBoxOver20 = (CheckBox) findViewById(R.id.checkBoxOver20) ;
-                if (over20 == 0) {
-                    checkBoxOver20.setChecked(false) ;
-                } else {
-                    checkBoxOver20.setChecked(true) ;
-                }
+                contentList.add(hashMap);
             }
+            cursor.close();
         }
+        listView = (ListView)findViewById(R.id.schedule_list);
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this,contentList,android.R.layout.simple_list_item_1,new String[]{"Content","Date"},new int[]{android.R.id.text2,android.R.id.text1}){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                View view = super.getView(position, convertView, parent);
+                TextView tv1 = (TextView)view.findViewById(android.R.id.text1);
+                tv1.setTextColor(Color.BLACK);
+
+                return view;
+            }
+        };
+        listView.setAdapter(simpleAdapter);
     }
 
     private void save_values() {
@@ -149,47 +170,28 @@ public class PopupActivity extends Activity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.execSQL(ContactDBCtrct.SQL_DELETE);
+        //db.execSQL(ContactDBCtrct.SQL_DELETE);
 
-        EditText editTextNo = (EditText) findViewById(R.id.editTextNo) ;
-        int no = Integer.parseInt(editTextNo.getText().toString());
+        EditText editTextName = (EditText) findViewById(R.id.editText2) ;
+        String content = editTextName.getText().toString() ;
 
-        EditText editTextName = (EditText) findViewById(R.id.editTextName) ;
-        String name = editTextName.getText().toString() ;
-
-        EditText editTextPhone = (EditText) findViewById(R.id.editTextPhone) ;
-        String phone = editTextPhone.getText().toString() ;
-
-        CheckBox checkBoxOver20 = (CheckBox) findViewById(R.id.checkBoxOver20) ;
-        boolean isOver20 = checkBoxOver20.isChecked() ;
-
-        String sqlInsert = "INSERT INTO CONTACT_T " +
-                "(NO, NAME, PHONE, OVER20) VALUES (" +
-                Integer.toString(no) + "," +
-                "'" + name + "'," +
-                "'" + phone + "'," +
-                ((isOver20 == true) ? "1" : "0") + ")" ;
+        String sqlInsert = "INSERT INTO SCHEDULE " +
+                "(DATE, CONTENT) VALUES (" +
+                "'" + thisdate + "'," +
+                "'" + content + "')" ;
 
         db.execSQL(sqlInsert);
+        mOnClose();
     }
 
     private void delete_values() {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.execSQL(ContactDBCtrct.SQL_DELETE);
+        db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + thisdate + "')");
+        //db.execSQL(ContactDBCtrct.SQL_DELETE);
 
-        EditText editTextNo = (EditText) findViewById(R.id.editTextNo) ;
-        editTextNo.setText("") ;
-
-        EditText editTextName = (EditText) findViewById(R.id.editTextName) ;
-        editTextName.setText("") ;
-
-        EditText editTextPhone = (EditText) findViewById(R.id.editTextPhone) ;
-        editTextPhone.setText("") ;
-
-        CheckBox checkBoxOver20 = (CheckBox) findViewById(R.id.checkBoxOver20) ;
-        checkBoxOver20.setChecked(false) ;
+        mOnClose();
 
     }
 }

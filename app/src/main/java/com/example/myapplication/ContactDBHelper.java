@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class ContactDBHelper extends SQLiteOpenHelper {
     public static final int DB_VERSION = 1;
-    public static final String DBFILE_CONTACT = "contact.db";
+    public static final String DBFILE_CONTACT = "schedule.db";
 
     public ContactDBHelper(Context context) {
         super(context, DBFILE_CONTACT, null, DB_VERSION);

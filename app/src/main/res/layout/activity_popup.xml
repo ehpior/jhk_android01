@@ -26,7 +26,7 @@
         android:padding="24dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/popup_et"
@@ -36,52 +36,38 @@
             android:inputType="textPersonName"
             android:text="Name" />
 
-        <TextView
-            android:id="@+id/txtText"
-            android:textSize="15sp"
-            android:textColor="#000"
-            android:alpha="0.87"
-            android:gravity="center"
-            android:layout_marginBottom="3dp"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:minHeight="190dp"
+            android:fillViewport="true">
+
+            <ListView
+                android:id="@+id/schedule_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+
+
+    </LinearLayout>
+    <!-- Notice -->
+
+    <!-- 닫기 버튼 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <EditText
-            android:id="@+id/editTextNo"
+            android:id="@+id/editText2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="No" />
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="date" />
-
-        <EditText
-            android:id="@+id/editTextName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Name" />
-
-        <EditText
-            android:id="@+id/editTextPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Phone" />
-
-        <CheckBox
-            android:id="@+id/checkBoxOver20"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CheckBox" />
+            android:hint="New Schedule"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/buttonSave"
@@ -94,25 +80,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Clear" />
-    </LinearLayout>
-    <!-- Notice -->
 
-    <!-- 닫기 버튼 -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <Button
-            android:text="확인"
-            android:textSize="15sp"
-            android:textColor="#ff7a00"
-            android:padding="16dp"
-            android:gravity="center"
-            android:background="#00000000"
+            android:id="@+id/close"
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:onClick="mOnClose"/>
+            android:background="#00000000"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="확인"
+            android:textColor="#ff7a00"
+            android:textSize="15sp" />
     </LinearLayout>
     <!--// 닫기 버튼 -->
 </LinearLayout>

@@ -66,11 +66,13 @@ public class MainActivity extends Activity {
 
     private Date date_selected = new Date();
 
-    public void mOnPopup(View v){
+    public void mOnPopup(View v, int thisday){
+        String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
         TextView tkk3 = (TextView)findViewById(R.id.textView3);
         Intent intent = new Intent(this,PopupActivity.class);
         //intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
         intent.putExtra("data",tkk3.getText());
+        intent.putExtra("date",thisdate);
         startActivityForResult(intent,1);
     }
 
@@ -134,7 +136,7 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
                 kk.setText("position : " + (position-dayNum2-5) +"    " +position);
-                mOnPopup(view);
+                mOnPopup(view, position-dayNum2-5);
 
             }
         });
@@ -328,7 +330,7 @@ public class MainActivity extends Activity {
 
 
 
-            File file = new File(getFilesDir(),"contact.db");
+            File file = new File(getFilesDir(),"schedule.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
 
             if(position>7 && position<41) {
@@ -338,31 +340,23 @@ public class MainActivity extends Activity {
 
                 if (sqliteDB != null) {
                     SQLiteDatabase db = dbHelper.getReadableDatabase();
-                    // cursor = db.rawQuery("SELECT * FROM CONTACT_T WHERE NAME = Date(" + thisday + ")", null);
-                    Cursor cursor = db.rawQuery("SELECT * FROM CONTACT_T WHERE NAME = Date('" + thisday + "')", null);
+                    Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisday + "')", null);
 
-                    if (cursor.moveToFirst()) { // 레코드가 존재한다면,
-                        // no (INTEGER) 값 가져오기.
-                        //int no = cursor.getInt(0);
-                        //if (no == (position - dayNum2 - 5)) {
-                            // name (TEXT) 값 가져오기
-                            String name = cursor.getString(1);
+                    while (cursor.moveToNext()) { // 레코드가 존재한다면,
+                        String content = cursor.getString(1);
+                        if(holder.tvItemGridView2.getVisibility() == View.INVISIBLE) {
                             holder.tvItemGridView2.setVisibility(View.VISIBLE);
-                            holder.tvItemGridView2.setText(name);
-                            //holder.tvItemGridView2.setBackgroundColor(Color.parseColor("#00AAAA"));
-
-                            // phone (TEXT) 값 가져오기
-                            String phone = cursor.getString(2);
+                            holder.tvItemGridView2.setText(content);
+                        }
+                        else if(holder.tvItemGridView3.getVisibility() == View.INVISIBLE){
                             holder.tvItemGridView3.setVisibility(View.VISIBLE);
-                            holder.tvItemGridView3.setText(phone);
-                            //holder.tvItemGridView3.setBackgroundColor(Color.parseColor("#00BBBB"));
-
-                            //int over = cursor.getInt(3);
-                            String over = cursor.getString(3);
+                            holder.tvItemGridView3.setText(content);
+                        }
+                        else if(holder.tvItemGridView4.getVisibility() == View.INVISIBLE){
                             holder.tvItemGridView4.setVisibility(View.VISIBLE);
-                            holder.tvItemGridView4.setText(String.valueOf(over));
-
-                        //}
+                            holder.tvItemGridView4.setText(content);
+                        }
+                        //holder.tvItemGridView3.setBackgroundColor(Color.parseColor("#00BBBB"));
                     }
                     cursor.close();
                 }
