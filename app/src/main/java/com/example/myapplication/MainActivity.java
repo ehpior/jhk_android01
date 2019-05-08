@@ -17,6 +17,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,11 +34,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity{
+
 
     /**
      * db선언
@@ -68,10 +74,8 @@ public class MainActivity extends Activity {
 
     public void mOnPopup(View v, int thisday){
         String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
-        TextView tkk3 = (TextView)findViewById(R.id.textView3);
         Intent intent = new Intent(this,PopupActivity.class);
         //intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
-        intent.putExtra("data",tkk3.getText());
         intent.putExtra("date",thisdate);
         startActivityForResult(intent,1);
     }
@@ -115,7 +119,6 @@ public class MainActivity extends Activity {
             dayList.add("");
         }
         setCalendarDate(mCal.get(Calendar.MONTH) + 1);
-
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
 
@@ -131,17 +134,16 @@ public class MainActivity extends Activity {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
-            TextView kk = (TextView) findViewById(R.id.textView3);
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
-                kk.setText("position : " + (position-dayNum2-5) +"    " +position);
                 mOnPopup(view, position-dayNum2-5);
 
             }
         });
 
-        Button bt1 = (Button)findViewById(R.id.button);
+
+        ImageButton bt1 = (ImageButton)findViewById(R.id.button);
         bt1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +168,7 @@ public class MainActivity extends Activity {
                 gridAdapter.notifyDataSetChanged();
             }
         });
-        Button bt2 = (Button)findViewById(R.id.button2);
+        ImageButton bt2 = (ImageButton)findViewById(R.id.button2);
         bt2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,17 +193,57 @@ public class MainActivity extends Activity {
                 gridAdapter.notifyDataSetChanged();
             }
         });
-    }
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout) ;
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int pos = tab.getPosition();
+                changeView(pos);
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // do nothing
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // do nothing
+            }
+        }) ;
+
+    }
+    private void changeView(int index) {
+        GridView textView1 = (GridView) findViewById(R.id.gridview) ;
+        TextView textView2 = (TextView) findViewById(R.id.textView) ;
+        TextView textView3 = (TextView) findViewById(R.id.textView2) ;
+
+        switch (index) {
+            case 0 :
+                textView1.setVisibility(View.VISIBLE) ;
+                textView2.setVisibility(View.INVISIBLE) ;
+                textView3.setVisibility(View.INVISIBLE) ;
+                break ;
+            case 1 :
+                textView1.setVisibility(View.INVISIBLE) ;
+                textView2.setVisibility(View.VISIBLE) ;
+                textView3.setVisibility(View.INVISIBLE) ;
+                break ;
+            case 2 :
+                textView1.setVisibility(View.INVISIBLE) ;
+                textView2.setVisibility(View.INVISIBLE) ;
+                textView3.setVisibility(View.VISIBLE) ;
+                break ;
+
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1){
             if(resultCode==RESULT_OK){
                 //데이터 받기
-                TextView kk = (TextView) findViewById(R.id.textView3);
                 String result = data.getStringExtra("result");
-                kk.setText(result);
                 gridAdapter.notifyDataSetChanged();
             }
         }
@@ -374,4 +416,5 @@ public class MainActivity extends Activity {
         TextView tvItemGridView3;
         TextView tvItemGridView4;
     }
+
 }
