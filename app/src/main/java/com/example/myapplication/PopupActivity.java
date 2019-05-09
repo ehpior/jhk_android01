@@ -198,7 +198,7 @@ public class PopupActivity extends Activity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + thisdate + "')");
-        //db.execSQL(ContactDBCtrct.SQL_DELETE);
+        //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
         mOnClose();
 

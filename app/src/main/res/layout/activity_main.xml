@@ -96,7 +96,15 @@
             android:overScrollMode="never"
             android:paddingTop="1dp"
             android:paddingBottom="1dp"
-            android:verticalSpacing="1dp"></GridView>
+            android:verticalSpacing="1dp">
+
+        </GridView>
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/textView"
@@ -105,15 +113,14 @@
             android:visibility="invisible"
             android:text="TextView1111" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            android:text="TextView2222" />
-
 
     </FrameLayout>
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 
 
 </LinearLayout>

@@ -29,15 +29,21 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import static com.example.myapplication.ContactDBCtrct.COL_CONTENT;
+import static com.example.myapplication.ContactDBCtrct.COL_DATE;
+import static com.example.myapplication.ContactDBCtrct.TBL_SCHEDULE;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -54,16 +60,19 @@ public class MainActivity extends AppCompatActivity{
      * 그리드뷰 어댑터
      */
     private GridAdapter gridAdapter;
+    private ListAdapter listAdapter;
 
     /**
      * 일 저장 할 리스트
      */
     private ArrayList<String> dayList;
+    private ArrayList<String> dayList2;
 
     /**
      * 그리드뷰
      */
     private GridView gridView;
+    private ListView listView;
 
     /**
      * 캘린더 변수
@@ -86,8 +95,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        File file = new File(getFilesDir(),"schedule.db");
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(file,null);
 
+        setContentView(R.layout.activity_main);
 
 
         tvDate = (TextView)findViewById(R.id.tv_date);
@@ -119,8 +130,26 @@ public class MainActivity extends AppCompatActivity{
             dayList.add("");
         }
         setCalendarDate(mCal.get(Calendar.MONTH) + 1);
+
+        /**
+         * 그리드뷰 생성
+         */
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
+
+        /**
+         * 리스트뷰 생성
+         */
+        dayList2 = new ArrayList<String>();
+        for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+            dayList2.add("" + (i + 1));
+        }
+        listAdapter = new ListAdapter(getApplicationContext(), dayList2);
+        listView = (ListView)findViewById(R.id.listview);
+        listView.setAdapter(listAdapter);
+
+
+
 
         gridView.setOnTouchListener(new View.OnTouchListener(){
             @Override
@@ -141,8 +170,17 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
+        Button bttt = (Button)findViewById(R.id.button3);
+        bttt.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnPopup(v, 1);
+            }
+        });
 
-
+        /**
+         * 달 바꾸기 bt1 , bt2
+         */
         ImageButton bt1 = (ImageButton)findViewById(R.id.button);
         bt1.setOnClickListener(new OnClickListener() {
             @Override
@@ -166,6 +204,14 @@ public class MainActivity extends AppCompatActivity{
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridView.setAdapter(gridAdapter);
                 gridAdapter.notifyDataSetChanged();
+
+                dayList2 = new ArrayList<String>();
+                for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+                    dayList2.add("" + (i + 1));
+                }
+                listAdapter = new ListAdapter(getApplicationContext(), dayList2);
+                listView.setAdapter(listAdapter);
+                listAdapter.notifyDataSetChanged();;
             }
         });
         ImageButton bt2 = (ImageButton)findViewById(R.id.button2);
@@ -191,8 +237,21 @@ public class MainActivity extends AppCompatActivity{
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridView.setAdapter(gridAdapter);
                 gridAdapter.notifyDataSetChanged();
+
+                dayList2 = new ArrayList<String>();
+                for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+                    dayList2.add("" + (i + 1));
+                }
+                listAdapter = new ListAdapter(getApplicationContext(), dayList2);
+                listView.setAdapter(listAdapter);
+                listAdapter.notifyDataSetChanged();;
             }
         });
+
+
+        /**
+         * 탭 변환
+         */
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout) ;
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -213,10 +272,14 @@ public class MainActivity extends AppCompatActivity{
         }) ;
 
     }
+
+    /**
+     * 탭에 따른 변화 함수
+     */
     private void changeView(int index) {
         GridView textView1 = (GridView) findViewById(R.id.gridview) ;
         TextView textView2 = (TextView) findViewById(R.id.textView) ;
-        TextView textView3 = (TextView) findViewById(R.id.textView2) ;
+        ListView textView3 = (ListView) findViewById(R.id.listview) ;
 
         switch (index) {
             case 0 :
@@ -238,6 +301,10 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+
+    /**
+     * 달력 최신화
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1){
@@ -248,10 +315,9 @@ public class MainActivity extends AppCompatActivity{
             }
         }
     }
+
     /**
      * 해당 월에 표시할 일 수 구함
-     *
-     * @param month
      */
     private void setCalendarDate(int month) {
         mCal.set(Calendar.MONTH, month - 1);
@@ -267,7 +333,6 @@ public class MainActivity extends AppCompatActivity{
 
     /**
      * 그리드뷰 어댑터
-     *
      */
     private class GridAdapter extends BaseAdapter {
 
@@ -351,9 +416,6 @@ public class MainActivity extends AppCompatActivity{
                 holder.tvItemGridView.setTextColor(Color.rgb(0,0,255));
             }
 
-            //해당 날짜 텍스트 컬러,배경 변경
-            //mCal = Calendar.getInstance();
-            //오늘 day 가져옴
             SimpleDateFormat sdf_d = new SimpleDateFormat("d");
             SimpleDateFormat sdf_m = new SimpleDateFormat("M");
             String sToday_d = sdf_d.format(date_selected);
@@ -361,14 +423,6 @@ public class MainActivity extends AppCompatActivity{
             if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH)+1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
                 holder.tvItemGridView.setTextColor(Color.parseColor("#00AAAA"));
             }
-            /*if((position % 7) == 0){
-                convertView.setBackgroundColor(Color.rgb(255,0,0));
-            }
-            else if((position % 7) == 6){
-                convertView.setBackgroundColor(Color.rgb(0,0,255));
-            else{
-                //convertView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            }*/
 
 
 
@@ -377,8 +431,6 @@ public class MainActivity extends AppCompatActivity{
 
             if(position>7 && position<41) {
                 String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", (position - dayNum2 - 5));
-                Log.e("asd", thisday);
-
 
                 if (sqliteDB != null) {
                     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -398,7 +450,6 @@ public class MainActivity extends AppCompatActivity{
                             holder.tvItemGridView4.setVisibility(View.VISIBLE);
                             holder.tvItemGridView4.setText(content);
                         }
-                        //holder.tvItemGridView3.setBackgroundColor(Color.parseColor("#00BBBB"));
                     }
                     cursor.close();
                 }
@@ -410,11 +461,73 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * 그리드뷰 용 뷰홀더
+     */
     private class ViewHolder {
         TextView tvItemGridView;
         TextView tvItemGridView2;
         TextView tvItemGridView3;
         TextView tvItemGridView4;
+    }
+
+    /**
+     * 리스트뷰 어댑터
+     */
+    private class ListAdapter extends BaseAdapter{
+
+        private final List<String> list;
+
+        private final LayoutInflater inflater;
+
+        public ListAdapter(Context context, List<String> list) {
+            this.list = list;
+            this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder2 holder = null;
+
+            if (convertView == null){
+                convertView = inflater.inflate(R.layout.item_diary_listview, parent, false);
+
+                holder = new ViewHolder2();
+                holder.tvitemListView = (TextView)convertView.findViewById(R.id.diary_date);
+                holder.tvitemListView2 = (TextView)convertView.findViewById(R.id.diary_title);
+
+                convertView.setTag(holder);
+            }else{
+                holder = (ViewHolder2)convertView.getTag();
+            }
+
+            holder.tvitemListView.setText(""+getItem(position));
+            holder.tvitemListView2.setText("Title"+getItem(position));
+
+            return convertView;
+        }
+    }
+    /**
+     * 리스트뷰 용 뷰홀더
+     */
+    private class ViewHolder2 {
+        TextView tvitemListView;
+        TextView tvitemListView2;
     }
 
 }
