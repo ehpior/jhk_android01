@@ -18,8 +18,6 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,19 +37,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import static com.example.myapplication.ContactDBCtrct.COL_CONTENT;
-import static com.example.myapplication.ContactDBCtrct.COL_DATE;
-import static com.example.myapplication.ContactDBCtrct.TBL_SCHEDULE;
-
 public class MainActivity extends AppCompatActivity{
-
 
     /**
      * db선언
      */
     ContactDBHelper dbHelper = new ContactDBHelper(this);
+    DiaryDBHelper dbHelper2 = new DiaryDBHelper(this);
     /**
      * 연/월 텍스트뷰
      */
@@ -88,6 +80,13 @@ public class MainActivity extends AppCompatActivity{
         intent.putExtra("date",thisdate);
         startActivityForResult(intent,1);
     }
+    public void mOnPopup2(View v, int thisday){
+        String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+        Intent intent = new Intent(this,PopupActivity2.class);
+        //intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
+        intent.putExtra("date",thisdate);
+        startActivityForResult(intent,2);
+    }
 
     private final String [] days = new String[]{"일","월","화","수","목","금","토"};
 
@@ -97,6 +96,9 @@ public class MainActivity extends AppCompatActivity{
 
         File file = new File(getFilesDir(),"schedule.db");
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(file,null);
+        db.execSQL(DiaryDBCtrct.SQL_DROP_TBL);
+        db.execSQL(DiaryDBCtrct.SQL_CREATE_TBL);
+
 
         setContentView(R.layout.activity_main);
 
@@ -148,6 +150,23 @@ public class MainActivity extends AppCompatActivity{
         listView = (ListView)findViewById(R.id.listview);
         listView.setAdapter(listAdapter);
 
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                listAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+
+
+
+
+
 
 
 
@@ -170,11 +189,21 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                mOnPopup2(view, position+1);
+
+            }
+        });
+
+
         Button bttt = (Button)findViewById(R.id.button3);
         bttt.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnPopup(v, 1);
+                mOnPopup2(v, 1);
             }
         });
 
@@ -312,6 +341,11 @@ public class MainActivity extends AppCompatActivity{
                 //데이터 받기
                 String result = data.getStringExtra("result");
                 gridAdapter.notifyDataSetChanged();
+            }
+        }
+        else if(requestCode==2){
+            if(resultCode==RESULT_OK){
+                listAdapter.notifyDataSetChanged();;
             }
         }
     }
@@ -517,7 +551,24 @@ public class MainActivity extends AppCompatActivity{
             }
 
             holder.tvitemListView.setText(""+getItem(position));
-            holder.tvitemListView2.setText("Title"+getItem(position));
+
+            File file = new File(getFilesDir(),"schedule.db");
+            SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
+
+            if(sqliteDB != null){
+                String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(holder.tvitemListView.getText().toString()));
+                Log.e("asd",holder.tvitemListView.getText().toString());
+                SQLiteDatabase db = dbHelper2.getReadableDatabase();
+                Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('"+thisday+"')",null);
+                if(cursor.moveToNext()) {
+                    holder.tvitemListView2.setText(cursor.getString(1));
+                }
+                else{
+                    holder.tvitemListView2.setText("");
+                    holder.tvitemListView2.setHint("New Diary");
+                }
+                cursor.close();
+            }
 
             return convertView;
         }

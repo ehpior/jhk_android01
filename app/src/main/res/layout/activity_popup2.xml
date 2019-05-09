@@ -29,38 +29,28 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/popup_et"
+            android:id="@+id/popup_diary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="date"
             android:hint="Date" />
-
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="190dp"
-            android:fillViewport="true">
-
-            <ListView
-                android:id="@+id/schedule_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </ScrollView>
-
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/et_diary_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="New Schedule"
-            android:layout_marginTop="25dp"/>
+            android:hint="Diary Title"
+            />
+        <EditText
+            android:id="@+id/et_diary_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="10"
+            android:ems="10"
+            android:hint="Diary Content"
+            />
 
     </LinearLayout>
-    <!-- Notice -->
-
-    <!-- 닫기 버튼 -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -70,19 +60,21 @@
 
 
         <Button
-            android:id="@+id/buttonSave"
+            android:id="@+id/buttonSave_diary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="mOnPopup_02_diary"
             android:text="Save" />
 
         <Button
-            android:id="@+id/buttonClear"
+            android:id="@+id/buttonClear_diary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="mOnPopup_03_diary"
             android:text="Clear" />
 
         <Button
-            android:id="@+id/close"
+            android:id="@+id/close_diary"
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:background="#00000000"
