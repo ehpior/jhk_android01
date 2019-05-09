@@ -37,8 +37,18 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 public class MainActivity extends AppCompatActivity{
 
+
+    PieChart pieChart;
     /**
      * db선언
      */
@@ -161,6 +171,49 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
+
+        /**
+         * 차트생성
+         */
+
+        pieChart = (PieChart)findViewById(R.id.piechart);
+
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setExtraOffsets(5,10,5,5);
+
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+
+        pieChart.setDrawHoleEnabled(false);
+        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setTransparentCircleRadius(61f);
+
+        ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
+
+        yValues.add(new PieEntry(50f,"Meal"));
+        yValues.add(new PieEntry(10f,"Transportation"));
+        yValues.add(new PieEntry(8f,"Mobile Phone"));
+        yValues.add(new PieEntry(20f,"Dessert"));
+        yValues.add(new PieEntry(30f,"Clothes"));
+        yValues.add(new PieEntry(40f,"Activities"));
+
+        Description description = new Description();
+        description.setText("Accout Status"); //라벨
+        description.setTextSize(30);
+        pieChart.setDescription(description);
+
+        pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
+
+        PieDataSet dataSet = new PieDataSet(yValues,"Countries");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+
+        PieData data = new PieData((dataSet));
+        data.setValueTextSize(13f);
+        data.setValueTextColor(Color.YELLOW);
+
+        pieChart.setData(data);
 
 
 
@@ -307,7 +360,7 @@ public class MainActivity extends AppCompatActivity{
      */
     private void changeView(int index) {
         GridView textView1 = (GridView) findViewById(R.id.gridview) ;
-        TextView textView2 = (TextView) findViewById(R.id.textView) ;
+        PieChart textView2 = (PieChart) findViewById(R.id.piechart) ;
         ListView textView3 = (ListView) findViewById(R.id.listview) ;
 
         switch (index) {
