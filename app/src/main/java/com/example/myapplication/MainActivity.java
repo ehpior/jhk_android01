@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity{
      */
     private ArrayList<String> dayList;
     private ArrayList<String> dayList2;
+    private ArrayList<String> dayList_last;
+    private ArrayList<String> dayList_next;
 
     /**
      * 그리드뷰
@@ -152,9 +154,9 @@ public class MainActivity extends AppCompatActivity{
         mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1, 1);
         final int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
         //1일 - 요일 매칭 시키기 위해 공백 add
-        for (int i = 1; i < dayNum; i++) {
+        /*for (int i = 1; i < dayNum; i++) {
             dayList.add("");
-        }
+        }*/
         setCalendarDate(mCal.get(Calendar.MONTH) + 1);
 
         /**
@@ -371,9 +373,7 @@ public class MainActivity extends AppCompatActivity{
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 mOnPopup2(view, position+1);
-
             }
         });
 
@@ -393,68 +393,14 @@ public class MainActivity extends AppCompatActivity{
         bt1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                dayList = new ArrayList<String>();
-                dayList.addAll(Arrays.asList(days));
-
-                mCal.add(mCal.MONTH,-1);
-                int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
-                 for (int i = 1; i < dayNum2; i++) {
-                    dayList.add("");
-                }
-
-                setCalendarDate(mCal.get(Calendar.MONTH)+1);
-
-
-                int year_tmp = mCal.get(Calendar.YEAR);
-                int month_tmp = mCal.get(Calendar.MONTH)+1;
-                tvDate.setText(String.valueOf(year_tmp));
-                tvDate2.setText(String.format("%02d",month_tmp));
-
-                gridAdapter = new GridAdapter(getApplicationContext(), dayList);
-                gridView.setAdapter(gridAdapter);
-                gridAdapter.notifyDataSetChanged();
-
-                dayList2 = new ArrayList<String>();
-                for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-                    dayList2.add("" + (i + 1));
-                }
-                listAdapter = new ListAdapter(getApplicationContext(), dayList2);
-                listView.setAdapter(listAdapter);
-                listAdapter.notifyDataSetChanged();
+                lastMonth();
             }
         });
         ImageButton bt2 = (ImageButton)findViewById(R.id.button2);
         bt2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                dayList = new ArrayList<String>();
-                dayList.addAll(Arrays.asList(days));
-
-                mCal.add(mCal.MONTH,+1);
-                int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
-                 for (int i = 1; i < dayNum2; i++) {
-                    dayList.add("");
-                }
-
-                setCalendarDate(mCal.get(Calendar.MONTH)+1);
-
-
-                int year_tmp = mCal.get(Calendar.YEAR);
-                int month_tmp = mCal.get(Calendar.MONTH)+1;
-                tvDate.setText(String.valueOf(year_tmp));
-                tvDate2.setText(String.format("%02d",month_tmp));
-
-                gridAdapter = new GridAdapter(getApplicationContext(), dayList);
-                gridView.setAdapter(gridAdapter);
-                gridAdapter.notifyDataSetChanged();
-
-                dayList2 = new ArrayList<String>();
-                for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-                    dayList2.add("" + (i + 1));
-                }
-                listAdapter = new ListAdapter(getApplicationContext(), dayList2);
-                listView.setAdapter(listAdapter);
-                listAdapter.notifyDataSetChanged();
+                nextMonth();
             }
         });
 
@@ -489,10 +435,10 @@ public class MainActivity extends AppCompatActivity{
         dayList.addAll(Arrays.asList(days));
 
         mCal.add(mCal.MONTH,-1);
-        int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
+        /*int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
         for (int i = 1; i < dayNum2; i++) {
             dayList.add("");
-        }
+        }*/
 
         setCalendarDate(mCal.get(Calendar.MONTH)+1);
 
@@ -520,10 +466,10 @@ public class MainActivity extends AppCompatActivity{
         dayList.addAll(Arrays.asList(days));
 
         mCal.add(mCal.MONTH,+1);
-        int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
+        /*int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
         for (int i = 1; i < dayNum2; i++) {
             dayList.add("");
-        }
+        }*/
 
         setCalendarDate(mCal.get(Calendar.MONTH)+1);
 
@@ -598,14 +544,42 @@ public class MainActivity extends AppCompatActivity{
      * 해당 월에 표시할 일 수 구함
      */
     private void setCalendarDate(int month) {
-        mCal.set(Calendar.MONTH, month - 1);
 
+        dayList_last = new ArrayList<String>();
+        dayList_next = new ArrayList<String>();
+        mCal.add(mCal.MONTH,-1);
+        int k = mCal.get(Calendar.DAY_OF_WEEK)-1;
+        Log.e("asd",String.valueOf(k));
+        if((28-(k-1)+7)<=mCal.getActualMaximum(Calendar.DAY_OF_MONTH)){
+            for(int i=36-k; i<=mCal.getActualMaximum(Calendar.DAY_OF_MONTH);i++){
+                //dayList_last.add(""+i);
+                dayList.add(""+i);
+            }
+        }
+        else if((29-k)>mCal.getActualMaximum(Calendar.DAY_OF_MONTH)){
+            for(int i=22-k; i<=mCal.getActualMaximum(Calendar.DAY_OF_MONTH);i++){
+                //dayList_last.add(""+i);
+                dayList.add(""+i);
+            }
+        }
+        else{
+            for(int i=29-k; i<=mCal.getActualMaximum(Calendar.DAY_OF_MONTH);i++){
+                //dayList_last.add(""+i);
+                dayList.add(""+i);
+            }
+        }
+        mCal.add(mCal.MONTH,+1);
         for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
             dayList.add("" + (i + 1));
         }
-        while(dayList.size()<49){
+        /*while(dayList.size()<49){
             dayList.add("");
+        }*/
+        int tmp = dayList.size();
+        for(int i=1; i<=(49-tmp);i++){
+            dayList.add(""+i);
         }
+
 
     }
 
@@ -695,6 +669,9 @@ public class MainActivity extends AppCompatActivity{
                 holder.tvItemGridView.setTextColor(Color.rgb(0,0,255));
             }
 
+            Log.e("asd",String.valueOf(getItem(position)));
+            Log.e("aqqq",String.valueOf(mCal.getActualMaximum(Calendar.DAY_OF_MONTH)));
+
             SimpleDateFormat sdf_d = new SimpleDateFormat("d");
             SimpleDateFormat sdf_m = new SimpleDateFormat("M");
             String sToday_d = sdf_d.format(date_selected);
@@ -708,7 +685,7 @@ public class MainActivity extends AppCompatActivity{
             File file = new File(getFilesDir(),"schedule.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
 
-            if(position>7 && position<41) {
+            if(position>6 && position<(mCal.getActualMaximum(Calendar.DAY_OF_MONTH))) {
                 String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", (position - dayNum2 - 5));
 
                 if (sqliteDB != null) {
