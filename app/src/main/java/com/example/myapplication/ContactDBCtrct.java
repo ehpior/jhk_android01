@@ -10,8 +10,8 @@ public class ContactDBCtrct {
 
     public static final String SQL_CREATE_TBL = "CREATE TABLE IF NOT EXISTS " +TBL_SCHEDULE+ " "+
             "(" +
-                COL_DATE+       " DATE"             +", "+
-                COL_CONTENT+      " TEXT"             +
+                COL_DATE+       " DATE NOT NULL"             +", "+
+                COL_CONTENT+      " TEXT NOT NULL"             +
             ")";
 
     public static final String SQL_DROP_TBL = "DROP TABLE IF EXISTS " + TBL_SCHEDULE;

@@ -18,8 +18,10 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,13 +42,20 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class MainActivity extends AppCompatActivity{
 
+
+    private GestureDetectorCompat detector;
 
     PieChart pieChart;
     /**
@@ -58,6 +67,7 @@ public class MainActivity extends AppCompatActivity{
      * 연/월 텍스트뷰
      */
     private TextView tvDate;
+    private TextView tvDate2;
     /**
      * 그리드뷰 어댑터
      */
@@ -113,7 +123,9 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
 
+
         tvDate = (TextView)findViewById(R.id.tv_date);
+        tvDate2 = (TextView)findViewById(R.id.tv_date2);
         gridView = (GridView)findViewById(R.id.gridview);
 
         // 오늘에 날짜를 세팅 해준다.
@@ -125,7 +137,9 @@ public class MainActivity extends AppCompatActivity{
         final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
 
         //현재 날짜 텍스트뷰에 뿌려줌
-        tvDate.setText(curYearFormat.format(date) + " / " + String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
+        //tvDate.setText(curYearFormat.format(date) + " / " + String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
+        tvDate.setText(curYearFormat.format(date));
+        tvDate2.setText(String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
 
         //gridview 요일 표시
         dayList = new ArrayList<String>();
@@ -180,7 +194,7 @@ public class MainActivity extends AppCompatActivity{
 
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
-        pieChart.setExtraOffsets(5,10,5,5);
+        pieChart.setExtraOffsets(5,5,5,5);
 
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
@@ -215,17 +229,129 @@ public class MainActivity extends AppCompatActivity{
 
         pieChart.setData(data);
 
+        pieChart.setOnChartGestureListener(new OnChartGestureListener() {
+            @Override
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+            }
+        });
+
+
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                //Object item = (Object)h.;
+                Log.e("qqq",h.toString());
+                Log.e("qqq",e.toString());
+            }
+
+            @Override
+            public void onNothingSelected() {
+                Log.e("qqq","nothing");
+
+            }
+        });
 
 
 
 
 
+
+
+
+
+        detector = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return false;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+
+            }
+
+            @Override
+            public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+                float diffY = event2.getY() - event1.getY();
+                float diffX = event2.getX() - event1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > 100 && Math.abs(velocityX) > 100) {
+                        if (diffX > 0) {
+                            lastMonth();
+                        } else {
+                            nextMonth();
+                        }
+                    }
+                } else {
+                    if (Math.abs(diffY) > 100 && Math.abs(velocityY) > 100) {
+                        if (diffY > 0) {
+                            //onSwipeBottom();
+                        } else {
+                            //onSwipeTop();
+                        }
+                    }
+                }
+                return true;
+            }
+        });
 
 
 
         gridView.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event){
+                detector.onTouchEvent(event);
                 if(event.getAction() == MotionEvent.ACTION_MOVE){
                     return true;
                 }
@@ -281,7 +407,8 @@ public class MainActivity extends AppCompatActivity{
 
                 int year_tmp = mCal.get(Calendar.YEAR);
                 int month_tmp = mCal.get(Calendar.MONTH)+1;
-                tvDate.setText(String.valueOf(year_tmp) + " / " + String.format("%02d",month_tmp));
+                tvDate.setText(String.valueOf(year_tmp));
+                tvDate2.setText(String.format("%02d",month_tmp));
 
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridView.setAdapter(gridAdapter);
@@ -293,7 +420,7 @@ public class MainActivity extends AppCompatActivity{
                 }
                 listAdapter = new ListAdapter(getApplicationContext(), dayList2);
                 listView.setAdapter(listAdapter);
-                listAdapter.notifyDataSetChanged();;
+                listAdapter.notifyDataSetChanged();
             }
         });
         ImageButton bt2 = (ImageButton)findViewById(R.id.button2);
@@ -314,7 +441,8 @@ public class MainActivity extends AppCompatActivity{
 
                 int year_tmp = mCal.get(Calendar.YEAR);
                 int month_tmp = mCal.get(Calendar.MONTH)+1;
-                tvDate.setText(String.valueOf(year_tmp) + " / " + String.format("%02d",month_tmp));
+                tvDate.setText(String.valueOf(year_tmp));
+                tvDate2.setText(String.format("%02d",month_tmp));
 
                 gridAdapter = new GridAdapter(getApplicationContext(), dayList);
                 gridView.setAdapter(gridAdapter);
@@ -326,7 +454,7 @@ public class MainActivity extends AppCompatActivity{
                 }
                 listAdapter = new ListAdapter(getApplicationContext(), dayList2);
                 listView.setAdapter(listAdapter);
-                listAdapter.notifyDataSetChanged();;
+                listAdapter.notifyDataSetChanged();
             }
         });
 
@@ -335,6 +463,7 @@ public class MainActivity extends AppCompatActivity{
          * 탭 변환
          */
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout) ;
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -353,6 +482,68 @@ public class MainActivity extends AppCompatActivity{
             }
         }) ;
 
+    }
+
+    private void lastMonth(){
+        dayList = new ArrayList<String>();
+        dayList.addAll(Arrays.asList(days));
+
+        mCal.add(mCal.MONTH,-1);
+        int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
+        for (int i = 1; i < dayNum2; i++) {
+            dayList.add("");
+        }
+
+        setCalendarDate(mCal.get(Calendar.MONTH)+1);
+
+
+        int year_tmp = mCal.get(Calendar.YEAR);
+        int month_tmp = mCal.get(Calendar.MONTH)+1;
+        tvDate.setText(String.valueOf(year_tmp));
+        tvDate2.setText(String.format("%02d",month_tmp));
+
+        gridAdapter = new GridAdapter(getApplicationContext(), dayList);
+        gridView.setAdapter(gridAdapter);
+        gridAdapter.notifyDataSetChanged();
+
+        dayList2 = new ArrayList<String>();
+        for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+            dayList2.add("" + (i + 1));
+        }
+        listAdapter = new ListAdapter(getApplicationContext(), dayList2);
+        listView.setAdapter(listAdapter);
+        listAdapter.notifyDataSetChanged();
+    }
+
+    private void nextMonth(){
+        dayList = new ArrayList<String>();
+        dayList.addAll(Arrays.asList(days));
+
+        mCal.add(mCal.MONTH,+1);
+        int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
+        for (int i = 1; i < dayNum2; i++) {
+            dayList.add("");
+        }
+
+        setCalendarDate(mCal.get(Calendar.MONTH)+1);
+
+
+        int year_tmp = mCal.get(Calendar.YEAR);
+        int month_tmp = mCal.get(Calendar.MONTH)+1;
+        tvDate.setText(String.valueOf(year_tmp));
+        tvDate2.setText(String.format("%02d",month_tmp));
+
+        gridAdapter = new GridAdapter(getApplicationContext(), dayList);
+        gridView.setAdapter(gridAdapter);
+        gridAdapter.notifyDataSetChanged();
+
+        dayList2 = new ArrayList<String>();
+        for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+            dayList2.add("" + (i + 1));
+        }
+        listAdapter = new ListAdapter(getApplicationContext(), dayList2);
+        listView.setAdapter(listAdapter);
+        listAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -479,15 +670,16 @@ public class MainActivity extends AppCompatActivity{
 
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             if(position<7){
-                layoutParams.height = gridviewH / 13;
+                layoutParams.height = gridviewH / 15;
                 holder.tvItemGridView2.setVisibility(View.GONE);
                 holder.tvItemGridView3.setVisibility(View.GONE);
                 holder.tvItemGridView4.setVisibility(View.GONE);
+                holder.tvItemGridView.setPadding(0,0,0,0);
             }
             else{
                 layoutParams.height = gridviewH * 2 / 13;
-                holder.tvItemGridView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                holder.tvItemGridView.setPadding(15,0,0,0);
+                //holder.tvItemGridView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                //holder.tvItemGridView.setPadding(15,0,0,0);
                 holder.tvItemGridView2.setVisibility(View.INVISIBLE);
                 holder.tvItemGridView3.setVisibility(View.INVISIBLE);
                 holder.tvItemGridView4.setVisibility(View.INVISIBLE);
@@ -610,7 +802,6 @@ public class MainActivity extends AppCompatActivity{
 
             if(sqliteDB != null){
                 String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(holder.tvitemListView.getText().toString()));
-                Log.e("asd",holder.tvitemListView.getText().toString());
                 SQLiteDatabase db = dbHelper2.getReadableDatabase();
                 Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('"+thisday+"')",null);
                 if(cursor.moveToNext()) {

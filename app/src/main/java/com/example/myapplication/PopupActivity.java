@@ -179,7 +179,7 @@ public class PopupActivity extends Activity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        //db.execSQL(ContactDBCtrct.SQL_DELETE);
+        //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
         EditText editTextName = (EditText) findViewById(R.id.editText2) ;
         String content = editTextName.getText().toString() ;
