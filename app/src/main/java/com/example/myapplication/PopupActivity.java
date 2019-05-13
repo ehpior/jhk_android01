@@ -10,17 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.app.Activity;
 import android.os.Bundle;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,7 +46,7 @@ public class PopupActivity extends Activity {
         qwe =  (ScrollView)findViewById(R.id.scrollView);
 
         //UI 객체생성
-        txtText = (EditText)findViewById(R.id.popup_et);
+        txtText = (EditText)findViewById(R.id.schedule_et_title);
 
         //데이터 가져오기
         Intent intent = getIntent();
@@ -78,7 +74,7 @@ public class PopupActivity extends Activity {
             }
         });
 
-        Button buttonclose = (Button)findViewById(R.id.close);
+        Button buttonclose = (Button)findViewById(R.id.buttonclose);
         buttonclose.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -91,7 +87,7 @@ public class PopupActivity extends Activity {
     public void mOnClose(){
         //데이터 전달하기
         Intent intent = new Intent();
-        EditText et1 = (EditText)findViewById(R.id.popup_et);
+        EditText et1 = (EditText)findViewById(R.id.schedule_et_title);
         intent.putExtra("result", et1.getText().toString());
         setResult(RESULT_OK, intent);
 
@@ -181,7 +177,7 @@ public class PopupActivity extends Activity {
 
         //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
-        EditText editTextName = (EditText) findViewById(R.id.editText2) ;
+        EditText editTextName = (EditText) findViewById(R.id.schedule_et_memo) ;
         String content = editTextName.getText().toString() ;
 
         String sqlInsert = "INSERT INTO SCHEDULE " +

@@ -16,17 +16,20 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,10 +98,25 @@ public class MainActivity extends AppCompatActivity{
 
     private Date date_selected = new Date();
 
-    public void mOnPopup(View v, int thisday){
+    public void mOnPopup(View v, int thisday, int month_chk){
         String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
-        Intent intent = new Intent(this,PopupActivity.class);
-        //intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
+        if(month_chk==0){
+            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+        }
+        else if(month_chk==-1) {
+            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", thisday);
+            if(mCal.get(Calendar.MONTH) < 1){
+                thisdate = String.valueOf(mCal.get(Calendar.YEAR)-1) + "-12-" + String.format("%02d", thisday);
+            }
+        }
+        else if(month_chk== 1) {
+            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", thisday);
+            if(mCal.get(Calendar.MONTH)+2 > 12){
+                thisdate = String.valueOf(mCal.get(Calendar.YEAR)+1) + "-01-" + String.format("%02d", thisday);
+            }
+        }
+        //Intent intent = new Intent(this,PopupActivity.class);
+        Intent intent = new Intent(this,MakeSchedule.class);
         intent.putExtra("date",thisdate);
         startActivityForResult(intent,1);
     }
@@ -123,7 +141,6 @@ public class MainActivity extends AppCompatActivity{
 
 
         setContentView(R.layout.activity_main);
-
 
 
         tvDate = (TextView)findViewById(R.id.tv_date);
@@ -362,11 +379,22 @@ public class MainActivity extends AppCompatActivity{
         });
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
+            int month_chk = 0;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
-                mOnPopup(view, position-dayNum2-5);
+                if(position<7){
+                    return;
+                }
+                else if((7<=position)&&(position<=13)&&(Integer.parseInt(gridAdapter.getItem(position))>7)){
+                    month_chk = -1;
+                }
+                else if((position>=35)&&(Integer.parseInt(gridAdapter.getItem(position))<20)){
+                    month_chk = 1;
+                }
+                else{
+                    month_chk = 0;
+                }
+                mOnPopup(view, Integer.parseInt(gridAdapter.getItem(position)),month_chk);
 
             }
         });
@@ -549,7 +577,6 @@ public class MainActivity extends AppCompatActivity{
         dayList_next = new ArrayList<String>();
         mCal.add(mCal.MONTH,-1);
         int k = mCal.get(Calendar.DAY_OF_WEEK)-1;
-        Log.e("asd",String.valueOf(k));
         if((28-(k-1)+7)<=mCal.getActualMaximum(Calendar.DAY_OF_MONTH)){
             for(int i=36-k; i<=mCal.getActualMaximum(Calendar.DAY_OF_MONTH);i++){
                 //dayList_last.add(""+i);
@@ -591,6 +618,7 @@ public class MainActivity extends AppCompatActivity{
         private final List<String> list;
 
         private final LayoutInflater inflater;
+        private String thisday;
 
         /**
          * 생성자
@@ -669,15 +697,23 @@ public class MainActivity extends AppCompatActivity{
                 holder.tvItemGridView.setTextColor(Color.rgb(0,0,255));
             }
 
-            Log.e("asd",String.valueOf(getItem(position)));
-            Log.e("aqqq",String.valueOf(mCal.getActualMaximum(Calendar.DAY_OF_MONTH)));
+            int month_chk = 0; //-1은 지난달, 0은 이번달, 1은 다음달
+            if((7<=position)&&(position<=13)&&(Integer.parseInt(getItem(position))>7)){
+                holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
+                month_chk = -1;
+            }
+            else if((position>=35)&&(Integer.parseInt(getItem(position))<20)){
+                holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
+                month_chk = 1;
+            }
+
 
             SimpleDateFormat sdf_d = new SimpleDateFormat("d");
             SimpleDateFormat sdf_m = new SimpleDateFormat("M");
             String sToday_d = sdf_d.format(date_selected);
             String sToday_m = sdf_m.format(date_selected);
             if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH)+1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
-                holder.tvItemGridView.setTextColor(Color.parseColor("#00AAAA"));
+                holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
             }
 
 
@@ -685,8 +721,23 @@ public class MainActivity extends AppCompatActivity{
             File file = new File(getFilesDir(),"schedule.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
 
-            if(position>6 && position<(mCal.getActualMaximum(Calendar.DAY_OF_MONTH))) {
-                String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", (position - dayNum2 - 5));
+            if(position>6) {
+                //String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", (position - dayNum2 - 5));
+                if(month_chk==0){
+                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                }
+                else if(month_chk==-1) {
+                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                    if(mCal.get(Calendar.MONTH) < 1){
+                        thisday = String.valueOf(mCal.get(Calendar.YEAR)-1) + "-12-" + String.format("%02d", Integer.parseInt(getItem(position)));
+                    }
+                }
+                else if(month_chk== 1) {
+                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                    if(mCal.get(Calendar.MONTH)+2 > 12){
+                        thisday = String.valueOf(mCal.get(Calendar.YEAR)+1) + "-01-" + String.format("%02d", Integer.parseInt(getItem(position)));
+                    }
+                }
 
                 if (sqliteDB != null) {
                     SQLiteDatabase db = dbHelper.getReadableDatabase();

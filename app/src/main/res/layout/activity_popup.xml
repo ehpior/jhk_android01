@@ -29,7 +29,7 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/popup_et"
+            android:id="@+id/schedule_et_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -50,7 +50,7 @@
         </ScrollView>
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/schedule_et_memo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -82,7 +82,7 @@
             android:text="Clear" />
 
         <Button
-            android:id="@+id/close"
+            android:id="@+id/buttonclose"
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:background="#00000000"
