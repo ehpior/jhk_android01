@@ -838,6 +838,7 @@ public class MainActivity extends AppCompatActivity{
                 holder = (ViewHolder2)convertView.getTag();
             }
 
+
             holder.tvitemListView.setText(""+getItem(position));
             switch(Integer.parseInt(getItem(position))%7){
                 case 0:
