@@ -39,6 +39,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -701,10 +702,22 @@ public class MainActivity extends AppCompatActivity{
             if((7<=position)&&(position<=13)&&(Integer.parseInt(getItem(position))>7)){
                 holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
                 month_chk = -1;
+                if((position % 7) == 0){
+                    holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
+                }
+                else if((position % 7) == 6){
+                    holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
+                }
             }
             else if((position>=35)&&(Integer.parseInt(getItem(position))<20)){
                 holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
                 month_chk = 1;
+                if((position % 7) == 0){
+                    holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
+                }
+                else if((position % 7) == 6){
+                    holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
+                }
             }
 
 
@@ -816,7 +829,9 @@ public class MainActivity extends AppCompatActivity{
 
                 holder = new ViewHolder2();
                 holder.tvitemListView = (TextView)convertView.findViewById(R.id.diary_date);
-                holder.tvitemListView2 = (TextView)convertView.findViewById(R.id.diary_title);
+                holder.tvitemListView2 = (TextView)convertView.findViewById(R.id.diary_datechk);
+                holder.tvitem_diary_title = (TextView)convertView.findViewById(R.id.diary_title);
+                holder.tvitem_diary_summary = (TextView)convertView.findViewById(R.id.diary_summary);
 
                 convertView.setTag(holder);
             }else{
@@ -824,6 +839,29 @@ public class MainActivity extends AppCompatActivity{
             }
 
             holder.tvitemListView.setText(""+getItem(position));
+            switch(Integer.parseInt(getItem(position))%7){
+                case 0:
+                    holder.tvitemListView2.setText("월");
+                    break;
+                case 1:
+                    holder.tvitemListView2.setText("화");
+                    break;
+                case 2:
+                    holder.tvitemListView2.setText("수");
+                    break;
+                case 3:
+                    holder.tvitemListView2.setText("목");
+                    break;
+                case 4:
+                    holder.tvitemListView2.setText("금");
+                    break;
+                case 5:
+                    holder.tvitemListView2.setText("토");
+                    break;
+                case 6:
+                    holder.tvitemListView2.setText("일");
+                    break;
+            }
 
             File file = new File(getFilesDir(),"schedule.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
@@ -833,11 +871,11 @@ public class MainActivity extends AppCompatActivity{
                 SQLiteDatabase db = dbHelper2.getReadableDatabase();
                 Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('"+thisday+"')",null);
                 if(cursor.moveToNext()) {
-                    holder.tvitemListView2.setText(cursor.getString(1));
+                    holder.tvitem_diary_title.setText(cursor.getString(1));
                 }
                 else{
-                    holder.tvitemListView2.setText("");
-                    holder.tvitemListView2.setHint("New Diary");
+                    holder.tvitem_diary_title.setText("");
+                    holder.tvitem_diary_title.setHint("New Diary");
                 }
                 cursor.close();
             }
@@ -851,6 +889,9 @@ public class MainActivity extends AppCompatActivity{
     private class ViewHolder2 {
         TextView tvitemListView;
         TextView tvitemListView2;
+        ImageView imageView_diary;
+        TextView tvitem_diary_title;
+        TextView tvitem_diary_summary;
     }
 
 }
