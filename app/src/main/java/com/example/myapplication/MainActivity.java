@@ -123,7 +123,8 @@ public class MainActivity extends AppCompatActivity{
     }
     public void mOnPopup2(View v, int thisday){
         String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
-        Intent intent = new Intent(this,PopupActivity2.class);
+        //Intent intent = new Intent(this,PopupActivity2.class);
+        Intent intent = new Intent(this,MakeDiary.class);
         //intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
         intent.putExtra("date",thisdate);
         startActivityForResult(intent,2);
@@ -840,29 +841,34 @@ public class MainActivity extends AppCompatActivity{
 
 
             holder.tvitemListView.setText(""+getItem(position));
-            switch(Integer.parseInt(getItem(position))%7){
+            switch((Integer.parseInt(getItem(position))+mCal.get(Calendar.DAY_OF_WEEK))%7){
                 case 0:
-                    holder.tvitemListView2.setText("월");
-                    break;
-                case 1:
-                    holder.tvitemListView2.setText("화");
-                    break;
-                case 2:
-                    holder.tvitemListView2.setText("수");
-                    break;
-                case 3:
-                    holder.tvitemListView2.setText("목");
-                    break;
-                case 4:
                     holder.tvitemListView2.setText("금");
                     break;
-                case 5:
+                case 1:
                     holder.tvitemListView2.setText("토");
                     break;
-                case 6:
+                case 2:
                     holder.tvitemListView2.setText("일");
                     break;
+                case 3:
+                    holder.tvitemListView2.setText("월");
+                    break;
+                case 4:
+                    holder.tvitemListView2.setText("화");
+                    break;
+                case 5:
+                    holder.tvitemListView2.setText("수");
+                    break;
+                case 6:
+                    holder.tvitemListView2.setText("목");
+                    break;
             }
+
+            /*if(position==1){
+                ImageView kkk = (ImageView)findViewById(R.id.diary_image);
+                kkk.setImageResource(R.drawable.beach);
+            }*/
 
             File file = new File(getFilesDir(),"schedule.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
@@ -873,10 +879,13 @@ public class MainActivity extends AppCompatActivity{
                 Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('"+thisday+"')",null);
                 if(cursor.moveToNext()) {
                     holder.tvitem_diary_title.setText(cursor.getString(1));
+                    holder.tvitem_diary_summary.setText(cursor.getString(3));
                 }
                 else{
                     holder.tvitem_diary_title.setText("");
                     holder.tvitem_diary_title.setHint("New Diary");
+                    holder.tvitem_diary_summary.setText("");
+                    holder.tvitem_diary_summary.setHint("New Summary");
                 }
                 cursor.close();
             }
