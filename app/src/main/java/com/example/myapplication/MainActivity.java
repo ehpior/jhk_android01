@@ -902,6 +902,8 @@ public class MainActivity extends AppCompatActivity{
                 if(cursor.moveToNext()) {
                     holder.tvitem_diary_title.setText(cursor.getString(1));
                     holder.tvitem_diary_summary.setText(cursor.getString(3));
+                    holder.imageView_diary.setPadding(0,0,0,0);
+                    holder.imageView_diary.setBackground(null);
                     holder.imageView_diary.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
                 }
                 else{
@@ -909,7 +911,9 @@ public class MainActivity extends AppCompatActivity{
                     holder.tvitem_diary_title.setHint("New Diary");
                     holder.tvitem_diary_summary.setText("");
                     holder.tvitem_diary_summary.setHint("New Summary");
-                    holder.imageView_diary.setImageResource(R.color.black);
+                    holder.imageView_diary.setPadding(33,50,33,50);
+                    holder.imageView_diary.setBackgroundResource(R.drawable.black_jump);
+                    holder.imageView_diary.setImageResource(R.drawable.plus);
                 }
                 cursor.close();
             }

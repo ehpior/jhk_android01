@@ -28,6 +28,8 @@ public class MakeDiary extends Activity {
     EditText content;
     EditText summary;
     ImageView tmp_image;
+    ImageView tmp_image2;
+    ImageView tmp_image3;
 
     Bitmap tmp_bitmap;
 
@@ -51,12 +53,31 @@ public class MakeDiary extends Activity {
         content = (EditText)findViewById(R.id.diary_et_content);
         summary = (EditText)findViewById(R.id.diary_et_summary);
         tmp_image = (ImageView)findViewById(R.id.diary_tmp_image);
+        tmp_image2 = (ImageView)findViewById(R.id.diary_tmp_image2);
+        tmp_image3 = (ImageView)findViewById(R.id.diary_tmp_image3);
+
+
 
         sqliteDB = init_database();
         init_tables();
         load_values();
 
 
+        tmp_image2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent,9);
+            }
+        });
+        tmp_image3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delete_values();
+            }
+        });
 
         Button asd = (Button)findViewById(R.id.loadload);
         asd.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +98,7 @@ public class MakeDiary extends Activity {
             }
         });
 
-        Button buttonClear = (Button)findViewById(R.id.clearclear);
+        /*Button buttonClear = (Button)findViewById(R.id.clearclear);
         buttonClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +112,7 @@ public class MakeDiary extends Activity {
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
 
     }
 
@@ -196,6 +217,8 @@ public class MakeDiary extends Activity {
                     tmp_bitmap = img;
                     in.close();
                     // 이미지 표시
+                    tmp_image.setPadding(0,0,0,0);
+                    tmp_image.setBackgroundResource(R.drawable.black);
                     tmp_image.setImageBitmap(img);
                 } catch (Exception e) {
                     e.printStackTrace();
