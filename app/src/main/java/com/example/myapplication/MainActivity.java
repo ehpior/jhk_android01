@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -136,13 +139,20 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        File file = new File(getFilesDir(),"schedule.db");
+        /*File file = new File(getFilesDir(),"schedule.db");
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(file,null);
+        db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
+        db.execSQL(ContactDBCtrct.SQL_CREATE_TBL);
+
+        file = new File(getFilesDir(),"diary.db");
+        db = SQLiteDatabase.openOrCreateDatabase(file,null);
         db.execSQL(DiaryDBCtrct.SQL_DROP_TBL);
-        db.execSQL(DiaryDBCtrct.SQL_CREATE_TBL);
+        db.execSQL(DiaryDBCtrct.SQL_CREATE_TBL);*/
+
 
 
         setContentView(R.layout.activity_main);
+
 
 
         tvDate = (TextView)findViewById(R.id.tv_date);
@@ -369,6 +379,12 @@ public class MainActivity extends AppCompatActivity{
 
 
 
+
+
+
+
+
+
         gridView.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event){
@@ -565,6 +581,9 @@ public class MainActivity extends AppCompatActivity{
         }
         else if(requestCode==2){
             if(resultCode==RESULT_OK){
+                //Bitmap b = BitmapFactory.decodeByteArray(data.getByteArrayExtra("bm"),0,data.getByteArrayExtra("bm").length);
+                //ImageView zzz = (ImageView)findViewById(R.id.imageView6);
+                //zzz.setImageBitmap(b);
                 listAdapter.notifyDataSetChanged();;
             }
         }
@@ -735,6 +754,7 @@ public class MainActivity extends AppCompatActivity{
             File file = new File(getFilesDir(),"schedule.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
 
+
             if(position>6) {
                 //String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", (position - dayNum2 - 5));
                 if(month_chk==0){
@@ -833,6 +853,7 @@ public class MainActivity extends AppCompatActivity{
                 holder.tvitemListView2 = (TextView)convertView.findViewById(R.id.diary_datechk);
                 holder.tvitem_diary_title = (TextView)convertView.findViewById(R.id.diary_title);
                 holder.tvitem_diary_summary = (TextView)convertView.findViewById(R.id.diary_summary);
+                holder.imageView_diary = (ImageView)convertView.findViewById(R.id.diary_image);
 
                 convertView.setTag(holder);
             }else{
@@ -870,8 +891,9 @@ public class MainActivity extends AppCompatActivity{
                 kkk.setImageResource(R.drawable.beach);
             }*/
 
-            File file = new File(getFilesDir(),"schedule.db");
+            File file = new File(getFilesDir(),"diary.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
+
 
             if(sqliteDB != null){
                 String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(holder.tvitemListView.getText().toString()));
@@ -880,12 +902,14 @@ public class MainActivity extends AppCompatActivity{
                 if(cursor.moveToNext()) {
                     holder.tvitem_diary_title.setText(cursor.getString(1));
                     holder.tvitem_diary_summary.setText(cursor.getString(3));
+                    holder.imageView_diary.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
                 }
                 else{
                     holder.tvitem_diary_title.setText("");
                     holder.tvitem_diary_title.setHint("New Diary");
                     holder.tvitem_diary_summary.setText("");
                     holder.tvitem_diary_summary.setHint("New Summary");
+                    holder.imageView_diary.setImageResource(R.color.black);
                 }
                 cursor.close();
             }
@@ -902,6 +926,12 @@ public class MainActivity extends AppCompatActivity{
         ImageView imageView_diary;
         TextView tvitem_diary_title;
         TextView tvitem_diary_summary;
+    }
+    public Bitmap byteArrayToBitmap(byte[] byteArray){
+        Bitmap bitmap = null;
+        bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        byteArray = null;
+        return bitmap;
     }
 
 }

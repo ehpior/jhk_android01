@@ -9,13 +9,15 @@ public class DiaryDBCtrct {
     public static final String COL_TITLE = "TITLE";
     public static final String COL_CONTENT = "CONTENT";
     public static final String COL_SUMMARY = "SUMMARY";
+    public static final String COL_IMAGE = "IMAGE";
 
     public static final String SQL_CREATE_TBL = "CREATE TABLE IF NOT EXISTS " +TBL_SCHEDULE+ " "+
             "(" +
             COL_DATE+       " DATE"             +", "+
             COL_TITLE+      " TEXT"             +", "+
             COL_CONTENT+    " TEXT"             +", "+
-            COL_SUMMARY+    " TEXT"             +
+            COL_SUMMARY+    " TEXT"             +", "+
+            COL_IMAGE+      " BLOB"             +
             ")";
 
     public static final String SQL_DROP_TBL = "DROP TABLE IF EXISTS " + TBL_SCHEDULE;

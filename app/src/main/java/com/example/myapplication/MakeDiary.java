@@ -1,18 +1,25 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 
 public class MakeDiary extends Activity {
 
@@ -20,6 +27,9 @@ public class MakeDiary extends Activity {
     EditText title;
     EditText content;
     EditText summary;
+    ImageView tmp_image;
+
+    Bitmap tmp_bitmap;
 
     SQLiteDatabase sqliteDB;
 
@@ -40,10 +50,24 @@ public class MakeDiary extends Activity {
         title = (EditText)findViewById(R.id.diary_et_title);
         content = (EditText)findViewById(R.id.diary_et_content);
         summary = (EditText)findViewById(R.id.diary_et_summary);
+        tmp_image = (ImageView)findViewById(R.id.diary_tmp_image);
 
         sqliteDB = init_database();
         init_tables();
         load_values();
+
+
+
+        Button asd = (Button)findViewById(R.id.loadload);
+        asd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent,9);
+            }
+        });
 
         Button buttonSave = (Button)findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +98,9 @@ public class MakeDiary extends Activity {
     public void mOnClose(){
         //데이터 전달하기
         Intent intent = new Intent();
+        //ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        //tmp_bitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
+        //intent.putExtra("bm",bs.toByteArray());
         setResult(RESULT_OK, intent);
 
         //액티비티(팝업) 닫기
@@ -110,6 +137,9 @@ public class MakeDiary extends Activity {
 
                 summary.setText(cursor.getString(3));
 
+                tmp_image.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
+                tmp_bitmap = byteArrayToBitmap(cursor.getBlob(4));
+
             }
             cursor.close();
         }
@@ -122,14 +152,23 @@ public class MakeDiary extends Activity {
 
         //db.execSQL(ContactDBCtrct.SQL_DELETE);
 
-        String sqlInsert = "INSERT INTO DIARY " +
+        /*String sqlInsert = "INSERT INTO DIARY " +
                 "(DATE, TITLE, CONTENT, SUMMARY) VALUES (" +
                 "'" + thisdate + "'," +
                 "'" + title.getText()+ "',"+
                 "'" + content.getText()+ "',"+
                 "'" + summary.getText() + "')" ;
 
-        db.execSQL(sqlInsert);
+        db.execSQL(sqlInsert);*/
+        ContentValues value = new ContentValues();
+        value.put("DATE", thisdate);
+        value.put("TITLE", String.valueOf(title.getText()));
+        value.put("CONTENT", String.valueOf(content.getText()));
+        value.put("SUMMARY", String.valueOf(summary.getText()));
+        value.put("IMAGE", bitmapToByteArray(tmp_bitmap));
+
+        db.insert("DIARY",null,value);
+
         mOnClose();
     }
 
@@ -138,12 +177,46 @@ public class MakeDiary extends Activity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.execSQL("DELETE FROM DIARY WHERE DATE = Date('" + thisdate + "')");
-        //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
+        //db.execSQL(DiaryDBCtrct.SQL_DROP_TBL);
 
         mOnClose();
 
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode==9){
+            if(resultCode==RESULT_OK){
+                try {
+                    // 선택한 이미지에서 비트맵 생성
+                    Log.e("asd",String.valueOf(data.getData()));
+                    InputStream in = getContentResolver().openInputStream(data.getData());
+                    Bitmap img = BitmapFactory.decodeStream(in);
+                    tmp_bitmap = img;
+                    in.close();
+                    // 이미지 표시
+                    tmp_image.setImageBitmap(img);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public byte[] bitmapToByteArray(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
+
+    public Bitmap byteArrayToBitmap(byte[] byteArray){
+        Bitmap bitmap = null;
+        bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        byteArray = null;
+        return bitmap;
+    }
 
 
 }
