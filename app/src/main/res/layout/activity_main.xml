@@ -17,21 +17,18 @@
         <ImageButton
             android:id="@+id/button"
             android:layout_width="0dp"
-            android:layout_height="40sp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/left"
-            android:layout_marginLeft="30sp"
-            android:layout_marginTop="1sp"
-            android:padding="5sp"
+            android:background="@color/titlebg"
             android:scaleType="fitXY"
-            android:background="#00ffffff"
-            android:visibility="invisible"
+            android:src="@drawable/arrow_left"
+            android:padding="12dp"
             />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="5"
             android:layout_gravity="center"
             android:orientation="horizontal">
 
@@ -41,46 +38,35 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:textAlignment="center"
-                android:textColor="#000000"
                 android:paddingTop="10dp"
                 android:paddingRight="5dp"
+                android:gravity="center_vertical|right"
+                android:textColor="#000000"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_date2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:textAlignment="center"
+                android:gravity="center_vertical|left"
                 android:textColor="#000000"
                 android:textSize="24sp" />
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="gone"
-                app:srcCompat="@drawable/beach" />
 
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/button2"
             android:layout_width="0dp"
-            android:layout_height="40sp"
-            android:layout_gravity="center_vertical"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="5sp"
-            android:layout_marginTop="1sp"
-            android:src="@drawable/right"
-            android:layout_marginRight="30sp"
+            android:background="@color/titlebg"
+            android:src="@drawable/arrow_right"
+            android:padding="12dp"
             android:scaleType="fitXY"
-            android:background="#00ffffff"
-            android:visibility="invisible"
             />
+
     </LinearLayout>
 
 
@@ -88,7 +74,7 @@
         android:id="@+id/contents"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10">
+        android:layout_weight="12">
 
 
         <GridView

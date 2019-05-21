@@ -59,10 +59,20 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import static java.lang.Math.abs;
+
 public class MainActivity extends AppCompatActivity{
 
 
-    private GestureDetectorCompat detector;
+    //private GestureDetectorCompat detector;
+
+    SimpleDateFormat sdf_d = new SimpleDateFormat("d");
+    SimpleDateFormat sdf_m = new SimpleDateFormat("M");
+
+    private Date date_selected = new Date();
+
+    String sToday_d = sdf_d.format(date_selected);
+    String sToday_m = sdf_m.format(date_selected);
 
     PieChart pieChart;
     /**
@@ -100,7 +110,6 @@ public class MainActivity extends AppCompatActivity{
      */
     private Calendar mCal;
 
-    private Date date_selected = new Date();
 
     public void mOnPopup(View v, int thisday, int month_chk){
         String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
@@ -326,7 +335,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        detector = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
+        /*detector = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
                 return false;
@@ -356,8 +365,8 @@ public class MainActivity extends AppCompatActivity{
             public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
                 float diffY = event2.getY() - event1.getY();
                 float diffX = event2.getX() - event1.getX();
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > 100 && Math.abs(velocityX) > 100) {
+                if (abs(diffX) > abs(diffY)) {
+                    if (abs(diffX) > 100 && abs(velocityX) > 100) {
                         if (diffX > 0) {
                             lastMonth();
                         } else {
@@ -365,7 +374,7 @@ public class MainActivity extends AppCompatActivity{
                         }
                     }
                 } else {
-                    if (Math.abs(diffY) > 100 && Math.abs(velocityY) > 100) {
+                    if (abs(diffY) > 100 && abs(velocityY) > 100) {
                         if (diffY > 0) {
                             //onSwipeBottom();
                         } else {
@@ -375,7 +384,7 @@ public class MainActivity extends AppCompatActivity{
                 }
                 return true;
             }
-        });
+        });*/
 
 
 
@@ -388,7 +397,7 @@ public class MainActivity extends AppCompatActivity{
         gridView.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event){
-                detector.onTouchEvent(event);
+                //detector.onTouchEvent(event);
                 if(event.getAction() == MotionEvent.ACTION_MOVE){
                     return true;
                 }
@@ -675,15 +684,21 @@ public class MainActivity extends AppCompatActivity{
             int gridviewH = gridView.getHeight();
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_calendar_gridview, parent, false);
 
                 holder = new ViewHolder();
 
-                holder.tvItemGridView = (TextView) convertView.findViewById(R.id.tv_item_gridview);
-                holder.tvItemGridView2 = (TextView) convertView.findViewById(R.id.tv_item2_gridview);
-                holder.tvItemGridView3 = (TextView) convertView.findViewById(R.id.tv_item3_gridview);
-                holder.tvItemGridView4 = (TextView) convertView.findViewById(R.id.tv_item4_gridview);
+                if(position<7){
+                    convertView = inflater.inflate(R.layout.item_calendar_gridview_first, parent, false);
+                }
+                else{
+                    convertView = inflater.inflate(R.layout.item_calendar_gridview, parent, false);
+                    holder.tvItemGridView2 = (TextView) convertView.findViewById(R.id.tv_item2_gridview);
+                    holder.tvItemGridView3 = (TextView) convertView.findViewById(R.id.tv_item3_gridview);
+                    holder.tvItemGridView4 = (TextView) convertView.findViewById(R.id.tv_item4_gridview);
+                    holder.tvItemWeather = (ImageView) convertView.findViewById(R.id.weather);
+                }
 
+                holder.tvItemGridView = (TextView) convertView.findViewById(R.id.tv_item_gridview);
 
                 convertView.setTag(holder);
             } else{
@@ -693,14 +708,15 @@ public class MainActivity extends AppCompatActivity{
 
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             if(position<7){
-                layoutParams.height = gridviewH / 15;
-                holder.tvItemGridView2.setVisibility(View.GONE);
+                //layoutParams.height = gridviewH / 15;
+                layoutParams.height = gridviewH / 20;
+                /*holder.tvItemGridView2.setVisibility(View.GONE);
                 holder.tvItemGridView3.setVisibility(View.GONE);
-                holder.tvItemGridView4.setVisibility(View.GONE);
-                holder.tvItemGridView.setPadding(0,0,0,0);
+                holder.tvItemGridView4.setVisibility(View.GONE);*/
             }
             else{
-                layoutParams.height = gridviewH * 2 / 13;
+                //layoutParams.height = gridviewH * 2 / 13;
+                layoutParams.height = gridviewH * 3 / 19;
                 //holder.tvItemGridView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                 //holder.tvItemGridView.setPadding(15,0,0,0);
                 holder.tvItemGridView2.setVisibility(View.INVISIBLE);
@@ -708,7 +724,6 @@ public class MainActivity extends AppCompatActivity{
                 holder.tvItemGridView4.setVisibility(View.INVISIBLE);
             }
 
-            int dayNum2 = mCal.get(Calendar.DAY_OF_WEEK);
             holder.tvItemGridView.setText("" + getItem(position));
 
             if((position % 7) == 0){
@@ -718,81 +733,82 @@ public class MainActivity extends AppCompatActivity{
                 holder.tvItemGridView.setTextColor(Color.rgb(0,0,255));
             }
 
-            int month_chk = 0; //-1은 지난달, 0은 이번달, 1은 다음달
-            if((7<=position)&&(position<=13)&&(Integer.parseInt(getItem(position))>7)){
-                holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
-                month_chk = -1;
-                if((position % 7) == 0){
-                    holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
-                }
-                else if((position % 7) == 6){
-                    holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
-                }
-            }
-            else if((position>=35)&&(Integer.parseInt(getItem(position))<20)){
-                holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
-                month_chk = 1;
-                if((position % 7) == 0){
-                    holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
-                }
-                else if((position % 7) == 6){
-                    holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
-                }
-            }
-
-
-            SimpleDateFormat sdf_d = new SimpleDateFormat("d");
-            SimpleDateFormat sdf_m = new SimpleDateFormat("M");
-            String sToday_d = sdf_d.format(date_selected);
-            String sToday_m = sdf_m.format(date_selected);
-            if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH)+1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
-                holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
-            }
-
-
-
-            File file = new File(getFilesDir(),"schedule.db");
-            SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
-
-
             if(position>6) {
-                //String thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", (position - dayNum2 - 5));
-                if(month_chk==0){
-                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                }
-                else if(month_chk==-1) {
-                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                    if(mCal.get(Calendar.MONTH) < 1){
-                        thisday = String.valueOf(mCal.get(Calendar.YEAR)-1) + "-12-" + String.format("%02d", Integer.parseInt(getItem(position)));
+
+                int month_chk = 0; //-1은 지난달, 0은 이번달, 1은 다음달
+                if ((7 <= position) && (position <= 13) && (Integer.parseInt(getItem(position)) > 7)) {//이전 달 설정
+                    holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
+                    month_chk = -1;
+                    if ((position % 7) == 0) {
+                        holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
+                    } else if ((position % 7) == 6) {
+                        holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
                     }
-                }
-                else if(month_chk== 1) {
-                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                    if(mCal.get(Calendar.MONTH)+2 > 12){
-                        thisday = String.valueOf(mCal.get(Calendar.YEAR)+1) + "-01-" + String.format("%02d", Integer.parseInt(getItem(position)));
+                } else if ((position >= 35) && (Integer.parseInt(getItem(position)) < 20)) {//다음 달 설정
+                    holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
+                    month_chk = 1;
+                    if ((position % 7) == 0) {
+                        holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
+                    } else if ((position % 7) == 6) {
+                        holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
                     }
                 }
 
-                if (sqliteDB != null) {
-                    SQLiteDatabase db = dbHelper.getReadableDatabase();
-                    Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisday + "')", null);
 
-                    while (cursor.moveToNext()) { // 레코드가 존재한다면,
-                        String content = cursor.getString(1);
-                        if(holder.tvItemGridView2.getVisibility() == View.INVISIBLE) {
-                            holder.tvItemGridView2.setVisibility(View.VISIBLE);
-                            holder.tvItemGridView2.setText(content);
+                if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
+                    //holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
+                    holder.tvItemGridView.setTextColor(Color.parseColor("#ffffff"));
+                    holder.tvItemGridView.setBackgroundResource(R.drawable.bg_today);
+                }
+
+
+                if (position > 6 && String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) {//날씨 설정
+                    if (abs(Integer.parseInt(sToday_d) - Integer.parseInt(getItem(position))) < 5) {
+                        holder.tvItemWeather.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.tvItemWeather.setVisibility(View.INVISIBLE);
+                    }
+                }
+
+
+                File file = new File(getFilesDir(), "schedule.db");
+                SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file, null);
+
+
+                if (position > 6) {
+                    if (month_chk == 0) {
+                        thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                    } else if (month_chk == -1) {
+                        thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                        if (mCal.get(Calendar.MONTH) < 1) {
+                            thisday = String.valueOf(mCal.get(Calendar.YEAR) - 1) + "-12-" + String.format("%02d", Integer.parseInt(getItem(position)));
                         }
-                        else if(holder.tvItemGridView3.getVisibility() == View.INVISIBLE){
-                            holder.tvItemGridView3.setVisibility(View.VISIBLE);
-                            holder.tvItemGridView3.setText(content);
-                        }
-                        else if(holder.tvItemGridView4.getVisibility() == View.INVISIBLE){
-                            holder.tvItemGridView4.setVisibility(View.VISIBLE);
-                            holder.tvItemGridView4.setText(content);
+                    } else if (month_chk == 1) {
+                        thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                        if (mCal.get(Calendar.MONTH) + 2 > 12) {
+                            thisday = String.valueOf(mCal.get(Calendar.YEAR) + 1) + "-01-" + String.format("%02d", Integer.parseInt(getItem(position)));
                         }
                     }
-                    cursor.close();
+
+                    if (sqliteDB != null) {
+                        SQLiteDatabase db = dbHelper.getReadableDatabase();
+                        Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisday + "')", null);
+
+                        while (cursor.moveToNext()) { // 레코드가 존재한다면,
+                            String content = cursor.getString(1);
+                            if (holder.tvItemGridView2.getVisibility() == View.INVISIBLE) {
+                                holder.tvItemGridView2.setVisibility(View.VISIBLE);
+                                holder.tvItemGridView2.setText(content);
+                            } else if (holder.tvItemGridView3.getVisibility() == View.INVISIBLE) {
+                                holder.tvItemGridView3.setVisibility(View.VISIBLE);
+                                holder.tvItemGridView3.setText(content);
+                            } else if (holder.tvItemGridView4.getVisibility() == View.INVISIBLE) {
+                                holder.tvItemGridView4.setVisibility(View.VISIBLE);
+                                holder.tvItemGridView4.setText(content);
+                            }
+                        }
+                        cursor.close();
+                    }
                 }
             }
 
@@ -810,6 +826,7 @@ public class MainActivity extends AppCompatActivity{
         TextView tvItemGridView2;
         TextView tvItemGridView3;
         TextView tvItemGridView4;
+        ImageView tvItemWeather;
     }
 
     /**
