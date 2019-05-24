@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class MakeDiary extends Activity {
     ImageView tmp_image2;
     ImageView tmp_image3;
 
-    Bitmap tmp_bitmap;
+    Bitmap tmp_bitmap = null;
 
     SQLiteDatabase sqliteDB;
 
@@ -90,7 +91,7 @@ public class MakeDiary extends Activity {
             }
         });
 
-        Button buttonSave = (Button)findViewById(R.id.buttonSave);
+        ImageButton buttonSave = (ImageButton)findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,15 +105,15 @@ public class MakeDiary extends Activity {
             public void onClick(View v) {
                 delete_values();
             }
-        });
+        });*/
 
-        Button buttonClose = (Button)findViewById(R.id.buttonclose);
+        ImageButton buttonClose = (ImageButton)findViewById(R.id.buttonclose);
         buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });*/
+        });
 
     }
 

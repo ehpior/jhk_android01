@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.File;
@@ -35,14 +36,14 @@ public class MakeSchedule extends AppCompatActivity {
         sqliteDB = init_database();
         init_tables();
 
-        Button buttonSave = (Button)findViewById(R.id.buttonSave);
+        ImageButton buttonSave = (ImageButton)findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 save_values() ;
             }
         });
-        Button buttonclose = (Button)findViewById(R.id.buttonclose);
+        ImageButton buttonclose = (ImageButton)findViewById(R.id.buttonclose);
         buttonclose.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v){
