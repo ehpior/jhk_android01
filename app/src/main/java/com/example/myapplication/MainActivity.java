@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -67,6 +68,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -81,17 +83,21 @@ import static java.lang.Math.abs;
 public class MainActivity extends AppCompatActivity{
 
 
-    private static String urlStr = "http://www.kma.go.kr/wid/queryDFS.jsp?gridx=61&gridy=125";
-
-    //private GestureDetectorCompat detector;
+    private GestureDetectorCompat detector;
 
     SimpleDateFormat sdf_d = new SimpleDateFormat("d");
     SimpleDateFormat sdf_m = new SimpleDateFormat("M");
+    SimpleDateFormat sdf_y = new SimpleDateFormat("y");
+
+    int today_position = -100;
+
+    final int[] weather_final = new int[10];
 
     private Date date_selected = new Date();
 
     String sToday_d = sdf_d.format(date_selected);
     String sToday_m = sdf_m.format(date_selected);
+    String sToday_y = sdf_y.format(date_selected);
 
     //PieChart pieChart;
     /**
@@ -167,6 +173,82 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Thread th_weather = new Thread(new Runnable() {
+            @Override public void run() {
+                Logic_Weather zxc = new Logic_Weather();
+                ArrayList<Integer> qqq = zxc.getweather();
+                for(int i=0 ; i<8 ;i++){
+                    weather_final[i+2] = qqq.get(i);
+                }
+            }
+        });
+
+        Thread th_weather2 = new Thread(new Runnable() {
+            @Override public void run() {
+                Logic_Weather2 zxc = new Logic_Weather2();
+                ArrayList<Integer> qqq = zxc.getsky();
+                ArrayList<Integer> qqq2 = zxc.getpty();
+                int temp=0;
+                int temp2=0;
+                int j=0;
+                int[] sky = new int[3];
+                int[] pty = new int[3];
+                sky = weather_cal(qqq);
+                pty = weather_cal(qqq2);
+                for(int i=0 ; i<3 ; i++){//맑음:1, 구름:2, 비:3, 눈:4, 구름비:5, 구름눈:6
+                    if(pty[i]==0){
+                        if(sky[i]<=2){
+                            weather_final[i]=1;
+                        }
+                        else{
+                            weather_final[i]=2;
+                        }
+                    }
+                    else if(pty[i]<=2){
+                        if(sky[i]<=2){
+                            weather_final[i]=3;
+                        }
+                        else{
+                            weather_final[i]=5;
+                        }
+                    }
+                    else{
+                        if(sky[i]<=2){
+                            weather_final[i]=4;
+                        }
+                        else{
+                            weather_final[i]=6;
+                        }
+                    }
+                }
+            }
+            private int[] weather_cal(ArrayList<Integer> qqq){
+                int temp=0;
+                int temp2=0;
+                int j=0;
+                int[] sky = new int[3];
+
+                for(int i=0 ; i<qqq.size() ; i++){
+                    if(qqq.get(i)==-1){
+                        sky[j] = (int)(Math.round(temp/(double)temp2));
+                        j++;
+                        temp=0;
+                        temp2=0;
+                    }
+                    else{
+                        temp += qqq.get(i);
+                        temp2++;
+                    }
+                }
+                sky[2] = (int)(Math.round(temp/(double)temp2));
+
+                return sky;
+            }
+        });
+
+        th_weather.start();
+        th_weather2.start();
+
         /*File file = new File(getFilesDir(),"schedule.db");
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(file,null);
         db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
@@ -178,6 +260,7 @@ public class MainActivity extends AppCompatActivity{
         db.execSQL(DiaryDBCtrct.SQL_CREATE_TBL);*/
 
         setContentView(R.layout.activity_main);
+
 
         tvDate = (TextView)findViewById(R.id.tv_date);
         tvDate2 = (TextView)findViewById(R.id.tv_date2);
@@ -347,7 +430,7 @@ public class MainActivity extends AppCompatActivity{
          * 제스처
          */
 
-        /*detector = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
+        detector = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
                 return false;
@@ -396,7 +479,7 @@ public class MainActivity extends AppCompatActivity{
                 }
                 return true;
             }
-        });*/
+        });
 
 
 
@@ -409,7 +492,7 @@ public class MainActivity extends AppCompatActivity{
         gridView.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event){
-                //detector.onTouchEvent(event);
+                detector.onTouchEvent(event);
                 if(event.getAction() == MotionEvent.ACTION_MOVE){
                     return true;
                 }
@@ -495,7 +578,27 @@ public class MainActivity extends AppCompatActivity{
             }
         }) ;
 
+
+        Log.e("asd","qqq");
+
+
+
+        try{
+            th_weather.join();
+            th_weather2.join();
+        }
+        catch(InterruptedException e){
+
+        }
+
+
+
+        for(int i =0 ; i<10 ; i++){
+            Log.e("최종날씨",String.valueOf(weather_final[i]));
+        }
+
     }
+
 
     private void lastMonth(){
         dayList = new ArrayList<String>();
@@ -769,11 +872,62 @@ public class MainActivity extends AppCompatActivity{
                 }
 
 
-                if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) { //오늘 day 텍스트 컬러 변경
+                if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m) && String.valueOf(mCal.get(Calendar.YEAR)).equals(sToday_y)) { //오늘 day 텍스트 컬러 변경
                     //holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
                     holder.tvItemGridView.setTextColor(Color.parseColor("#ffffff"));
                     holder.tvItemGridView.setBackgroundResource(R.drawable.bg_today);
+                    today_position = position;
                 }
+                Log.e("asd",position+" "+getItem(position) );
+
+                if(String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m) && String.valueOf(mCal.get(Calendar.YEAR)).equals(sToday_y)){
+                    switch (position - today_position){
+                        case 0:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[0]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 1:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[1]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 2:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[2]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 3:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[3]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 4:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[4]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 5:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[5]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 6:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[6]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 7:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[7]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 8:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[8]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 9:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[9]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        default:
+                            holder.tvItemWeather.setVisibility(View.INVISIBLE);
+                            break;
+                    }
+                }
+
 
 
                 /*if (position > 6 && String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) {//날씨 설정
@@ -793,12 +947,14 @@ public class MainActivity extends AppCompatActivity{
                     if (month_chk == 0) {
                         thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
                         if(String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) {
-                            if (abs(Integer.parseInt(sToday_d) - Integer.parseInt(getItem(position))) < 5) {
+                            /*if (abs(Integer.parseInt(sToday_d) - Integer.parseInt(getItem(position))) < 5) {
                                 holder.tvItemWeather.setColorFilter(Color.parseColor("#FFBB00"), PorterDuff.Mode.SRC_IN);
                                 holder.tvItemWeather.setVisibility(VISIBLE);
                             } else {
                                 holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                            }
+                            }*/
+
+
                         }
                     } else if (month_chk == -1) {
                         thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
@@ -857,6 +1013,30 @@ public class MainActivity extends AppCompatActivity{
 
             return convertView;
         }
+    }
+
+    public int weather_chk(int k){
+        switch (k){
+            case 1:
+                k=R.drawable.weather_sunny;
+                break;
+            case 2:
+                k=R.drawable.weather_cloud;
+                break;
+            case 3:
+                k=R.drawable.weather_rain;
+                break;
+            case 4:
+                k=R.drawable.weather_snow;
+                break;
+            case 5:
+                k=R.drawable.weather_cloud_rain;
+                break;
+            case 6:
+                k= R.drawable.weather_cloud_snow;
+                break;
+        }
+        return k;
     }
 
     /**
@@ -998,5 +1178,134 @@ public class MainActivity extends AppCompatActivity{
         return bitmap;
     }
 
+    public class Logic_Weather {
+
+        private ArrayList<Integer> weather = new ArrayList<Integer>();
+
+        public Logic_Weather() {
+
+            try {
+                DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+                DocumentBuilder parser = f.newDocumentBuilder();
+
+                Document xmlDoc = null;
+                String url = "http://www.weather.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=109";
+                xmlDoc = parser.parse(url);
+
+                Element root = xmlDoc.getDocumentElement();
+                Log.e("asd",root.getTagName());
+
+                String k = "";
+
+                for(int i=0 ; ; i++){
+                    Node xmlNode1 = root.getElementsByTagName("data").item(i);
+                    if(i<10){
+                        if(i%2==0){
+                            continue;
+                        }
+                    }
+                    if(xmlNode1 == null){
+                        break;
+                    }
+                    Node xmlNode21 = ((Element) xmlNode1).getElementsByTagName("wf").item(0);
+
+                    k = xmlNode21.getTextContent();
+                    if(k.contains("맑") || k.contains("조")){
+                        weather.add(1);
+                    }
+                    else if(k.contains("음") || k.contains("림")){
+                        weather.add(2);
+                    }
+                    else if(k.contains("많")){
+                        if(k.contains(" 비")){
+                            weather.add(3);
+                        }
+                        else if(k.contains(" 눈")){
+                            weather.add(4);
+                        }
+                    }
+                    else{
+                        if(k.contains(" 비")){
+                            weather.add(5);
+                        }
+                        else if(k.contains(" 눈")){
+                            weather.add(6);
+                        }
+                    }
+                    k="";
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println(e.toString());
+            }
+        }
+
+        public ArrayList<Integer> getweather() {
+            return weather;
+        }
+
+    }
+    public class Logic_Weather2 {
+
+        private ArrayList<Integer> sky = new ArrayList<Integer>();
+        private ArrayList<Integer> pty = new ArrayList<Integer>();
+
+        /*private String[] wfEn = new String[5];
+        private String[] hour1 = new String[5];*/
+
+        public Logic_Weather2() {
+
+            try {
+                DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+                DocumentBuilder parser = f.newDocumentBuilder();
+
+                Document xmlDoc = null;
+                String url = "http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1135063000";
+                xmlDoc = parser.parse(url);
+
+                Element root = xmlDoc.getDocumentElement();
+
+                int flag=0;
+
+                for(int i=0 ; ; i++){
+                    Node xmlNode1 = root.getElementsByTagName("data").item(i);
+                    if(xmlNode1 == null){
+                        break;
+                    }
+                    Node xmlNode21 = ((Element) xmlNode1).getElementsByTagName("sky").item(0);
+                    Node xmlNode22 = ((Element) xmlNode1).getElementsByTagName("pty").item(0);
+                    Node xmlNode23 = ((Element) xmlNode1).getElementsByTagName("day").item(0);
+
+                    sky.add(Integer.parseInt(xmlNode21.getTextContent()));
+                    pty.add(Integer.parseInt(xmlNode22.getTextContent()));
+                    if(Integer.parseInt(xmlNode23.getTextContent())==1 && flag==0){
+                        flag=1;
+                        sky.add(-1);
+                        pty.add(-1);
+                    }
+                    else if(Integer.parseInt(xmlNode23.getTextContent())==2 && flag==1){
+                        flag=2;
+                        sky.add(-1);
+                        pty.add(-1);
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println(e.toString());
+            }
+        }
+
+        public ArrayList<Integer> getsky() {
+            return sky;
+        }
+
+        public ArrayList<Integer> getpty() {
+            return pty;
+        }
+
+    }
 
 }
+

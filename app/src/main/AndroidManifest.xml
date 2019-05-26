@@ -11,12 +11,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MakeDiary"></activity>
         <activity android:name=".MakeSchedule" />
-        <activity
-            android:name=".PopupActivity2"
-            android:theme="@android:style/Theme.Dialog" />
-        <activity
-            android:name=".PopupActivity"
-            android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
