@@ -159,8 +159,13 @@ public class MakeDiary extends Activity {
 
                 summary.setText(cursor.getString(3));
 
-                tmp_image.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
-                tmp_bitmap = byteArrayToBitmap(cursor.getBlob(4));
+                try {
+                    tmp_image.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
+                    tmp_bitmap = byteArrayToBitmap(cursor.getBlob(4));
+                }
+                catch(NullPointerException e){
+                    tmp_bitmap = null;
+                }
 
             }
             cursor.close();
@@ -230,9 +235,14 @@ public class MakeDiary extends Activity {
 
     public byte[] bitmapToByteArray(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+        try {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            return byteArray;//
+        }
+        catch(NullPointerException e){
+            return null;
+        }
     }
 
     public Bitmap byteArrayToBitmap(byte[] byteArray){

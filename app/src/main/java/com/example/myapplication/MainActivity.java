@@ -664,6 +664,7 @@ public class MainActivity extends AppCompatActivity{
 
         switch (index) {
             case 0 :
+                gridAdapter.notifyDataSetChanged();
                 textView1.setVisibility(VISIBLE) ;
                 textView2.setVisibility(View.INVISIBLE) ;
                 textView3.setVisibility(View.INVISIBLE) ;
@@ -674,9 +675,10 @@ public class MainActivity extends AppCompatActivity{
                 textView3.setVisibility(View.INVISIBLE) ;
                 break ;
             case 2 :
+                listAdapter.notifyDataSetChanged();
                 textView1.setVisibility(View.INVISIBLE) ;
                 textView2.setVisibility(View.INVISIBLE) ;
-                textView3.setVisibility(VISIBLE) ;
+                textView3.setVisibility(VISIBLE);
                 break ;
 
         }
@@ -870,7 +872,6 @@ public class MainActivity extends AppCompatActivity{
                     holder.tvItemGridView.setBackgroundResource(R.drawable.bg_today);
                     today_position = position;
                 }
-                Log.e("asd",position+" "+getItem(position) );
 
                 if(String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m) && String.valueOf(mCal.get(Calendar.YEAR)).equals(sToday_y)){
                     switch (position - today_position){
@@ -1135,7 +1136,12 @@ public class MainActivity extends AppCompatActivity{
                     holder.tvitem_diary_summary.setText(cursor.getString(3));
                     holder.imageView_diary.setPadding(0,0,0,0);
                     holder.imageView_diary.setBackground(null);
-                    holder.imageView_diary.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
+                    try {
+                        holder.imageView_diary.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
+                    }
+                    catch(NullPointerException e){
+                        holder.imageView_diary.setImageResource(R.color.black);
+                    }
                 }
                 else{
                     holder.tvitem_diary_title.setText("");
