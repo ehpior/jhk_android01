@@ -249,6 +249,14 @@ public class MainActivity extends AppCompatActivity{
         th_weather.start();
         th_weather2.start();
 
+        try{
+            th_weather.join();
+            th_weather2.join();
+        }
+        catch(InterruptedException e){
+
+        }
+
         /*File file = new File(getFilesDir(),"schedule.db");
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(file,null);
         db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
@@ -579,23 +587,7 @@ public class MainActivity extends AppCompatActivity{
         }) ;
 
 
-        Log.e("asd","qqq");
 
-
-
-        try{
-            th_weather.join();
-            th_weather2.join();
-        }
-        catch(InterruptedException e){
-
-        }
-
-
-
-        for(int i =0 ; i<10 ; i++){
-            Log.e("최종날씨",String.valueOf(weather_final[i]));
-        }
 
     }
 

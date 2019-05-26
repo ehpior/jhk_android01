@@ -73,8 +73,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:padding="1dp"
-                    android:src="@drawable/dot_blue"
-                    android:visibility="visible" />
+                    android:src="@drawable/dot_blue"/>
 
                 <ImageView
                     android:id="@+id/dot_2"
@@ -82,8 +81,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:padding="1dp"
-                    android:src="@drawable/dot_green"
-                    android:visibility="visible" />
+                    android:src="@drawable/dot_green" />
 
             </LinearLayout>
         </LinearLayout>
