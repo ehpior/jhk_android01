@@ -1,10 +1,37 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import com.github.mikephil.charting.charts.PieChart;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,71 +40,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
-
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.media.Image;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Display;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import static android.view.View.VISIBLE;
 import static java.lang.Math.abs;
@@ -85,7 +49,7 @@ import static java.lang.Math.abs;
 public class MainActivity extends AppCompatActivity{
 
 
-    private GestureDetectorCompat detector;
+    private GestureDetector detector;
 
     SimpleDateFormat sdf_d = new SimpleDateFormat("d");
     SimpleDateFormat sdf_m = new SimpleDateFormat("M");
@@ -125,8 +89,6 @@ public class MainActivity extends AppCompatActivity{
      */
     private ArrayList<String> dayList;
     private ArrayList<String> dayList2;
-    private ArrayList<String> dayList_last;
-    private ArrayList<String> dayList_next;
 
     /**
      * 그리드뷰
@@ -493,7 +455,55 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        /*GestureDetector.SimpleOnGestureListener detector2 = new GestureDetector.SimpleOnGestureListener() {
 
+            @Override
+            public boolean onDown(MotionEvent ev) {
+                Log.w("TEST", "onDown = "+ev.toString());
+                return true;
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent ev) {
+                Log.w("TEST", "onSingleTapUp = "+ev.toString());
+                return true;
+            }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent ev) {
+                Log.w("TEST", "onSingleTapConfirmed = "+ev.toString());
+                return true;
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent ev) {
+                Log.w("TEST", "onDoubleTap = "+ev.toString());
+                return true;
+            }
+
+            @Override
+            public boolean onDoubleTapEvent(MotionEvent ev) {
+                Log.w("TEST", "onDoubleTapEvent = "+ev.toString());
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                Log.w("TEST", "onScroll / e1 = "+e1.toString());
+                Log.w("TEST", "onScroll / e2 = "+e2.toString());
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                Log.w("TEST", "onFling / e1 = "+e1.toString());
+                Log.w("TEST", "onFling / e2 = "+e2.toString());
+                return true;
+            }
+
+        };
+
+        detector = new GestureDetector(this, detector2);*/
 
 
 
@@ -514,12 +524,13 @@ public class MainActivity extends AppCompatActivity{
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             int month_chk = 0;
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position<7){
                     return;
                 }
-                else if((7<=position)&&(position<=13)&&(Integer.parseInt(gridAdapter.getItem(position))>7)){
+                else if((position<=13)&&(Integer.parseInt(gridAdapter.getItem(position))>7)){
                     month_chk = -1;
                 }
                 else if((position>=35)&&(Integer.parseInt(gridAdapter.getItem(position))<20)){
@@ -529,9 +540,10 @@ public class MainActivity extends AppCompatActivity{
                     month_chk = 0;
                 }
                 mOnPopup(view, Integer.parseInt(gridAdapter.getItem(position)),month_chk);
-
             }
         });
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -674,7 +686,21 @@ public class MainActivity extends AppCompatActivity{
         });
 
 
+        /**
+         * BottomSheetDialog 하단 슬라이드 메뉴
+         */
 
+        Button qq = (Button)findViewById(R.id.omg);
+        qq.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString("data1","2019-05-15");
+                bottomSheetDialog.setArguments(bundle);
+                bottomSheetDialog.show(getSupportFragmentManager(),"bott");
+            }
+        });
 
     }
 
@@ -799,8 +825,6 @@ public class MainActivity extends AppCompatActivity{
      */
     private void setCalendarDate(int month) {
 
-        dayList_last = new ArrayList<String>();
-        dayList_next = new ArrayList<String>();
         mCal.add(mCal.MONTH,-1);
         int k = mCal.get(Calendar.DAY_OF_WEEK)-1;
         if((28-(k-1)+7)<=mCal.getActualMaximum(Calendar.DAY_OF_MONTH)){
@@ -933,24 +957,49 @@ public class MainActivity extends AppCompatActivity{
             }
 
             if(position>6) {
+                float zsr= (float)96f/255f;
 
                 int month_chk = 0; //-1은 지난달, 0은 이번달, 1은 다음달
                 if ((7 <= position) && (position <= 13) && (Integer.parseInt(getItem(position)) > 7)) {//이전 달 설정
-                    holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
                     month_chk = -1;
+                    holder.tvItemWeather.setAlpha(zsr);
+                    holder.tvItemGridView.setAlpha(zsr);
+                    holder.tvItemGridView2.setAlpha(zsr);
+                    holder.tvItemGridView3.setAlpha(zsr);
+                    holder.tvItemGridView4.setAlpha(zsr);
+                    holder.dot1.setAlpha(zsr);
+                    holder.dot2.setAlpha(zsr);
+                    /*holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
                     if ((position % 7) == 0) {
                         holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
                     } else if ((position % 7) == 6) {
                         holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
-                    }
+                    }*/
                 } else if ((position >= 35) && (Integer.parseInt(getItem(position)) < 20)) {//다음 달 설정
-                    holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
                     month_chk = 1;
+                    holder.tvItemWeather.setAlpha(zsr);
+                    holder.tvItemGridView.setAlpha(zsr);
+                    holder.tvItemGridView2.setAlpha(zsr);
+                    holder.tvItemGridView3.setAlpha(zsr);
+                    holder.tvItemGridView4.setAlpha(zsr);
+                    holder.dot1.setAlpha(zsr);
+                    holder.dot2.setAlpha(zsr);
+                    /*holder.tvItemGridView.setTextColor(Color.parseColor("#60000000"));
                     if ((position % 7) == 0) {
                         holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
                     } else if ((position % 7) == 6) {
                         holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
-                    }
+                    }*/
+                }
+                else{
+                    zsr=(float)1.0;
+                    holder.tvItemWeather.setAlpha(zsr);
+                    holder.tvItemGridView.setAlpha(zsr);
+                    holder.tvItemGridView2.setAlpha(zsr);
+                    holder.tvItemGridView3.setAlpha(zsr);
+                    holder.tvItemGridView4.setAlpha(zsr);
+                    holder.dot1.setAlpha(zsr);
+                    holder.dot2.setAlpha(zsr);
                 }
 
 
@@ -996,7 +1045,6 @@ public class MainActivity extends AppCompatActivity{
 
                     calDate = chk_date1.getTime() - chk_date2.getTime();
                     calDate /= 24*60*60*1000;
-                    Log.e("asd",sToday_full+" "+thisday+" "+String.valueOf(calDate));
                 }
                 catch(ParseException e){
 

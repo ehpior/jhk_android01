@@ -18,11 +18,19 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/omg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/titlebg"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:orientation="horizontal">
 
                 <ImageButton
@@ -31,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
-                    android:padding="7dp"
+                    android:padding="6dp"
                     android:background="@color/titlebg"
                     android:src="@drawable/bt_menu"
                     />
@@ -103,7 +111,7 @@
                     android:layout_weight="1"
                     android:background="@color/titlebg"
                     android:scaleType="fitXY"
-                    android:padding="10dp"
+                    android:padding="9dp"
                     android:src="@drawable/bt_setting"
                     />
 
