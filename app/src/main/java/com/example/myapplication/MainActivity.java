@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity{
     SimpleDateFormat sdf_d = new SimpleDateFormat("d");
     SimpleDateFormat sdf_m = new SimpleDateFormat("M");
     SimpleDateFormat sdf_y = new SimpleDateFormat("y");
+    SimpleDateFormat sdf_full = new SimpleDateFormat("yyyy-MM-dd");
 
     int today_position = -100;
 
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity{
     String sToday_d = sdf_d.format(date_selected);
     String sToday_m = sdf_m.format(date_selected);
     String sToday_y = sdf_y.format(date_selected);
+    String sToday_full = sdf_full.format(date_selected);
 
     //PieChart pieChart;
     /**
@@ -536,14 +540,6 @@ public class MainActivity extends AppCompatActivity{
         });
 
 
-        Button bttt = (Button)findViewById(R.id.button3);
-        bttt.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnPopup2(v, 1);
-            }
-        });
-
         /**
          * 달 바꾸기 bt1 , bt2
          */
@@ -566,7 +562,7 @@ public class MainActivity extends AppCompatActivity{
         /**
          * 탭 변환
          */
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout) ;
+        /*TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout) ;
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -584,7 +580,98 @@ public class MainActivity extends AppCompatActivity{
             public void onTabReselected(TabLayout.Tab tab) {
                 // do nothing
             }
-        }) ;
+        }) ;*/
+
+        /**
+         * 좌측슬라이드메뉴
+         */
+
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+        // Drawer 화면(뷰) 객체 참조
+        final View drawerView = (View) findViewById(R.id.drawer);
+
+
+        // 드로어 화면을 열고 닫을 버튼 객체 참조
+        ImageButton btnOpenDrawer = (ImageButton) findViewById(R.id.btn_OpenDrawer);
+        Button btnCloseDrawer = (Button) findViewById(R.id.btn_CloseDrawer);
+
+
+        // 드로어 여는 버튼 리스너
+        btnOpenDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(drawerView);
+            }
+        });
+
+
+        // 드로어 닫는 버튼 리스너
+        btnCloseDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(drawerView);
+            }
+        });
+
+        /**
+         * 우측슬라이드메뉴
+         */
+
+        // Drawer 화면(뷰) 객체 참조
+        final View drawerView2 = (View) findViewById(R.id.drawer2);
+
+
+        // 드로어 화면을 열고 닫을 버튼 객체 참조
+        ImageButton btnOpenDrawer2 = (ImageButton) findViewById(R.id.btn_OpenDrawer2);
+        Button btnCloseDrawer2 = (Button) findViewById(R.id.btn_CloseDrawer2);
+
+
+        // 드로어 여는 버튼 리스너
+        btnOpenDrawer2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(drawerView2);
+            }
+        });
+
+
+        // 드로어 닫는 버튼 리스너
+        btnCloseDrawer2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(drawerView2);
+            }
+        });
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+
+
+        Button btnOpenCalendar = (Button)findViewById(R.id.open_calendar);
+        Button btnOpenAccount = (Button)findViewById(R.id.open_account);
+        Button btnOpenDiary = (Button)findViewById(R.id.open_diary);
+
+        btnOpenCalendar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeView(0);
+                drawerLayout.closeDrawer(drawerView);
+            }
+        });
+        btnOpenAccount.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeView(1);
+                drawerLayout.closeDrawer(drawerView);
+            }
+        });
+        btnOpenDiary.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeView(2);
+                drawerLayout.closeDrawer(drawerView);
+            }
+        });
 
 
 
@@ -758,6 +845,7 @@ public class MainActivity extends AppCompatActivity{
 
         private final LayoutInflater inflater;
         private String thisday;
+        private int weather_over_chk=0;
 
         /**
          * 생성자
@@ -820,7 +908,7 @@ public class MainActivity extends AppCompatActivity{
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             if(position<7){
                 //layoutParams.height = gridviewH / 15;
-                layoutParams.height = gridviewH / 20;
+                layoutParams.height = gridviewH / 22;
                 /*holder.tvItemGridView2.setVisibility(View.GONE);
                 holder.tvItemGridView3.setVisibility(View.GONE);
                 holder.tvItemGridView4.setVisibility(View.GONE);*/
@@ -866,121 +954,119 @@ public class MainActivity extends AppCompatActivity{
                 }
 
 
-                if (sToday_d.equals(getItem(position)) && String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m) && String.valueOf(mCal.get(Calendar.YEAR)).equals(sToday_y)) { //오늘 day 텍스트 컬러 변경
+                File file = new File(getFilesDir(), "schedule.db");
+                SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file, null);
+
+
+                if (month_chk == 0) {
+                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                    if(String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) {
+                        /*if (abs(Integer.parseInt(sToday_d) - Integer.parseInt(getItem(position))) < 5) {
+                            holder.tvItemWeather.setColorFilter(Color.parseColor("#FFBB00"), PorterDuff.Mode.SRC_IN);
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                        } else {
+                            holder.tvItemWeather.setVisibility(View.INVISIBLE);
+                        }*/
+
+
+                    }
+                } else if (month_chk == -1) {
+                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                    if (mCal.get(Calendar.MONTH) < 1) {
+                        thisday = String.valueOf(mCal.get(Calendar.YEAR) - 1) + "-12-" + String.format("%02d", Integer.parseInt(getItem(position)));
+                    }
+                } else if (month_chk == 1) {
+                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
+                    if (mCal.get(Calendar.MONTH) + 2 > 12) {
+                        thisday = String.valueOf(mCal.get(Calendar.YEAR) + 1) + "-01-" + String.format("%02d", Integer.parseInt(getItem(position)));
+                    }
+                }
+
+                if (sToday_full.equals(thisday)) { //오늘 day 텍스트 컬러 변경
                     //holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
                     holder.tvItemGridView.setTextColor(Color.parseColor("#ffffff"));
                     holder.tvItemGridView.setBackgroundResource(R.drawable.bg_today);
                     today_position = position;
                 }
+                long calDate=-100;
 
-                if(String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m) && String.valueOf(mCal.get(Calendar.YEAR)).equals(sToday_y)){
-                    switch (position - today_position){
-                        case 0:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[0]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 1:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[1]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 2:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[2]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 3:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[3]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 4:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[4]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 5:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[5]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 6:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[6]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 7:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[7]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 8:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[8]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 9:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[9]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        default:
-                            holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                            break;
-                    }
+                try {
+                    Date chk_date1 = sdf_full.parse(thisday);
+                    Date chk_date2 = sdf_full.parse(sToday_full);
+
+                    calDate = chk_date1.getTime() - chk_date2.getTime();
+                    calDate /= 24*60*60*1000;
+                    Log.e("asd",sToday_full+" "+thisday+" "+String.valueOf(calDate));
                 }
+                catch(ParseException e){
 
-
-
-                /*if (position > 6 && String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) {//날씨 설정
-                    if (abs(Integer.parseInt(sToday_d) - Integer.parseInt(getItem(position))) < 5) {
+                }
+                switch ((int)(calDate)){
+                    case 0:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[0]));
                         holder.tvItemWeather.setVisibility(VISIBLE);
-                    } else {
+                        break;
+                    case 1:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[1]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 2:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[2]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 3:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[3]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 4:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[4]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 5:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[5]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 6:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[6]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 7:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[7]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 8:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[8]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    case 9:
+                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[9]));
+                        holder.tvItemWeather.setVisibility(VISIBLE);
+                        break;
+                    default:
                         holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                    }
-                }*/
-
-
-                File file = new File(getFilesDir(), "schedule.db");
-                SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file, null);
-
-
-                if (position > 6) {
-                    if (month_chk == 0) {
-                        thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                        if(String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) {
-                            /*if (abs(Integer.parseInt(sToday_d) - Integer.parseInt(getItem(position))) < 5) {
-                                holder.tvItemWeather.setColorFilter(Color.parseColor("#FFBB00"), PorterDuff.Mode.SRC_IN);
-                                holder.tvItemWeather.setVisibility(VISIBLE);
-                            } else {
-                                holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                            }*/
-
-
-                        }
-                    } else if (month_chk == -1) {
-                        thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                        if (mCal.get(Calendar.MONTH) < 1) {
-                            thisday = String.valueOf(mCal.get(Calendar.YEAR) - 1) + "-12-" + String.format("%02d", Integer.parseInt(getItem(position)));
-                        }
-                    } else if (month_chk == 1) {
-                        thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                        if (mCal.get(Calendar.MONTH) + 2 > 12) {
-                            thisday = String.valueOf(mCal.get(Calendar.YEAR) + 1) + "-01-" + String.format("%02d", Integer.parseInt(getItem(position)));
-                        }
-                    }
-
-                    if (sqliteDB != null) {
-                        SQLiteDatabase db = dbHelper.getReadableDatabase();
-                        Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisday + "')", null);
-
-                        while (cursor.moveToNext()) { // 레코드가 존재한다면,
-                            String content = cursor.getString(1);
-                            if (holder.tvItemGridView2.getVisibility() == View.INVISIBLE) {
-                                holder.tvItemGridView2.setVisibility(VISIBLE);
-                                holder.tvItemGridView2.setText(content);
-                            } else if (holder.tvItemGridView3.getVisibility() == View.INVISIBLE) {
-                                holder.tvItemGridView3.setVisibility(VISIBLE);
-                                holder.tvItemGridView3.setText(content);
-                            } else if (holder.tvItemGridView4.getVisibility() == View.INVISIBLE) {
-                                holder.tvItemGridView4.setVisibility(VISIBLE);
-                                holder.tvItemGridView4.setText(content);
-                            }
-                        }
-                        cursor.close();
-                    }
+                        break;
                 }
+
+                if (sqliteDB != null) {
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+                    Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisday + "')", null);
+
+                    while (cursor.moveToNext()) { // 레코드가 존재한다면,
+                        String content = cursor.getString(1);
+                        if (holder.tvItemGridView2.getVisibility() == View.INVISIBLE) {
+                            holder.tvItemGridView2.setVisibility(VISIBLE);
+                            holder.tvItemGridView2.setText(content);
+                        } else if (holder.tvItemGridView3.getVisibility() == View.INVISIBLE) {
+                            holder.tvItemGridView3.setVisibility(VISIBLE);
+                            holder.tvItemGridView3.setText(content);
+                        } else if (holder.tvItemGridView4.getVisibility() == View.INVISIBLE) {
+                            holder.tvItemGridView4.setVisibility(VISIBLE);
+                            holder.tvItemGridView4.setText(content);
+                        }
+                    }
+                    cursor.close();
+                }
+
                 sqliteDB.close();
                 file = new File(getFilesDir(),"diary.db");
                 sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
@@ -1001,6 +1087,7 @@ public class MainActivity extends AppCompatActivity{
                 }
                 sqliteDB.close();
             }
+
 
 
 

@@ -1,154 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-
-
-    <LinearLayout
+    tools:context=".MainActivity">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/titlebg"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/titlebg"
-            android:scaleType="fitXY"
-            android:src="@drawable/arrow_left"
-            android:padding="12dp"
-            />
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        >
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:paddingTop="10dp"
-                android:paddingRight="5dp"
-                android:gravity="center_vertical|right"
-                android:textColor="#000000"
-                android:textSize="14sp" />
+                android:background="@color/titlebg"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_date2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                <ImageButton
+                    android:id="@+id/btn_OpenDrawer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:padding="7dp"
+                    android:background="@color/titlebg"
+                    android:src="@drawable/bt_menu"
+                    />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+
+                <ImageButton
+                    android:id="@+id/button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/titlebg"
+                    android:padding="12dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/arrow_left" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|right"
+                        android:paddingTop="10dp"
+                        android:paddingRight="5dp"
+                        android:textColor="#000000"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_date2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|left"
+                        android:textColor="#000000"
+                        android:textSize="24sp" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/button2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/titlebg"
+                    android:padding="12dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/arrow_right" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+                <ImageButton
+                    android:id="@+id/btn_OpenDrawer2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/titlebg"
+                    android:scaleType="fitXY"
+                    android:padding="10dp"
+                    android:src="@drawable/bt_setting"
+                    />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/contents"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
+                android:background="@color/titlebg"
+                android:layout_weight="12">
+
+
+                <GridView
+                    android:id="@+id/gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#10000000"
+                    android:verticalSpacing="1dp"
+                    android:horizontalSpacing="1dp"
+                    android:numColumns="7"
+                    android:overScrollMode="never"
+                    android:visibility="visible">
+
+                </GridView>
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/piechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible">
+
+                </com.github.mikephil.charting.charts.PieChart>
+
+                <ListView
+                    android:id="@+id/listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:visibility="invisible" />
+
+
+            </FrameLayout>
+
+            <!--
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical|left"
-                android:textColor="#000000"
-                android:textSize="24sp" />
+                android:background="@color/titlebg"
+                android:orientation="horizontal"
+                app:tabIndicatorGravity="top">
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabItem1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Calendar"
+                    android:textSize="15sp" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabItem2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Account"
+                    android:textSize="15sp" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabItem3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Diary"
+                    android:textSize="15sp" />
+            </android.support.design.widget.TabLayout>
+            -->
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/button2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/titlebg"
-            android:src="@drawable/arrow_right"
-            android:padding="12dp"
-            android:scaleType="fitXY"
-            />
+    </RelativeLayout>
 
-    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/drawer"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:background="#B0000000"
+        android:layout_gravity="start"
+        android:clickable="true"
+        >
 
-
-    <FrameLayout
-        android:id="@+id/contents"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="12">
-
-
-        <GridView
-            android:id="@+id/gridview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#10000000"
-            android:horizontalSpacing="1dp"
-            android:numColumns="7"
-            android:overScrollMode="never"
-            android:paddingTop="1dp"
-            android:paddingBottom="1dp"
-            android:verticalSpacing="1dp"
-            android:visibility="visible">
+            android:orientation="vertical">
 
-        </GridView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="23dp"
+                android:gravity="center"
+                android:text="Options"
+                android:textColor="#f70"
+                android:textSize="24dp" />
 
-        <com.github.mikephil.charting.charts.PieChart
+            <Button
+                android:id="@+id/open_calendar"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calendar" />
+
+            <Button
+                android:id="@+id/open_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Account" />
+
+            <Button
+                android:id="@+id/open_diary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Diary" />
+        </LinearLayout>
+            <Button
+                android:id="@+id/btn_CloseDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentBottom="true"
+                android:text="Close" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/drawer2"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:background="#B0000000"
+        android:layout_gravity="end"
+        android:clickable="true"
+        >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/piechart"
-            android:visibility="invisible"
-            >
+            android:orientation="vertical">
 
-        </com.github.mikephil.charting.charts.PieChart>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="23dp"
+                android:gravity="center"
+                android:text="Settings"
+                android:textColor="#f70"
+                android:textSize="24dp" />
 
-        <ListView
-            android:id="@+id/listview"
+            <!--
+            <Button
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calendar" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Account" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Diary" />
+                -->
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_CloseDrawer2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:visibility="invisible"/>
-
-
-
-    </FrameLayout>
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/titlebg"
-        app:tabIndicatorGravity="top"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/tabItem1"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="Calendar" />
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:text="Close" />
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/tabItem2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="Diet" />
+    </RelativeLayout>
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/tabItem3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="Diary" />
-    </android.support.design.widget.TabLayout>
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        android:visibility="gone"/>
-
-
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>
