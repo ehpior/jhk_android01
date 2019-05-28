@@ -65,7 +65,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     flag=2;
                     bottom_sch2.setText(content);
                 }
-                else if(flag==0){
+                else if(flag==2){
                     flag=3;
                     bottom_sch3.setText(content);
                 }

@@ -215,13 +215,13 @@ public class MainActivity extends AppCompatActivity{
         th_weather.start();
         th_weather2.start();
 
-        try{
+        /*try{
             th_weather.join();
             th_weather2.join();
         }
         catch(InterruptedException e){
 
-        }
+        }*/
 
         /*File file = new File(getFilesDir(),"schedule.db");
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(file,null);
@@ -272,6 +272,14 @@ public class MainActivity extends AppCompatActivity{
         /**
          * 그리드뷰 생성
          */
+        try{
+            th_weather.join();
+            th_weather2.join();
+        }
+        catch(InterruptedException e){
+
+        }
+
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
 
@@ -404,7 +412,7 @@ public class MainActivity extends AppCompatActivity{
          * 제스처
          */
 
-        detector = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
+        detector = new GestureDetector(this, new GestureDetector.OnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
                 return false;
@@ -527,6 +535,11 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /*BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString("data1","2019-05-15");
+                bottomSheetDialog.setArguments(bundle);
+                bottomSheetDialog.show(getSupportFragmentManager(),"bott");*/
                 if(position<7){
                     return;
                 }
