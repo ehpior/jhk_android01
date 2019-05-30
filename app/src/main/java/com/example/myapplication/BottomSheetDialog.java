@@ -8,9 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 /**
@@ -42,10 +47,16 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         TextView bottom_sch1 = (TextView)view.findViewById(R.id.bottom_sch1);
         TextView bottom_sch2 = (TextView)view.findViewById(R.id.bottom_sch2);
         TextView bottom_sch3 = (TextView)view.findViewById(R.id.bottom_sch3);
+        final EditText bottom_sch_make = (EditText)view.findViewById(R.id.bottom_make_sch);
+
+        bottom_sch1.setVisibility(GONE);
+        bottom_sch2.setVisibility(GONE);
+        bottom_sch3.setVisibility(GONE);
 
         if(getArguments() != null){
             kkk = getArguments().getString("data1");
         }
+        Log.e("전달값",kkk);
 
         File file = new File(getActivity().getFilesDir(), "schedule.db");
         SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file, null);
@@ -59,14 +70,17 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 String content = cursor.getString(1);
                 if(flag==0){
                     flag=1;
+                    bottom_sch1.setVisibility(VISIBLE);
                     bottom_sch1.setText(content);
                 }
                 else if(flag==1){
                     flag=2;
+                    bottom_sch2.setVisibility(VISIBLE);
                     bottom_sch2.setText(content);
                 }
                 else if(flag==2){
                     flag=3;
+                    bottom_sch3.setVisibility(VISIBLE);
                     bottom_sch3.setText(content);
                 }
             }
@@ -74,6 +88,27 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         }
 
         sqliteDB.close();
+
+        bottom_sch_make.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch(actionId){
+                    case EditorInfo.IME_ACTION_DONE:
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                        String content = bottom_sch_make.getText().toString() ;
+
+                        String sqlInsert = "INSERT INTO SCHEDULE " +
+                                "(DATE, CONTENT) VALUES (" +
+                                "'" + kkk + "'," +
+                                "'" + content + "')" ;
+
+                        db.execSQL(sqlInsert);
+                        dismiss();
+                }
+                return false;
+            }
+        });
 
 
         return view;

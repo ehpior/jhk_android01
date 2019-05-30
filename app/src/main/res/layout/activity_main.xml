@@ -22,6 +22,7 @@
                 android:id="@+id/omg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="Button" />
 
             <LinearLayout
@@ -192,9 +193,32 @@
             -->
 
         </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="#009688"
+            android:src="@drawable/plus"
+            android:clickable="true"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
 
     </RelativeLayout>
 
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main2"
+        app:menu="@menu/activity_main2_drawer" />
+
+    <!--
     <RelativeLayout
         android:id="@+id/drawer"
         android:layout_width="250dp"
@@ -247,6 +271,7 @@
                 android:text="Close" />
 
     </RelativeLayout>
+    -->
 
     <RelativeLayout
         android:id="@+id/drawer2"

@@ -97,11 +97,13 @@ public class MakeSchedule extends AppCompatActivity {
         //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
         EditText editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
+        EditText editdate = (EditText) findViewById(R.id.schedule_et_date) ;
         String content = editTextName.getText().toString() ;
+        String date = editdate.getText().toString() ;
 
         String sqlInsert = "INSERT INTO SCHEDULE " +
                 "(DATE, CONTENT) VALUES (" +
-                "'" + thisdate + "'," +
+                "'" + date + "'," +
                 "'" + content + "')" ;
 
         db.execSQL(sqlInsert);
@@ -110,8 +112,10 @@ public class MakeSchedule extends AppCompatActivity {
     private void delete_values() {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        EditText editdate = (EditText) findViewById(R.id.schedule_et_date) ;
+        String date = editdate.getText().toString() ;
 
-        db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + thisdate + "')");
+        db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + date + "')");
         //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
         mOnClose();

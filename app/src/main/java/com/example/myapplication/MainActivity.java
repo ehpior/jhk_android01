@@ -8,12 +8,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,8 +50,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import static android.view.View.VISIBLE;
 import static java.lang.Math.abs;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+
+    DrawerLayout drawerLayout;
 
     private GestureDetector detector;
 
@@ -101,8 +107,7 @@ public class MainActivity extends AppCompatActivity{
      */
     private Calendar mCal;
 
-
-    public void mOnPopup(View v, int thisday, int month_chk){
+    public String cal_thisdate(int thisday,int month_chk){
         String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
         if(month_chk==0){
             thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
@@ -119,6 +124,28 @@ public class MainActivity extends AppCompatActivity{
                 thisdate = String.valueOf(mCal.get(Calendar.YEAR)+1) + "-01-" + String.format("%02d", thisday);
             }
         }
+        return thisdate;
+    }
+
+
+    public void mOnPopup(View v, int thisday, int month_chk){
+        /*String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+        if(month_chk==0){
+            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+        }
+        else if(month_chk==-1) {
+            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", thisday);
+            if(mCal.get(Calendar.MONTH) < 1){
+                thisdate = String.valueOf(mCal.get(Calendar.YEAR)-1) + "-12-" + String.format("%02d", thisday);
+            }
+        }
+        else if(month_chk== 1) {
+            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", thisday);
+            if(mCal.get(Calendar.MONTH)+2 > 12){
+                thisdate = String.valueOf(mCal.get(Calendar.YEAR)+1) + "-01-" + String.format("%02d", thisday);
+            }
+        }*/
+        String thisdate = cal_thisdate(thisday,month_chk);
         //Intent intent = new Intent(this,PopupActivity.class);
         Intent intent = new Intent(this,MakeSchedule.class);
         intent.putExtra("date",thisdate);
@@ -535,11 +562,8 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
+                BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
                 Bundle bundle = new Bundle();
-                bundle.putString("data1","2019-05-15");
-                bottomSheetDialog.setArguments(bundle);
-                bottomSheetDialog.show(getSupportFragmentManager(),"bott");*/
                 if(position<7){
                     return;
                 }
@@ -552,7 +576,10 @@ public class MainActivity extends AppCompatActivity{
                 else{
                     month_chk = 0;
                 }
-                mOnPopup(view, Integer.parseInt(gridAdapter.getItem(position)),month_chk);
+                bundle.putString("data1",cal_thisdate(Integer.parseInt(gridAdapter.getItem(position)),month_chk));
+                bottomSheetDialog.setArguments(bundle);
+                bottomSheetDialog.show(getSupportFragmentManager(),"bott");
+                //mOnPopup(view, Integer.parseInt(gridAdapter.getItem(position)),month_chk);
             }
         });
 
@@ -610,7 +637,7 @@ public class MainActivity extends AppCompatActivity{
         /**
          * 좌측슬라이드메뉴
          */
-
+        /*
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         // Drawer 화면(뷰) 객체 참조
@@ -638,11 +665,13 @@ public class MainActivity extends AppCompatActivity{
                 drawerLayout.closeDrawer(drawerView);
             }
         });
+        */
 
         /**
          * 우측슬라이드메뉴
          */
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         // Drawer 화면(뷰) 객체 참조
         final View drawerView2 = (View) findViewById(R.id.drawer2);
 
@@ -672,7 +701,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        Button btnOpenCalendar = (Button)findViewById(R.id.open_calendar);
+        /*Button btnOpenCalendar = (Button)findViewById(R.id.open_calendar);
         Button btnOpenAccount = (Button)findViewById(R.id.open_account);
         Button btnOpenDiary = (Button)findViewById(R.id.open_diary);
 
@@ -696,7 +725,17 @@ public class MainActivity extends AppCompatActivity{
                 changeView(2);
                 drawerLayout.closeDrawer(drawerView);
             }
+        });*/
+
+        ImageButton btnOpenDrawer = (ImageButton) findViewById(R.id.btn_OpenDrawer);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+        btnOpenDrawer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(navigationView);
+            }
         });
+        navigationView.setNavigationItemSelectedListener(this);
 
 
         /**
@@ -715,8 +754,44 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+
+        FloatingActionButton fab_main = (FloatingActionButton)findViewById(R.id.fab_main);
+        fab_main.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnPopup(v,15,0);
+            }
+        });
     }
 
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_calendar) {
+            changeView(0);
+            // Handle the camera action
+        } else if (id == R.id.nav_account) {
+            changeView(1);
+        } else if (id == R.id.nav_diary) {
+            changeView(2);
+        } /*else if (id == R.id.nav_tools) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }*/
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    /**
+     * 이전 달
+     */
 
     private void lastMonth(){
         dayList = new ArrayList<String>();
@@ -749,6 +824,10 @@ public class MainActivity extends AppCompatActivity{
         listAdapter.notifyDataSetChanged();
     }
 
+
+    /**
+     * 다음달
+     */
     private void nextMonth(){
         dayList = new ArrayList<String>();
         dayList.addAll(Arrays.asList(days));
@@ -1020,18 +1099,9 @@ public class MainActivity extends AppCompatActivity{
                 SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file, null);
 
 
-                if (month_chk == 0) {
+                thisday = cal_thisdate(Integer.parseInt(getItem(position)),month_chk);
+                /*if (month_chk == 0) {
                     thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                    if(String.valueOf(mCal.get(Calendar.MONTH) + 1).equals(sToday_m)) {
-                        /*if (abs(Integer.parseInt(sToday_d) - Integer.parseInt(getItem(position))) < 5) {
-                            holder.tvItemWeather.setColorFilter(Color.parseColor("#FFBB00"), PorterDuff.Mode.SRC_IN);
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                        } else {
-                            holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                        }*/
-
-
-                    }
                 } else if (month_chk == -1) {
                     thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
                     if (mCal.get(Calendar.MONTH) < 1) {
@@ -1042,7 +1112,7 @@ public class MainActivity extends AppCompatActivity{
                     if (mCal.get(Calendar.MONTH) + 2 > 12) {
                         thisday = String.valueOf(mCal.get(Calendar.YEAR) + 1) + "-01-" + String.format("%02d", Integer.parseInt(getItem(position)));
                     }
-                }
+                }*/
 
                 if (sToday_full.equals(thisday)) { //오늘 day 텍스트 컬러 변경
                     //holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
