@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.app.Dialog;
 import java.io.File;
+
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.daimajia.swipe.SwipeLayout;
 
 import java.io.File;
 
@@ -44,14 +47,18 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         View view = inflater.inflate(R.layout.activity_bottom_sheet_dialog, container,false);
         dbHelper = new ContactDBHelper(getActivity());
 
-        TextView bottom_sch1 = (TextView)view.findViewById(R.id.bottom_sch1);
+        final TextView bottom_sch1 = (TextView)view.findViewById(R.id.bottom_sch1);
         TextView bottom_sch2 = (TextView)view.findViewById(R.id.bottom_sch2);
         TextView bottom_sch3 = (TextView)view.findViewById(R.id.bottom_sch3);
+        SwipeLayout swl1 = (SwipeLayout)view.findViewById(R.id.swipelayout);
+        SwipeLayout swl2 = (SwipeLayout)view.findViewById(R.id.swipelayout2);
+        SwipeLayout swl3 = (SwipeLayout)view.findViewById(R.id.swipelayout3);
+
         final EditText bottom_sch_make = (EditText)view.findViewById(R.id.bottom_make_sch);
 
-        bottom_sch1.setVisibility(GONE);
-        bottom_sch2.setVisibility(GONE);
-        bottom_sch3.setVisibility(GONE);
+        swl1.setVisibility(GONE);
+        swl2.setVisibility(GONE);
+        swl3.setVisibility(GONE);
 
         if(getArguments() != null){
             kkk = getArguments().getString("data1");
@@ -70,17 +77,17 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 String content = cursor.getString(1);
                 if(flag==0){
                     flag=1;
-                    bottom_sch1.setVisibility(VISIBLE);
+                    swl1.setVisibility(VISIBLE);
                     bottom_sch1.setText(content);
                 }
                 else if(flag==1){
                     flag=2;
-                    bottom_sch2.setVisibility(VISIBLE);
+                    swl2.setVisibility(VISIBLE);
                     bottom_sch2.setText(content);
                 }
                 else if(flag==2){
                     flag=3;
-                    bottom_sch3.setVisibility(VISIBLE);
+                    swl3.setVisibility(VISIBLE);
                     bottom_sch3.setText(content);
                 }
             }
@@ -107,6 +114,31 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                         dismiss();
                 }
                 return false;
+            }
+        });
+
+        swl1.findViewWithTag("delete").setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                String title = String.valueOf(bottom_sch1.getText());
+
+                db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + kkk + "') AND CONTENT = '"+ title +"'");
+
+                dismiss();
+                ((MainActivity)MainActivity.mContext).grid_notifychange();
+
+            }
+        });
+        swl1.findViewWithTag("modify").setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.mContext,MakeSchedule.class);
+                intent.putExtra("date",kkk);
+                dismiss();
+                startActivity(intent);
+
             }
         });
 

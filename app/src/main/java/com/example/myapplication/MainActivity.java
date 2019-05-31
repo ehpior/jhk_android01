@@ -52,6 +52,7 @@ import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    public static Context mContext;
 
     DrawerLayout drawerLayout;
 
@@ -106,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * 캘린더 변수
      */
     private Calendar mCal;
+
+    public void grid_notifychange(){
+        gridAdapter.notifyDataSetChanged();
+    }
 
     public String cal_thisdate(int thisday,int month_chk){
         String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
@@ -165,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mContext = this;
 
         Thread th_weather = new Thread(new Runnable() {
             @Override public void run() {
