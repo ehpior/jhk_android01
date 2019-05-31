@@ -136,6 +136,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.mContext,MakeSchedule.class);
                 intent.putExtra("date",kkk);
+                intent.putExtra("content",String.valueOf(bottom_sch1.getText()));
                 dismiss();
                 startActivity(intent);
 

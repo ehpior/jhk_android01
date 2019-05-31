@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.v7.app.AppCompatActivity;
@@ -17,9 +18,12 @@ public class MakeSchedule extends AppCompatActivity {
 
     SQLiteDatabase sqliteDB;
     TextView txtText;
+    EditText editTextName;
+    EditText editdate;
 
     ContactDBHelper dbHelper = null;
     String thisdate = new String();
+    String sch_content = "";
 
 
     @Override
@@ -33,8 +37,15 @@ public class MakeSchedule extends AppCompatActivity {
         thisdate = intent.getStringExtra("date");
         txtText.setText(thisdate);
 
+        sch_content = intent.getStringExtra("content");
+
+        editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
+        editdate = (EditText) findViewById(R.id.schedule_et_date) ;
+
+
         sqliteDB = init_database();
         init_tables();
+        load_values();
 
         ImageButton buttonSave = (ImageButton)findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new Button.OnClickListener() {
@@ -89,6 +100,28 @@ public class MakeSchedule extends AppCompatActivity {
         dbHelper = new ContactDBHelper(this);
     }
 
+    private void load_values() {
+
+        editTextName.setText(sch_content);
+        editdate.setText(thisdate);
+
+        /*if (sqliteDB != null) {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('" + thisdate + "') AND CONTENT = '"+ sch_content +"'", null);
+
+            while (cursor.moveToNext()) { // 레코드가 존재한다면,
+                // no (INTEGER) 값 가져오기.
+                title.setText(cursor.getString(1));
+
+                content.setText(cursor.getString(2));
+
+                summary.setText(cursor.getString(3));
+
+            }
+            cursor.close();
+        }*/
+    }
+
     private void save_values() {
         // delete
 
@@ -96,8 +129,8 @@ public class MakeSchedule extends AppCompatActivity {
 
         //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
-        EditText editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
-        EditText editdate = (EditText) findViewById(R.id.schedule_et_date) ;
+        editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
+        editdate = (EditText) findViewById(R.id.schedule_et_date) ;
         String content = editTextName.getText().toString() ;
         String date = editdate.getText().toString() ;
 
