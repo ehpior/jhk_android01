@@ -41,6 +41,8 @@
                     android:layout_weight="1"
                     android:scaleType="fitXY"
                     android:padding="6dp"
+                    android:paddingRight="0dp"
+                    android:paddingLeft="0dp"
                     android:background="@color/titlebg"
                     android:src="@drawable/bt_menu"
                     />
@@ -113,6 +115,8 @@
                     android:background="@color/titlebg"
                     android:scaleType="fitXY"
                     android:padding="9dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
                     android:src="@drawable/bt_setting"
                     />
 
