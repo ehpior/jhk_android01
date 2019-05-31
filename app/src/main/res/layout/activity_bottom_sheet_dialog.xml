@@ -3,35 +3,144 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/bottom_sch1"
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/swipelayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:text="TextView"
         android:visibility="gone"
-        />
+        >
+        <LinearLayout
+            android:tag="Bottom2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:tag="modify"
+                android:src="@android:drawable/ic_menu_manage"
+                android:layout_width="70dp"
+                android:background="#4cd964"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:tag="delete"
+                android:src="@android:drawable/ic_delete"
+                android:layout_width="70dp"
+                android:background="#ff9999"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/bottom_sch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_margin="10dp"
+                android:text="TextView"
+                />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/bottom_sch2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:visibility="gone"
-        />
+    </com.daimajia.swipe.SwipeLayout>
 
-    <TextView
-        android:id="@+id/bottom_sch3"
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/swipelayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
         android:visibility="gone"
-        />
+        >
+        <LinearLayout
+            android:tag="Bottom2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:tag="modify"
+                android:src="@android:drawable/ic_menu_manage"
+                android:layout_width="70dp"
+                android:background="#4cd964"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:tag="delete"
+                android:src="@android:drawable/ic_delete"
+                android:layout_width="70dp"
+                android:background="#ff9999"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/bottom_sch2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="20sp"
+                android:layout_margin="10dp"
+                />
+        </LinearLayout>
+
+    </com.daimajia.swipe.SwipeLayout>
+
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/swipelayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        >
+        <LinearLayout
+            android:tag="Bottom2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:tag="modify"
+                android:src="@android:drawable/ic_menu_manage"
+                android:layout_width="70dp"
+                android:background="#4cd964"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:tag="delete"
+                android:src="@android:drawable/ic_delete"
+                android:layout_width="70dp"
+                android:background="#ff9999"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/bottom_sch3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="20sp"
+                android:layout_margin="10dp"
+                />
+        </LinearLayout>
+
+    </com.daimajia.swipe.SwipeLayout>
+
 
     <EditText
         android:id="@+id/bottom_make_sch"
