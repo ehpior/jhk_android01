@@ -914,7 +914,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //Bitmap b = BitmapFactory.decodeByteArray(data.getByteArrayExtra("bm"),0,data.getByteArrayExtra("bm").length);
                 //ImageView zzz = (ImageView)findViewById(R.id.imageView6);
                 //zzz.setImageBitmap(b);
-                listAdapter.notifyDataSetChanged();;
+                listAdapter.notifyDataSetChanged();
             }
         }
     }

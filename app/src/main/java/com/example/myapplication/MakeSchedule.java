@@ -77,6 +77,7 @@ public class MakeSchedule extends AppCompatActivity {
         EditText et1 = (EditText)findViewById(R.id.schedule_et_title);
         intent.putExtra("result", et1.getText().toString());
         setResult(RESULT_OK, intent);
+        ((MainActivity)MainActivity.mContext).grid_notifychange();
 
         //액티비티(팝업) 닫기
         finish();
