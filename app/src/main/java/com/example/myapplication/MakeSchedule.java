@@ -147,9 +147,13 @@ public class MakeSchedule extends AppCompatActivity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         EditText editdate = (EditText) findViewById(R.id.schedule_et_date) ;
+        //editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
+        //String content = editTextName.getText().toString() ;
         String date = editdate.getText().toString() ;
 
         db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + date + "')");
+        //db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" +  date + "') AND CONTENT = '"+ content +"'");
+
         //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
         mOnClose();

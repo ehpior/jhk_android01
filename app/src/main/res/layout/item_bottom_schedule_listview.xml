@@ -16,7 +16,7 @@
                 android:id="@+id/bottom_sch_modify"
                 android:src="@android:drawable/ic_menu_manage"
                 android:layout_width="70dp"
-                android:background="#4cd964"
+                android:background="#E04cd964"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:layout_height="match_parent" />
@@ -24,7 +24,7 @@
                 android:id="@+id/bottom_sch_delete"
                 android:src="@android:drawable/ic_delete"
                 android:layout_width="70dp"
-                android:background="#ff9999"
+                android:background="#E0ff9999"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:layout_height="match_parent" />

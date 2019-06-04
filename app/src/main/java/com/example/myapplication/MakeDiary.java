@@ -31,6 +31,11 @@ public class MakeDiary extends Activity {
     ImageView tmp_image;
     ImageView tmp_image2;
     ImageView tmp_image3;
+    ImageView state_face;
+    ImageView state_weather;
+
+    int face=1;
+    int weather=1;
 
     Bitmap tmp_bitmap = null;
 
@@ -56,6 +61,8 @@ public class MakeDiary extends Activity {
         tmp_image = (ImageView)findViewById(R.id.diary_tmp_image);
         tmp_image2 = (ImageView)findViewById(R.id.diary_tmp_image2);
         tmp_image3 = (ImageView)findViewById(R.id.diary_tmp_image3);
+        state_face = (ImageView)findViewById(R.id.make_diary_face);
+        state_weather = (ImageView)findViewById(R.id.make_diary_weather);
 
 
 
@@ -91,6 +98,28 @@ public class MakeDiary extends Activity {
             }
         });
 
+        state_face.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),make_diary_select_face.class);
+                startActivityForResult(intent,5);
+            }
+        });
+        state_weather.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),make_diary_select_weather.class);
+                startActivityForResult(intent,6);
+            }
+        });
+
+
+
+
+
+
+
+
         ImageButton buttonSave = (ImageButton)findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,14 +127,6 @@ public class MakeDiary extends Activity {
                 save_values();
             }
         });
-
-        /*Button buttonClear = (Button)findViewById(R.id.clearclear);
-        buttonClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                delete_values();
-            }
-        });*/
 
         ImageButton buttonClose = (ImageButton)findViewById(R.id.buttonclose);
         buttonClose.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +145,8 @@ public class MakeDiary extends Activity {
         //tmp_bitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
         //intent.putExtra("bm",bs.toByteArray());
         setResult(RESULT_OK, intent);
+
+        sqliteDB.close();
 
         //액티비티(팝업) 닫기
         finish();
@@ -159,6 +182,67 @@ public class MakeDiary extends Activity {
 
                 summary.setText(cursor.getString(3));
 
+                switch(cursor.getInt(5)){
+                    case 1:
+                        face=1;
+                        state_face.setImageResource(R.drawable.icon_face_1);
+                        break;
+                    case 2:
+                        face=2;
+                        state_face.setImageResource(R.drawable.icon_face_2);
+                        break;
+                    case 3:
+                        face=3;
+                        state_face.setImageResource(R.drawable.icon_face_3);
+                        break;
+                    case 4:
+                        face=4;
+                        state_face.setImageResource(R.drawable.icon_face_4);
+                        break;
+                    case 5:
+                        face=5;
+                        state_face.setImageResource(R.drawable.icon_face_5);
+                        break;
+                    case 6:
+                        face=6;
+                        state_face.setImageResource(R.drawable.icon_face_6);
+                        break;
+                    case 7:
+                        face=7;
+                        state_face.setImageResource(R.drawable.icon_face_7);
+                        break;
+                    case 8:
+                        face=8;
+                        state_face.setImageResource(R.drawable.icon_face_8);
+                        break;
+                }
+                switch(cursor.getInt(6)){
+                    case 1:
+                        weather=1;
+                        state_weather.setImageResource(R.drawable.weather_1);
+                        break;
+                    case 2:
+                        weather=2;
+                        state_weather.setImageResource(R.drawable.weather_2);
+                        break;
+                    case 3:
+                        weather=3;
+                        state_weather.setImageResource(R.drawable.weather_3);
+                        break;
+                    case 4:
+                        weather=4;
+                        state_weather.setImageResource(R.drawable.weather_4);
+                        break;
+                    case 5:
+                        weather=5;
+                        state_weather.setImageResource(R.drawable.weather_5);
+                        break;
+                    case 6:
+                        weather=6;
+                        state_weather.setImageResource(R.drawable.weather_6);
+                        break;
+                }
+
                 try {
                     tmp_image.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
                     tmp_bitmap = byteArrayToBitmap(cursor.getBlob(4));
@@ -193,6 +277,8 @@ public class MakeDiary extends Activity {
         value.put("CONTENT", String.valueOf(content.getText()));
         value.put("SUMMARY", String.valueOf(summary.getText()));
         value.put("IMAGE", bitmapToByteArray(tmp_bitmap));
+        value.put("FACE",face);
+        value.put("WEATHER",weather);
 
         db.insert("DIARY",null,value);
 
@@ -213,7 +299,77 @@ public class MakeDiary extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode==9){
+        if(requestCode==5){
+            if(resultCode==RESULT_OK){
+                int a = data.getIntExtra("no",1);
+                switch(a){
+                    case 1:
+                        face=1;
+                        state_face.setImageResource(R.drawable.icon_face_1);
+                        break;
+                    case 2:
+                        face=2;
+                        state_face.setImageResource(R.drawable.icon_face_2);
+                        break;
+                    case 3:
+                        face=3;
+                        state_face.setImageResource(R.drawable.icon_face_3);
+                        break;
+                    case 4:
+                        face=4;
+                        state_face.setImageResource(R.drawable.icon_face_4);
+                        break;
+                    case 5:
+                        face=5;
+                        state_face.setImageResource(R.drawable.icon_face_5);
+                        break;
+                    case 6:
+                        face=6;
+                        state_face.setImageResource(R.drawable.icon_face_6);
+                        break;
+                    case 7:
+                        face=7;
+                        state_face.setImageResource(R.drawable.icon_face_7);
+                        break;
+                    case 8:
+                        face=8;
+                        state_face.setImageResource(R.drawable.icon_face_8);
+                        break;
+                }
+            }
+        }
+        else if(requestCode==6){
+            if(resultCode==RESULT_OK){
+                int a = data.getIntExtra("no",1);
+                switch(a){
+                    case 1:
+                        weather=1;
+                        state_weather.setImageResource(R.drawable.weather_1);
+                        break;
+                    case 2:
+                        weather=2;
+                        state_weather.setImageResource(R.drawable.weather_2);
+                        break;
+                    case 3:
+                        weather=3;
+                        state_weather.setImageResource(R.drawable.weather_3);
+                        break;
+                    case 4:
+                        weather=4;
+                        state_weather.setImageResource(R.drawable.weather_4);
+                        break;
+                    case 5:
+                        weather=5;
+                        state_weather.setImageResource(R.drawable.weather_5);
+                        break;
+                    case 6:
+                        weather=6;
+                        state_weather.setImageResource(R.drawable.weather_6);
+                        break;
+                }
+            }
+        }
+        else if(requestCode==9){
             if(resultCode==RESULT_OK){
                 try {
                     // 선택한 이미지에서 비트맵 생성

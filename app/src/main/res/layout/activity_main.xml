@@ -75,12 +75,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:gravity="center_vertical|right"
-                        android:paddingTop="10dp"
-                        android:paddingRight="5dp"
+                        android:gravity="center"
                         android:textColor="#000000"
                         android:textSize="14sp" />
-
+<!--
                     <TextView
                         android:id="@+id/tv_date2"
                         android:layout_width="0dp"
@@ -90,7 +88,7 @@
                         android:gravity="center_vertical|left"
                         android:textColor="#000000"
                         android:textSize="24sp" />
-
+-->
                 </LinearLayout>
 
                 <ImageButton
@@ -137,13 +135,20 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#10000000"
-                    android:verticalSpacing="1dp"
                     android:horizontalSpacing="1dp"
                     android:numColumns="7"
                     android:overScrollMode="never"
-                    android:visibility="visible">
+                    android:verticalSpacing="1dp"
+                    >
 
                 </GridView>
+
+                <ListView
+                    android:id="@+id/listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:visibility="invisible" />
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/piechart"
@@ -153,12 +158,12 @@
 
                 </com.github.mikephil.charting.charts.PieChart>
 
-                <ListView
-                    android:id="@+id/listview"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@null"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    />
 
 
             </FrameLayout>

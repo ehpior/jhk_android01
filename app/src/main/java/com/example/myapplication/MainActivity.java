@@ -10,10 +10,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -52,6 +56,13 @@ import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    int view_flag = 0;
+
+    SpannableStringBuilder sps;
+
+    RecyclerView mRecyclerView;
+    RecyclerView.LayoutManager mLayoutManager;
+
     public static Context mContext;
 
     DrawerLayout drawerLayout;
@@ -84,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * 연/월 텍스트뷰
      */
     private TextView tvDate;
-    private TextView tvDate2;
+    //private TextView tvDate2;
     /**
      * 그리드뷰 어댑터
      */
@@ -271,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         tvDate = (TextView)findViewById(R.id.tv_date);
-        tvDate2 = (TextView)findViewById(R.id.tv_date2);
+        //tvDate2 = (TextView)findViewById(R.id.tv_date2);
         gridView = (GridView)findViewById(R.id.gridview);
 
         // 오늘에 날짜를 세팅 해준다.
@@ -284,8 +295,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //현재 날짜 텍스트뷰에 뿌려줌
         //tvDate.setText(curYearFormat.format(date) + " / " + String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
-        tvDate.setText(curYearFormat.format(date));
-        tvDate2.setText(String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
+        //tvDate.setText(curYearFormat.format(date)+String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
+        sps = new SpannableStringBuilder(curYearFormat.format(date)+" "+String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
+        sps.setSpan(new AbsoluteSizeSpan(65),5,7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvDate.setText(sps);
+        //tvDate2.setText(String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
 
         //gridview 요일 표시
         dayList = new ArrayList<String>();
@@ -339,6 +353,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+
+        /**
+         * 리사이클러뷰 생성
+         */
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new GridLayoutManager(this,2);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        ArrayList<RecyclerItem> diarylist_recycle = new ArrayList<>();
+        diarylist_recycle.add(new RecyclerItem("1-1","1-2"));
+        diarylist_recycle.add(new RecyclerItem("2-1","2-2"));
+        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
+        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
+        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
+        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
+        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
+        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
+        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
+
+        RecyclerAdapter myRe = new RecyclerAdapter(diarylist_recycle);
+
+        mRecyclerView.setAdapter(myRe);
 
         /**
          * 차트생성
@@ -766,7 +804,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab_main.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnPopup(v,15,0);
+                if(view_flag==0) {
+                    mOnPopup(v, Integer.parseInt(sToday_d), 0);
+                }
+                else if(view_flag==1){
+
+                }
+                else if(view_flag==2){
+                    mOnPopup2(v,Integer.parseInt(sToday_d));
+                }
             }
         });
     }
@@ -815,8 +861,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int year_tmp = mCal.get(Calendar.YEAR);
         int month_tmp = mCal.get(Calendar.MONTH)+1;
-        tvDate.setText(String.valueOf(year_tmp));
-        tvDate2.setText(String.format("%02d",month_tmp));
+        //tvDate.setText(String.valueOf(year_tmp)+String.format("%02d",month_tmp));
+        sps = new SpannableStringBuilder(String.valueOf(year_tmp)+" "+String.format("%02d",month_tmp));
+        sps.setSpan(new AbsoluteSizeSpan(65),5,7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvDate.setText(sps);
+        //tvDate2.setText(String.format("%02d",month_tmp));
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
@@ -850,8 +899,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int year_tmp = mCal.get(Calendar.YEAR);
         int month_tmp = mCal.get(Calendar.MONTH)+1;
-        tvDate.setText(String.valueOf(year_tmp));
-        tvDate2.setText(String.format("%02d",month_tmp));
+        //tvDate.setText(String.valueOf(year_tmp)+String.format("%02d",month_tmp));
+        sps = new SpannableStringBuilder(String.valueOf(year_tmp)+" "+String.format("%02d",month_tmp));
+        sps.setSpan(new AbsoluteSizeSpan(65),5,7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvDate.setText(sps);
+        //tvDate2.setText(String.format("%02d",month_tmp));
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
@@ -876,17 +928,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (index) {
             case 0 :
+                view_flag = 0;
                 gridAdapter.notifyDataSetChanged();
                 textView1.setVisibility(VISIBLE) ;
                 textView2.setVisibility(View.INVISIBLE) ;
                 textView3.setVisibility(View.INVISIBLE) ;
                 break ;
             case 1 :
+                view_flag = 1;
                 textView1.setVisibility(View.INVISIBLE) ;
                 textView2.setVisibility(VISIBLE) ;
                 textView3.setVisibility(View.INVISIBLE) ;
                 break ;
             case 2 :
+                view_flag = 2;
                 listAdapter.notifyDataSetChanged();
                 textView1.setVisibility(View.INVISIBLE) ;
                 textView2.setVisibility(View.INVISIBLE) ;
@@ -1236,22 +1291,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public int weather_chk(int k){
         switch (k){
             case 1:
-                k=R.drawable.weather_sunny;
+                k=R.drawable.weather_1;
                 break;
             case 2:
-                k=R.drawable.weather_cloud;
+                k=R.drawable.weather_2;
                 break;
             case 3:
-                k=R.drawable.weather_rain;
+                k=R.drawable.weather_3;
                 break;
             case 4:
-                k=R.drawable.weather_snow;
+                k=R.drawable.weather_4;
                 break;
             case 5:
-                k=R.drawable.weather_cloud_rain;
+                k=R.drawable.weather_5;
                 break;
             case 6:
-                k= R.drawable.weather_cloud_snow;
+                k= R.drawable.weather_6;
                 break;
         }
         return k;
@@ -1310,7 +1365,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 holder.tvitemListView = (TextView)convertView.findViewById(R.id.diary_date);
                 holder.tvitemListView2 = (TextView)convertView.findViewById(R.id.diary_datechk);
                 holder.tvitem_diary_title = (TextView)convertView.findViewById(R.id.diary_title);
-                holder.tvitem_diary_summary = (TextView)convertView.findViewById(R.id.diary_summary);
+                //holder.tvitem_diary_summary = (TextView)convertView.findViewById(R.id.diary_summary);
                 holder.imageView_diary = (ImageView)convertView.findViewById(R.id.diary_image);
 
                 convertView.setTag(holder);
@@ -1358,7 +1413,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('"+thisday+"')",null);
                 if(cursor.moveToNext()) {
                     holder.tvitem_diary_title.setText(cursor.getString(1));
-                    holder.tvitem_diary_summary.setText(cursor.getString(3));
+                    //holder.tvitem_diary_summary.setText(cursor.getString(3));
                     holder.imageView_diary.setPadding(0,0,0,0);
                     holder.imageView_diary.setBackground(null);
                     try {
@@ -1371,8 +1426,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 else{
                     holder.tvitem_diary_title.setText("");
                     holder.tvitem_diary_title.setHint("New Diary");
-                    holder.tvitem_diary_summary.setText("");
-                    holder.tvitem_diary_summary.setHint("New Summary");
+                    //holder.tvitem_diary_summary.setText("");
+                    //holder.tvitem_diary_summary.setHint("New Summary");
                     holder.imageView_diary.setPadding(33,50,33,50);
                     holder.imageView_diary.setBackgroundResource(R.drawable.black_jump);
                     holder.imageView_diary.setImageResource(R.drawable.plus);
@@ -1392,7 +1447,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView tvitemListView2;
         ImageView imageView_diary;
         TextView tvitem_diary_title;
-        TextView tvitem_diary_summary;
+        //TextView tvitem_diary_summary;
     }
     public Bitmap byteArrayToBitmap(byte[] byteArray){
         Bitmap bitmap = null;

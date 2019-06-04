@@ -10,6 +10,8 @@ public class DiaryDBCtrct {
     public static final String COL_CONTENT = "CONTENT";
     public static final String COL_SUMMARY = "SUMMARY";
     public static final String COL_IMAGE = "IMAGE";
+    public static final String COL_FACE = "FACE";
+    public static final String COL_WEATHER = "WEATHER";
 
     public static final String SQL_CREATE_TBL = "CREATE TABLE IF NOT EXISTS " +TBL_SCHEDULE+ " "+
             "(" +
@@ -17,7 +19,9 @@ public class DiaryDBCtrct {
             COL_TITLE+      " TEXT"             +", "+
             COL_CONTENT+    " TEXT"             +", "+
             COL_SUMMARY+    " TEXT"             +", "+
-            COL_IMAGE+      " BLOB"             +
+            COL_IMAGE+      " BLOB"             +", "+
+            COL_FACE+       " INT"              +", "+
+            COL_WEATHER+    " INT"              +
             ")";
 
     public static final String SQL_DROP_TBL = "DROP TABLE IF EXISTS " + TBL_SCHEDULE;
