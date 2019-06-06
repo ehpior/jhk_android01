@@ -34,6 +34,8 @@ public class MakeDiary extends Activity {
     ImageView state_face;
     ImageView state_weather;
 
+    boolean new_chk;
+
     int face=1;
     int weather=1;
 
@@ -50,6 +52,8 @@ public class MakeDiary extends Activity {
         setContentView(R.layout.activity_make_diary);
 
         txtText = (EditText)findViewById(R.id.diary_et_date);
+
+        new_chk = false;
 
         Intent intent = getIntent();
         thisdate = intent.getStringExtra("date");
@@ -175,6 +179,7 @@ public class MakeDiary extends Activity {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('" + thisdate + "')", null);
             while (cursor.moveToNext()) { // 레코드가 존재한다면,
+                new_chk = true;
                 // no (INTEGER) 값 가져오기.
                 title.setText(cursor.getString(1));
 
@@ -280,7 +285,12 @@ public class MakeDiary extends Activity {
         value.put("FACE",face);
         value.put("WEATHER",weather);
 
-        db.insert("DIARY",null,value);
+        if(new_chk == true){
+            db.update("DIARY",value,"DATE = '" + thisdate + "'",null);
+        }
+        else{
+            db.insert("DIARY",null,value);
+        }
 
         mOnClose();
     }

@@ -14,19 +14,20 @@
             >
             <ImageView
                 android:id="@+id/bottom_sch_modify"
-                android:src="@android:drawable/ic_menu_manage"
+                android:src="@android:drawable/ic_dialog_info"
                 android:layout_width="70dp"
-                android:background="#E04cd964"
+                android:background="#5853EB"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:layout_height="match_parent" />
             <ImageView
                 android:id="@+id/bottom_sch_delete"
                 android:src="@android:drawable/ic_delete"
+                android:tint="@color/white"
                 android:layout_width="70dp"
-                android:background="#E0ff9999"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
+                android:background="#ED0000"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
                 android:layout_height="match_parent" />
         </LinearLayout>
         <LinearLayout

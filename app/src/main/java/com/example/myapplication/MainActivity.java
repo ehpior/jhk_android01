@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.PieChart;
@@ -1182,62 +1183,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.tvItemGridView.setBackgroundResource(R.drawable.bg_today);
                     today_position = position;
                 }
-                long calDate=-100;
+                if((Integer.parseInt(thisday.substring(5,7)) == Integer.parseInt(sToday_m)) || (Integer.parseInt(thisday.substring(5,7)) == (Integer.parseInt(sToday_m)+1))) {
+                    long calDate = -100;
 
-                try {
-                    Date chk_date1 = sdf_full.parse(thisday);
-                    Date chk_date2 = sdf_full.parse(sToday_full);
+                    try {
+                        Date chk_date1 = sdf_full.parse(thisday);
+                        Date chk_date2 = sdf_full.parse(sToday_full);
 
-                    calDate = chk_date1.getTime() - chk_date2.getTime();
-                    calDate /= 24*60*60*1000;
+                        calDate = chk_date1.getTime() - chk_date2.getTime();
+                        calDate /= 24 * 60 * 60 * 1000;
+                    } catch (ParseException e) {
+
+                    }
+                    switch ((int) (calDate)) {
+                        case 0:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[0]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 1:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[1]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 2:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[2]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 3:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[3]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 4:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[4]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 5:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[5]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 6:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[6]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 7:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[7]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 8:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[8]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                        case 9:
+                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[9]));
+                            holder.tvItemWeather.setVisibility(VISIBLE);
+                            break;
+                    }
                 }
-                catch(ParseException e){
-
-                }
-                switch ((int)(calDate)){
-                    case 0:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[0]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 1:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[1]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 2:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[2]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 3:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[3]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 4:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[4]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 5:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[5]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 6:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[6]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 7:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[7]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 8:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[8]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    case 9:
-                        holder.tvItemWeather.setImageResource(weather_chk(weather_final[9]));
-                        holder.tvItemWeather.setVisibility(VISIBLE);
-                        break;
-                    default:
-                        holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                        break;
+                else{
+                    holder.tvItemWeather.setVisibility(View.INVISIBLE);
                 }
 
                 if (sqliteDB != null) {
@@ -1367,6 +1369,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 holder.tvitem_diary_title = (TextView)convertView.findViewById(R.id.diary_title);
                 //holder.tvitem_diary_summary = (TextView)convertView.findViewById(R.id.diary_summary);
                 holder.imageView_diary = (ImageView)convertView.findViewById(R.id.diary_image);
+                holder.diary_face = (ImageView)convertView.findViewById(R.id.list_face);
+                holder.diary_weather = (ImageView)convertView.findViewById(R.id.list_weather);
+                holder.diary_weather_face = (LinearLayout)convertView.findViewById(R.id.list_weather_face);
 
                 convertView.setTag(holder);
             }else{
@@ -1374,7 +1379,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
 
-            holder.tvitemListView.setText(""+getItem(position));
+            holder.tvitemListView.setText(String.format("%02d",Integer.parseInt(getItem(position))));
             switch((Integer.parseInt(getItem(position))+mCal.get(Calendar.DAY_OF_WEEK))%7){
                 case 0:
                     holder.tvitemListView2.setText("Fri");
@@ -1412,6 +1417,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SQLiteDatabase db = dbHelper2.getReadableDatabase();
                 Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('"+thisday+"')",null);
                 if(cursor.moveToNext()) {
+                    holder.imageView_diary.setVisibility(View.VISIBLE);
                     holder.tvitem_diary_title.setText(cursor.getString(1));
                     //holder.tvitem_diary_summary.setText(cursor.getString(3));
                     holder.imageView_diary.setPadding(0,0,0,0);
@@ -1422,8 +1428,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     catch(NullPointerException e){
                         holder.imageView_diary.setImageResource(R.color.black);
                     }
+                    holder.diary_weather_face.setVisibility(VISIBLE);
+                    switch(cursor.getInt(5)){
+                        case 1:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_1);
+                            break;
+                        case 2:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_2);
+                            break;
+                        case 3:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_3);
+                            break;
+                        case 4:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_4);
+                            break;
+                        case 5:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_5);
+                            break;
+                        case 6:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_6);
+                            break;
+                        case 7:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_7);
+                            break;
+                        case 8:
+                            holder.diary_face.setImageResource(R.drawable.icon_face_8);
+                            break;
+                    }
+                    switch(cursor.getInt(6)){
+                        case 1:
+                            holder.diary_weather.setImageResource(R.drawable.weather_1);
+                            break;
+                        case 2:
+                            holder.diary_weather.setImageResource(R.drawable.weather_2);
+                            break;
+                        case 3:
+                            holder.diary_weather.setImageResource(R.drawable.weather_3);
+                            break;
+                        case 4:
+                            holder.diary_weather.setImageResource(R.drawable.weather_4);
+                            break;
+                        case 5:
+                            holder.diary_weather.setImageResource(R.drawable.weather_5);
+                            break;
+                        case 6:
+                            holder.diary_weather.setImageResource(R.drawable.weather_6);
+                            break;
+                    }
                 }
                 else{
+                    holder.imageView_diary.setVisibility(View.INVISIBLE);
                     holder.tvitem_diary_title.setText("");
                     holder.tvitem_diary_title.setHint("New Diary");
                     //holder.tvitem_diary_summary.setText("");
@@ -1431,6 +1485,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.imageView_diary.setPadding(33,50,33,50);
                     holder.imageView_diary.setBackgroundResource(R.drawable.black_jump);
                     holder.imageView_diary.setImageResource(R.drawable.plus);
+                    holder.diary_weather_face.setVisibility(View.GONE);
                 }
                 cursor.close();
             }
@@ -1447,6 +1502,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView tvitemListView2;
         ImageView imageView_diary;
         TextView tvitem_diary_title;
+        ImageView diary_face;
+        ImageView diary_weather;
+        LinearLayout diary_weather_face;
         //TextView tvitem_diary_summary;
     }
     public Bitmap byteArrayToBitmap(byte[] byteArray){
