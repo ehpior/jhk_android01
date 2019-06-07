@@ -469,7 +469,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          * 제스처
          */
 
-        detector = new GestureDetector(this, new GestureDetector.OnGestureListener() {
+        /*detector = new GestureDetector(this, new GestureDetector.OnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
                 return false;
@@ -518,7 +518,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 return true;
             }
-        });
+        });*/
 
         /*GestureDetector.SimpleOnGestureListener detector2 = new GestureDetector.SimpleOnGestureListener() {
 
