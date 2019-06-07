@@ -76,10 +76,9 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                 sch_list.add(cursor.getString(1));
             }
             cursor.close();
+            db.close();
         }
         sqliteDB.close();
-
-        Log.e("asd",String.valueOf(sch_list));
 
         listAdapter = new ListAdapter(getActivity(), sch_list);
         listView = (ListView)view.findViewById(R.id.listview_bottom_sch);
@@ -100,6 +99,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                                 "'" + content + "')" ;
 
                         db.execSQL(sqlInsert);
+                        db.close();
                         dismiss();
                 }
                 return false;
@@ -220,6 +220,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
                     db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + thisdate + "') AND CONTENT = '"+ this_title +"'");
+                    db.close();
 
                     dismiss();
                     ((MainActivity)MainActivity.mContext).grid_notifychange();

@@ -24,16 +24,38 @@
             android:src="@drawable/icon_cancel"
             android:padding="10dp"
             />
+        <ImageButton
+            android:id="@+id/buttondelete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/titlebg"
+            android:scaleType="fitXY"
+            android:src="@android:drawable/ic_menu_delete"
+            android:padding="10dp"
+            />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:gravity="center_vertical"
             android:text="New Schedule"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/buttontmp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/titlebg"
+            android:scaleType="fitXY"
+            android:src="@android:drawable/ic_menu_delete"
+            android:padding="10dp"
+            android:visibility="invisible"
+            />
 
         <ImageButton
             android:id="@+id/buttonSave"

@@ -62,8 +62,8 @@ public class MakeSchedule extends AppCompatActivity {
             }
         });
 
-        Button clear = (Button)findViewById(R.id.clearclear);
-        clear.setOnClickListener(new View.OnClickListener() {
+        ImageButton buttondelete = (ImageButton)findViewById(R.id.buttondelete);
+        buttondelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 delete_values();
@@ -130,8 +130,6 @@ public class MakeSchedule extends AppCompatActivity {
 
         //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
-        editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
-        editdate = (EditText) findViewById(R.id.schedule_et_date) ;
         String content = editTextName.getText().toString() ;
         String date = editdate.getText().toString() ;
 
@@ -141,21 +139,19 @@ public class MakeSchedule extends AppCompatActivity {
                 "'" + content + "')" ;
 
         db.execSQL(sqlInsert);
+        db.close();
         mOnClose();
     }
     private void delete_values() {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        EditText editdate = (EditText) findViewById(R.id.schedule_et_date) ;
-        //editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
-        //String content = editTextName.getText().toString() ;
-        String date = editdate.getText().toString() ;
 
-        db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + date + "')");
-        //db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" +  date + "') AND CONTENT = '"+ content +"'");
+        //db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + date + "')");
+        db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" +  thisdate + "') AND CONTENT = '"+ sch_content +"'");
 
         //db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
 
+        db.close();
         mOnClose();
 
     }

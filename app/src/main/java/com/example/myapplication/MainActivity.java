@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,6 +37,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.daimajia.swipe.SwipeLayout;
 import com.github.mikephil.charting.charts.PieChart;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,6 +59,12 @@ import static android.view.View.VISIBLE;
 import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+
+    GestureDetector gestureDetector;
+    boolean tapped = true;
+
+    String date_clicked = "";
 
     int view_flag = 0;
 
@@ -184,6 +193,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         mContext = this;
+
+        gestureDetector = new GestureDetector(this,new GestureListener());
 
         Thread th_weather = new Thread(new Runnable() {
             @Override public void run() {
@@ -592,7 +603,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        gridView.setOnTouchListener(new View.OnTouchListener(){
+        /*gridView.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event){
                 detector.onTouchEvent(event);
@@ -627,7 +638,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 bottomSheetDialog.show(getSupportFragmentManager(),"bott");
                 //mOnPopup(view, Integer.parseInt(gridAdapter.getItem(position)),month_chk);
             }
-        });
+        });*/
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -1024,7 +1035,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         private final LayoutInflater inflater;
         private String thisday;
-        private int weather_over_chk=0;
 
         /**
          * 생성자
@@ -1074,6 +1084,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.tvItemWeather = (ImageView) convertView.findViewById(R.id.weather);
                     holder.dot1 = (ImageView)convertView.findViewById(R.id.dot_1);
                     holder.dot2 = (ImageView)convertView.findViewById(R.id.dot_2);
+                    holder.grid_lay = (ConstraintLayout)convertView.findViewById(R.id.gridview_layout);
                 }
 
                 holder.tvItemGridView = (TextView) convertView.findViewById(R.id.tv_item_gridview);
@@ -1082,6 +1093,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else{
                 holder = (ViewHolder)convertView.getTag();
             }
+
+            holder.tvItemGridView.setTag(position);
+
 
 
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
@@ -1112,6 +1126,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             if(position>6) {
+                convertView.setOnTouchListener(new View.OnTouchListener() {//더블클릭
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        ViewHolder k = (ViewHolder)v.getTag();
+                        int position = (int)(k.tvItemGridView.getTag());
+                        int month_chk;
+
+                        if((position<=13)&&(Integer.parseInt(gridAdapter.getItem(position))>7)){
+                            month_chk = -1;
+                        }
+                        else if((position>=35)&&(Integer.parseInt(gridAdapter.getItem(position))<20)){
+                            month_chk = 1;
+                        }
+                        else{
+                            month_chk = 0;
+                        }
+
+                        date_clicked = cal_thisdate(Integer.parseInt(gridAdapter.getItem(position)),month_chk);
+
+                        return gestureDetector.onTouchEvent(event);
+                    }
+                });
                 float zsr= (float)96f/255f;
 
                 int month_chk = 0; //-1은 지난달, 0은 이번달, 1은 다음달
@@ -1325,6 +1361,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView tvItemWeather;
         ImageView dot1;
         ImageView dot2;
+        ConstraintLayout grid_lay;
     }
 
     /**
@@ -1488,6 +1525,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.diary_weather_face.setVisibility(View.GONE);
                 }
                 cursor.close();
+                db.close();
             }
             sqliteDB.close();
 
@@ -1529,7 +1567,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 xmlDoc = parser.parse(url);
 
                 Element root = xmlDoc.getDocumentElement();
-                Log.e("asd",root.getTagName());
 
                 String k = "";
 
@@ -1642,6 +1679,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
+    public class GestureListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
+            Bundle bundle = new Bundle();
+
+            bundle.putString("data1",date_clicked);
+            bottomSheetDialog.setArguments(bundle);
+            bottomSheetDialog.show(getSupportFragmentManager(),"bott");
+
+            return super.onSingleTapConfirmed(e);
+        }
+
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        // event when double tap occurs
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+
+            Intent intent = new Intent(mContext,MakeSchedule.class);
+            intent.putExtra("date",date_clicked);
+            startActivityForResult(intent,1);
+
+            return true;
+        }
+    }
+
 
 }
 

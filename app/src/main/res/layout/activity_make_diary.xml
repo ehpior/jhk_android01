@@ -26,15 +26,38 @@
             android:padding="10dp"
             />
 
+        <ImageButton
+            android:id="@+id/buttondelete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/titlebg"
+            android:scaleType="fitXY"
+            android:src="@android:drawable/ic_menu_delete"
+            android:padding="10dp"
+            />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:gravity="center_vertical"
             android:text="New Diary"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/buttontmp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/titlebg"
+            android:scaleType="fitXY"
+            android:src="@android:drawable/ic_menu_delete"
+            android:visibility="invisible"
+            android:padding="10dp"
+            />
 
         <ImageButton
             android:id="@+id/buttonSave"
@@ -208,29 +231,6 @@
             android:minLines="2"
             android:layout_marginBottom="30dp" />
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/clearclear"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="clear"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/loadload"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:text="Load" />
-        </LinearLayout>
 
     </LinearLayout>
     <!-- Notice -->

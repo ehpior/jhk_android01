@@ -91,17 +91,6 @@ public class MakeDiary extends Activity {
             }
         });
 
-        Button asd = (Button)findViewById(R.id.loadload);
-        asd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent,9);
-            }
-        });
-
         state_face.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,6 +126,14 @@ public class MakeDiary extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        ImageButton buttondelete = (ImageButton)findViewById(R.id.buttondelete);
+        buttondelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delete_values();
             }
         });
 
