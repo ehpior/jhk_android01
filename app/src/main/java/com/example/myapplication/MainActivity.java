@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     GestureDetector gestureDetector;
-    boolean tapped = true;
 
     String date_clicked = "";
 
@@ -134,20 +133,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public String cal_thisdate(int thisday,int month_chk){
-        String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+        String thisdate = "";
+        Calendar cal_tmp = (Calendar)mCal.clone();
         if(month_chk==0){
-            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+            //thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+            cal_tmp.set(Calendar.DATE,thisday);
+            thisdate = sdf_full.format(cal_tmp.getTime());
         }
-        else if(month_chk==-1) {
-            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", thisday);
+        else {
+            if (month_chk == -1) {
+            /*thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", thisday);
             if(mCal.get(Calendar.MONTH) < 1){
                 thisdate = String.valueOf(mCal.get(Calendar.YEAR)-1) + "-12-" + String.format("%02d", thisday);
-            }
-        }
-        else if(month_chk== 1) {
-            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", thisday);
+            }*/
+                cal_tmp.add(Calendar.MONTH, -1);
+                cal_tmp.set(Calendar.DATE, thisday);
+                thisdate = sdf_full.format(cal_tmp.getTime());
+            } else if (month_chk == 1) {
+            /*thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", thisday);
             if(mCal.get(Calendar.MONTH)+2 > 12){
                 thisdate = String.valueOf(mCal.get(Calendar.YEAR)+1) + "-01-" + String.format("%02d", thisday);
+            }*/
+                cal_tmp.add(Calendar.MONTH, +1);
+                cal_tmp.set(Calendar.DATE, thisday);
+                thisdate = sdf_full.format(cal_tmp.getTime());
             }
         }
         return thisdate;
@@ -155,34 +164,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void mOnPopup(View v, int thisday, int month_chk){
-        /*String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
-        if(month_chk==0){
-            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
-        }
-        else if(month_chk==-1) {
-            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", thisday);
-            if(mCal.get(Calendar.MONTH) < 1){
-                thisdate = String.valueOf(mCal.get(Calendar.YEAR)-1) + "-12-" + String.format("%02d", thisday);
-            }
-        }
-        else if(month_chk== 1) {
-            thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", thisday);
-            if(mCal.get(Calendar.MONTH)+2 > 12){
-                thisdate = String.valueOf(mCal.get(Calendar.YEAR)+1) + "-01-" + String.format("%02d", thisday);
-            }
-        }*/
         String thisdate = cal_thisdate(thisday,month_chk);
-        //Intent intent = new Intent(this,PopupActivity.class);
         Intent intent = new Intent(this,MakeSchedule.class);
         intent.putExtra("date",thisdate);
         startActivityForResult(intent,1);
     }
     public void mOnPopup2(View v, int thisday){
-        String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
-        //Intent intent = new Intent(this,PopupActivity2.class);
+        //String thisdate = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", thisday);
+        mCal.set(Calendar.DATE,thisday);
         Intent intent = new Intent(this,MakeDiary.class);
-        //intent.putExtra("data",String.valueOf(mCal.get(Calendar.DATE)));
-        intent.putExtra("date",thisdate);
+        intent.putExtra("date",sdf_full.format(mCal.getTime()));
         startActivityForResult(intent,2);
     }
 
@@ -272,26 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         th_weather.start();
         th_weather2.start();
 
-        /*try{
-            th_weather.join();
-            th_weather2.join();
-        }
-        catch(InterruptedException e){
-
-        }*/
-
-        /*File file = new File(getFilesDir(),"schedule.db");
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(file,null);
-        db.execSQL(ContactDBCtrct.SQL_DROP_TBL);
-        db.execSQL(ContactDBCtrct.SQL_CREATE_TBL);
-
-        file = new File(getFilesDir(),"diary.db");
-        db = SQLiteDatabase.openOrCreateDatabase(file,null);
-        db.execSQL(DiaryDBCtrct.SQL_DROP_TBL);
-        db.execSQL(DiaryDBCtrct.SQL_CREATE_TBL);*/
-
         setContentView(R.layout.activity_main);
-
 
         tvDate = (TextView)findViewById(R.id.tv_date);
         //tvDate2 = (TextView)findViewById(R.id.tv_date2);
@@ -301,14 +273,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         long now = System.currentTimeMillis();
         final Date date = new Date(now);
         //연,월,일을 따로 저장
-        final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
-        final SimpleDateFormat curMonthFormat = new SimpleDateFormat("M", Locale.KOREA);
-        final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
+        //final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
+        //final SimpleDateFormat curMonthFormat = new SimpleDateFormat("M", Locale.KOREA);
+        //final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
 
         //현재 날짜 텍스트뷰에 뿌려줌
         //tvDate.setText(curYearFormat.format(date) + " / " + String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
         //tvDate.setText(curYearFormat.format(date)+String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
-        sps = new SpannableStringBuilder(curYearFormat.format(date)+" "+String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
+        sps = new SpannableStringBuilder(sdf_y.format(date)+" "+String.format("%02d",Integer.parseInt(sdf_m.format(date))));
         sps.setSpan(new AbsoluteSizeSpan(65),5,7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvDate.setText(sps);
         //tvDate2.setText(String.format("%02d",Integer.parseInt(curMonthFormat.format(date))));
@@ -321,13 +293,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //이번달 1일 무슨요일인지 판단 mCal.set(Year,Month,Day)
 
-        mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1, 1);
-        final int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
+        mCal.set(Integer.parseInt(sdf_y.format(date)), Integer.parseInt(sdf_m.format(date)) - 1, 1);
+        //final int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
         //1일 - 요일 매칭 시키기 위해 공백 add
         /*for (int i = 1; i < dayNum; i++) {
             dayList.add("");
         }*/
-        setCalendarDate(mCal.get(Calendar.MONTH) + 1);
+        //setCalendarDate(mCal.get(Calendar.MONTH) + 1);
+        setCalendarDate();
 
         /**
          * 그리드뷰 생성
@@ -868,7 +841,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dayList.add("");
         }*/
 
-        setCalendarDate(mCal.get(Calendar.MONTH)+1);
+        //setCalendarDate(mCal.get(Calendar.MONTH)+1);
+        setCalendarDate();
 
 
         int year_tmp = mCal.get(Calendar.YEAR);
@@ -881,7 +855,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
-        gridAdapter.notifyDataSetChanged();
+        //gridAdapter.notifyDataSetChanged();
 
         dayList2 = new ArrayList<String>();
         for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
@@ -889,7 +863,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         listAdapter = new ListAdapter(getApplicationContext(), dayList2);
         listView.setAdapter(listAdapter);
-        listAdapter.notifyDataSetChanged();
+        //listAdapter.notifyDataSetChanged();
     }
 
 
@@ -906,7 +880,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dayList.add("");
         }*/
 
-        setCalendarDate(mCal.get(Calendar.MONTH)+1);
+        //setCalendarDate(mCal.get(Calendar.MONTH)+1);
+        setCalendarDate();
 
 
         int year_tmp = mCal.get(Calendar.YEAR);
@@ -919,7 +894,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
-        gridAdapter.notifyDataSetChanged();
+        //gridAdapter.notifyDataSetChanged();
 
         dayList2 = new ArrayList<String>();
         for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
@@ -927,7 +902,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         listAdapter = new ListAdapter(getApplicationContext(), dayList2);
         listView.setAdapter(listAdapter);
-        listAdapter.notifyDataSetChanged();
+        //listAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -972,7 +947,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(requestCode==1){
             if(resultCode==RESULT_OK){
                 //데이터 받기
-                String result = data.getStringExtra("result");
+                //String result = data.getStringExtra("result");
                 gridAdapter.notifyDataSetChanged();
             }
         }
@@ -989,7 +964,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * 해당 월에 표시할 일 수 구함
      */
-    private void setCalendarDate(int month) {
+    //private void setCalendarDate(int month) {
+    private void setCalendarDate() {
 
         mCal.add(mCal.MONTH,-1);
         int k = mCal.get(Calendar.DAY_OF_WEEK)-1;
@@ -1034,7 +1010,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private final List<String> list;
 
         private final LayoutInflater inflater;
-        private String thisday;
 
         /**
          * 생성자
@@ -1126,28 +1101,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             if(position>6) {
-                convertView.setOnTouchListener(new View.OnTouchListener() {//더블클릭
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        ViewHolder k = (ViewHolder)v.getTag();
-                        int position = (int)(k.tvItemGridView.getTag());
-                        int month_chk;
-
-                        if((position<=13)&&(Integer.parseInt(gridAdapter.getItem(position))>7)){
-                            month_chk = -1;
-                        }
-                        else if((position>=35)&&(Integer.parseInt(gridAdapter.getItem(position))<20)){
-                            month_chk = 1;
-                        }
-                        else{
-                            month_chk = 0;
-                        }
-
-                        date_clicked = cal_thisdate(Integer.parseInt(gridAdapter.getItem(position)),month_chk);
-
-                        return gestureDetector.onTouchEvent(event);
-                    }
-                });
                 float zsr= (float)96f/255f;
 
                 int month_chk = 0; //-1은 지난달, 0은 이번달, 1은 다음달
@@ -1179,6 +1132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if ((position % 7) == 0) {
                         holder.tvItemGridView.setTextColor(Color.parseColor("#60ff0000"));
                     } else if ((position % 7) == 6) {
+
                         holder.tvItemGridView.setTextColor(Color.parseColor("#600000ff"));
                     }*/
                 }
@@ -1198,20 +1152,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file, null);
 
 
-                thisday = cal_thisdate(Integer.parseInt(getItem(position)),month_chk);
-                /*if (month_chk == 0) {
-                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 1)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                } else if (month_chk == -1) {
-                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH))) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                    if (mCal.get(Calendar.MONTH) < 1) {
-                        thisday = String.valueOf(mCal.get(Calendar.YEAR) - 1) + "-12-" + String.format("%02d", Integer.parseInt(getItem(position)));
+                final String thisday = cal_thisdate(Integer.parseInt(getItem(position)),month_chk);
+
+
+
+                convertView.setOnTouchListener(new View.OnTouchListener() {//더블클릭
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        date_clicked = thisday;
+
+                        return gestureDetector.onTouchEvent(event);
                     }
-                } else if (month_chk == 1) {
-                    thisday = String.valueOf(mCal.get(Calendar.YEAR)) + '-' + String.format("%02d", (mCal.get(Calendar.MONTH) + 2)) + '-' + String.format("%02d", Integer.parseInt(getItem(position)));
-                    if (mCal.get(Calendar.MONTH) + 2 > 12) {
-                        thisday = String.valueOf(mCal.get(Calendar.YEAR) + 1) + "-01-" + String.format("%02d", Integer.parseInt(getItem(position)));
-                    }
-                }*/
+                });
 
                 if (sToday_full.equals(thisday)) { //오늘 day 텍스트 컬러 변경
                     //holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
@@ -1296,12 +1248,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                     cursor.close();
+                    db.close();
                 }
-
                 sqliteDB.close();
+
                 file = new File(getFilesDir(),"diary.db");
                 sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
-
 
                 if(sqliteDB != null){
                     SQLiteDatabase db = dbHelper2.getReadableDatabase();
@@ -1315,12 +1267,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         holder.dot2.setVisibility(View.INVISIBLE);
                     }
                     cursor.close();
+                    db.close();
                 }
                 sqliteDB.close();
             }
-
-
-
 
             return convertView;
         }
@@ -1440,11 +1390,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.tvitemListView2.setText("Thu");
                     break;
             }
-
-            /*if(position==1){
-                ImageView kkk = (ImageView)findViewById(R.id.diary_image);
-                kkk.setImageResource(R.drawable.beach);
-            }*/
 
             File file = new File(getFilesDir(),"diary.db");
             SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file,null);
