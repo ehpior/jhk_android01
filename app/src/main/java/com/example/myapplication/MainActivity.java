@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 
@@ -258,9 +259,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return sky;
             }
         });
-
-        th_weather.start();
-        th_weather2.start();
+        try {
+            th_weather.start();
+            th_weather2.start();
+        }
+        catch(Exception e){
+            Toast.makeText(this, "11111111111",Toast.LENGTH_SHORT).show();
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -1182,47 +1187,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } catch (ParseException e) {
 
                     }
-                    switch ((int) (calDate)) {
-                        case 0:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[0]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 1:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[1]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 2:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[2]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 3:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[3]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 4:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[4]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 5:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[5]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 6:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[6]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 7:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[7]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 8:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[8]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
-                        case 9:
-                            holder.tvItemWeather.setImageResource(weather_chk(weather_final[9]));
-                            holder.tvItemWeather.setVisibility(VISIBLE);
-                            break;
+                    try {
+                        switch ((int) (calDate)) {
+                            case 0:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[0]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 1:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[1]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 2:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[2]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 3:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[3]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 4:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[4]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 5:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[5]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 6:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[6]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 7:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[7]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 8:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[8]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                            case 9:
+                                holder.tvItemWeather.setImageResource(weather_chk(weather_final[9]));
+                                holder.tvItemWeather.setVisibility(VISIBLE);
+                                break;
+                        }
+                    }
+                    catch(Exception e){
+                        Toast.makeText(mContext, "2222222",Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{

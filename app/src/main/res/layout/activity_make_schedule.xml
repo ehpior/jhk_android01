@@ -82,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
+            android:background="@drawable/black_all"
             android:orientation="horizontal"
             android:layout_marginBottom="30dp"
             >
@@ -98,15 +99,30 @@
                 android:paddingLeft="20dp"
                 android:minLines="2"
                 />
-            <Button
-                android:id="@+id/prac_bt"
+            <LinearLayout
+                android:id="@+id/prac_lay"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/black_all"
                 android:layout_weight="1"
-                android:textColor="#000000"
-                android:text="Color Select"
-                android:background="@android:color/transparent"
-                />
+                android:orientation="vertical"
+                >
+                <View
+                    android:id="@+id/prac_bt"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:background="@android:color/transparent"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:text="Color Select"
+                    />
+            </LinearLayout>
 
         </LinearLayout>
 

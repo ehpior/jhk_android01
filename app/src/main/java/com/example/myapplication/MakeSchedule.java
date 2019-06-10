@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,12 +16,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import java.io.File;
+import java.util.Random;
+
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 
 public class MakeSchedule extends AppCompatActivity implements  View.OnClickListener, ColorPickerDialogListener {
@@ -29,7 +33,8 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
     TextView txtText;
     EditText editTextName;
     EditText editdate;
-    Button qwer;
+    View qwer;
+    LinearLayout qwer2;
 
     ContactDBHelper dbHelper = null;
     String thisdate = new String();
@@ -54,6 +59,8 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
 
         editTextName = (EditText) findViewById(R.id.schedule_et_title) ;
         editdate = (EditText) findViewById(R.id.schedule_et_date) ;
+        qwer = (View)findViewById(R.id.prac_bt);
+        qwer2 = (LinearLayout) findViewById(R.id.prac_lay);
 
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -85,25 +92,20 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
         });
 
 
-        qwer = (Button)findViewById(R.id.prac_bt);
-        qwer.setOnClickListener(this);
+        qwer2.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v){
         final int id = v.getId();
-        switch (id) {
-            case R.id.prac_bt:
-                hideKeyboard();
-                ColorPickerDialog.newBuilder()
-                        .setDialogType(ColorPickerDialog.TYPE_PRESETS)
-                        .setAllowPresets(false)
-                        .setDialogId(DIALOG_PRESET_ID)
-                        .setColor(Color.BLACK)
-                        .setShowAlphaSlider(true)
-                        .show(this);
-                break;
-        }
+        hideKeyboard();
+        ColorPickerDialog.newBuilder()
+                .setDialogType(ColorPickerDialog.TYPE_PRESETS)
+                .setAllowPresets(false)
+                .setDialogId(DIALOG_PRESET_ID)
+                .setColor(Color.BLACK)
+                .setShowAlphaSlider(true)
+                .show(this);
     }
     private static final int DIALOG_DEFAULT_ID = 0;
     private static final int DIALOG_PRESET_ID = 1;
@@ -132,6 +134,9 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
         if(db == null){
             System.out.println("DB creation failed. " + file.getAbsolutePath());
         }
+        Random random = new Random();
+        qwer.setBackgroundColor(Color.rgb(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+        color_final = ((ColorDrawable)qwer.getBackground()).getColor();
         return db;
     }
     private void init_tables(){
