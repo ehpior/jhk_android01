@@ -7,19 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -38,11 +38,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.github.mikephil.charting.charts.PieChart;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,15 +52,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import static android.view.View.VISIBLE;
-import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
 
     GestureDetector gestureDetector;
 
@@ -785,7 +784,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
 
-        FloatingActionButton fab_main = (FloatingActionButton)findViewById(R.id.fab_main);
+        /*FloatingActionButton fab_main = (FloatingActionButton)findViewById(R.id.fab_main);
         fab_main.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -799,7 +798,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mOnPopup2(v,Integer.parseInt(sToday_d));
                 }
             }
-        });
+        });*/
     }
 
 
@@ -1236,15 +1235,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     while (cursor.moveToNext()) { // 레코드가 존재한다면,
                         String content = cursor.getString(1);
+                        int color = cursor.getInt(4);
                         if (holder.tvItemGridView2.getVisibility() == View.INVISIBLE) {
                             holder.tvItemGridView2.setVisibility(VISIBLE);
                             holder.tvItemGridView2.setText(content);
+                            if(color!=0) ((GradientDrawable)holder.tvItemGridView2.getBackground().getCurrent()).setStroke(5,color);
                         } else if (holder.tvItemGridView3.getVisibility() == View.INVISIBLE) {
                             holder.tvItemGridView3.setVisibility(VISIBLE);
                             holder.tvItemGridView3.setText(content);
+                            if(color!=0) ((GradientDrawable)holder.tvItemGridView3.getBackground().getCurrent()).setStroke(5,color);
                         } else if (holder.tvItemGridView4.getVisibility() == View.INVISIBLE) {
                             holder.tvItemGridView4.setVisibility(VISIBLE);
                             holder.tvItemGridView4.setText(content);
+                            if(color!=0) ((GradientDrawable)holder.tvItemGridView4.getBackground().getCurrent()).setStroke(5,color);
                         }
                     }
                     cursor.close();
@@ -1658,6 +1661,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
     }
+
 
 
 }

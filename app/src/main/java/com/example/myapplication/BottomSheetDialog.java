@@ -1,18 +1,15 @@
 package com.example.myapplication;
 
-import android.app.Activity;
-import android.app.Dialog;
 import java.io.File;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,20 +18,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.daimajia.swipe.SwipeLayout;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 /**
  * Created by charlie on 2017. 11. 22
@@ -101,6 +89,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                         db.execSQL(sqlInsert);
                         db.close();
                         dismiss();
+                        ((MainActivity)MainActivity.mContext).grid_notifychange();
                 }
                 return false;
             }

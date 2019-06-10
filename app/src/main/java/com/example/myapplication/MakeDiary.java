@@ -8,11 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -288,7 +287,7 @@ public class MakeDiary extends Activity {
         else{
             db.insert("DIARY",null,value);
         }
-
+        db.close();
         mOnClose();
     }
 
@@ -414,6 +413,8 @@ public class MakeDiary extends Activity {
         byteArray = null;
         return bitmap;
     }
+
+
 
 
 }
