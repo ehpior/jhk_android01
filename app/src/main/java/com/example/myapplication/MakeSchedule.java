@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import androidx.appcompat.app.AppCompatActivity;
@@ -148,6 +149,11 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
 
         editTextName.setText(sch_content);
         editdate.setText(thisdate);
+
+        /*if(sqliteDB != null){
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisdate + "') AND CONTENT = '"+ sch_content +"'", null);
+        }*/
 
         /*if (sqliteDB != null) {
             SQLiteDatabase db = dbHelper.getReadableDatabase();

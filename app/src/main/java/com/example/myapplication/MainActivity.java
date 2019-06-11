@@ -178,6 +178,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private final String [] days = new String[]{"일","월","화","수","목","금","토"};
+    //private final String [] days = new String[]{"SUN","MON","TUE","WED","THU","FRI","SAT"};
+    //private final String [] days = new String[]{"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         gestureDetector = new GestureDetector(this,new GestureListener());
 
+        /*
         Thread th_weather = new Thread(new Runnable() {
             @Override public void run() {
                 Logic_Weather zxc = new Logic_Weather();
@@ -266,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         catch(Exception e){
             Toast.makeText(this, "11111111111",Toast.LENGTH_SHORT).show();
         }
+        */
 
         setContentView(R.layout.activity_main);
 
@@ -309,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /**
          * 그리드뷰 생성
          */
+        /*
         try{
             th_weather.join();
             th_weather2.join();
@@ -316,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         catch(InterruptedException e){
 
         }
+        */
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
@@ -1082,6 +1088,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             if(position<7){
                 //layoutParams.height = gridviewH / 15;
+
                 layoutParams.height = gridviewH / 22;
                 /*holder.tvItemGridView2.setVisibility(View.GONE);
                 holder.tvItemGridView3.setVisibility(View.GONE);
@@ -1092,6 +1099,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //layoutParams.height = gridviewH * 2 / 13;
                 layoutParams.height = gridviewH * 3 / 19;
                 //holder.tvItemGridView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+
                 //holder.tvItemGridView.setPadding(15,0,0,0);
                 holder.tvItemGridView2.setVisibility(View.INVISIBLE);
                 holder.tvItemGridView3.setVisibility(View.INVISIBLE);
@@ -1178,7 +1187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.tvItemGridView.setBackgroundResource(R.drawable.bg_today);
                     today_position = position;
                 }
-                if((Integer.parseInt(thisday.substring(5,7)) == Integer.parseInt(sToday_m)) || (Integer.parseInt(thisday.substring(5,7)) == (Integer.parseInt(sToday_m)+1))) {
+                /*if((Integer.parseInt(thisday.substring(5,7)) == Integer.parseInt(sToday_m)) || (Integer.parseInt(thisday.substring(5,7)) == (Integer.parseInt(sToday_m)+1))) {
                     long calDate = -100;
 
                     try {
@@ -1240,7 +1249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else{
                     holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                }
+                }*/
 
                 if (sqliteDB != null) {
                     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -1252,15 +1261,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (holder.tvItemGridView2.getVisibility() == View.INVISIBLE) {
                             holder.tvItemGridView2.setVisibility(VISIBLE);
                             holder.tvItemGridView2.setText(content);
-                            if(color!=0) ((GradientDrawable)holder.tvItemGridView2.getBackground().getCurrent()).setStroke(5,color);
+                            ((GradientDrawable)holder.tvItemGridView2.getBackground().getCurrent()).setStroke(5,color);
                         } else if (holder.tvItemGridView3.getVisibility() == View.INVISIBLE) {
                             holder.tvItemGridView3.setVisibility(VISIBLE);
                             holder.tvItemGridView3.setText(content);
-                            if(color!=0) ((GradientDrawable)holder.tvItemGridView3.getBackground().getCurrent()).setStroke(5,color);
+                            ((GradientDrawable)holder.tvItemGridView3.getBackground().getCurrent()).setStroke(5,color);
                         } else if (holder.tvItemGridView4.getVisibility() == View.INVISIBLE) {
                             holder.tvItemGridView4.setVisibility(VISIBLE);
                             holder.tvItemGridView4.setText(content);
-                            if(color!=0) ((GradientDrawable)holder.tvItemGridView4.getBackground().getCurrent()).setStroke(5,color);
+                            ((GradientDrawable)holder.tvItemGridView4.getBackground().getCurrent()).setStroke(5,color);
                         }
                         else if(holder.tvItemGridView4.getVisibility() == View.VISIBLE){
                             holder.more_chk.setVisibility(VISIBLE);

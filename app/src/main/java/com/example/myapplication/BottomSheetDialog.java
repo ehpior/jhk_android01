@@ -2,10 +2,13 @@ package com.example.myapplication;
 
 import java.io.File;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObservable;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by charlie on 2017. 11. 22
@@ -79,14 +83,22 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     case EditorInfo.IME_ACTION_DONE:
                         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                        String content = bottom_sch_make.getText().toString() ;
+                        ContentValues value = new ContentValues();
+
+                        value.put("DATE", thisdate);
+                        value.put("CONTENT", bottom_sch_make.getText().toString());
+                        Random random = new Random();
+                        value.put("COLOR", Color.rgb(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+
+                        /*String content = bottom_sch_make.getText().toString() ;
 
                         String sqlInsert = "INSERT INTO SCHEDULE " +
                                 "(DATE, CONTENT) VALUES (" +
                                 "'" + thisdate + "'," +
                                 "'" + content + "')" ;
 
-                        db.execSQL(sqlInsert);
+                        db.execSQL(sqlInsert);*/
+                        db.insert("SCHEDULE", null, value);
                         db.close();
                         dismiss();
                         ((MainActivity)MainActivity.mContext).grid_notifychange();

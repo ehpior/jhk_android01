@@ -74,7 +74,7 @@ public class MakeDiary extends Activity {
         load_values();
 
 
-        tmp_image2.setOnClickListener(new View.OnClickListener() {
+        tmp_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -83,12 +83,12 @@ public class MakeDiary extends Activity {
                 startActivityForResult(intent,9);
             }
         });
-        tmp_image3.setOnClickListener(new View.OnClickListener() {
+        /*tmp_image3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 delete_values();
             }
-        });
+        });*/
 
         state_face.setOnClickListener(new View.OnClickListener() {
             @Override
