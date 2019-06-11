@@ -9,13 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
@@ -26,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -39,7 +31,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.github.mikephil.charting.charts.PieChart;
+import com.google.android.material.navigation.NavigationView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1064,6 +1064,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.dot1 = (ImageView)convertView.findViewById(R.id.dot_1);
                     holder.dot2 = (ImageView)convertView.findViewById(R.id.dot_2);
                     holder.grid_lay = (ConstraintLayout)convertView.findViewById(R.id.gridview_layout);
+                    holder.more_chk = (ImageView)convertView.findViewById(R.id.more_chk);
                 }
 
                 holder.tvItemGridView = (TextView) convertView.findViewById(R.id.tv_item_gridview);
@@ -1077,6 +1078,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             if(position<7){
                 //layoutParams.height = gridviewH / 15;
@@ -1086,6 +1088,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 holder.tvItemGridView4.setVisibility(View.GONE);*/
             }
             else{
+                holder.more_chk.setVisibility(View.INVISIBLE);
                 //layoutParams.height = gridviewH * 2 / 13;
                 layoutParams.height = gridviewH * 3 / 19;
                 //holder.tvItemGridView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
@@ -1259,6 +1262,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             holder.tvItemGridView4.setText(content);
                             if(color!=0) ((GradientDrawable)holder.tvItemGridView4.getBackground().getCurrent()).setStroke(5,color);
                         }
+                        else if(holder.tvItemGridView4.getVisibility() == View.VISIBLE){
+                            holder.more_chk.setVisibility(VISIBLE);
+                        }
                     }
                     cursor.close();
                     db.close();
@@ -1324,6 +1330,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView tvItemWeather;
         ImageView dot1;
         ImageView dot2;
+        ImageView more_chk;
         ConstraintLayout grid_lay;
     }
 
