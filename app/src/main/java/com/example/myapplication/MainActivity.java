@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         gestureDetector = new GestureDetector(this,new GestureListener());
 
-        /*
+
         Thread th_weather = new Thread(new Runnable() {
             @Override public void run() {
                 Logic_Weather zxc = new Logic_Weather();
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         catch(Exception e){
             Toast.makeText(this, "11111111111",Toast.LENGTH_SHORT).show();
         }
-        */
+
 
         setContentView(R.layout.activity_main);
 
@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /**
          * 그리드뷰 생성
          */
-        /*
+
         try{
             th_weather.join();
             th_weather2.join();
@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         catch(InterruptedException e){
 
         }
-        */
+
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
@@ -1187,7 +1187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.tvItemGridView.setBackgroundResource(R.drawable.bg_today);
                     today_position = position;
                 }
-                /*if((Integer.parseInt(thisday.substring(5,7)) == Integer.parseInt(sToday_m)) || (Integer.parseInt(thisday.substring(5,7)) == (Integer.parseInt(sToday_m)+1))) {
+                if((Integer.parseInt(thisday.substring(5,7)) == Integer.parseInt(sToday_m)) || (Integer.parseInt(thisday.substring(5,7)) == (Integer.parseInt(sToday_m)+1))) {
                     long calDate = -100;
 
                     try {
@@ -1249,7 +1249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else{
                     holder.tvItemWeather.setVisibility(View.INVISIBLE);
-                }*/
+                }
 
                 if (sqliteDB != null) {
                     SQLiteDatabase db = dbHelper.getReadableDatabase();
