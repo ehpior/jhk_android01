@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
-    android:layout_height="300dp"
+    android:layout_width="250dp"
+    android:layout_height="160dp"
     android:padding="20dp"
     android:background="@color/white"
     android:orientation="vertical"
@@ -22,28 +22,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/icon_face_1" />
+            android:src="@drawable/icon_face_11" />
 
         <ImageView
             android:id="@+id/face_2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/icon_face_2" />
+            android:src="@drawable/icon_face_22" />
 
         <ImageView
             android:id="@+id/face_3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/icon_face_3" />
+            android:src="@drawable/icon_face_33" />
 
-        <ImageView
-            android:id="@+id/face_4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/icon_face_4" />
 
     </LinearLayout>
 
@@ -54,32 +48,26 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/face_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/icon_face_44" />
+
+        <ImageView
             android:id="@+id/face_5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/icon_face_5" />
+            android:src="@drawable/icon_face_55" />
 
         <ImageView
             android:id="@+id/face_6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/icon_face_6" />
+            android:src="@drawable/icon_face_66" />
 
-        <ImageView
-            android:id="@+id/face_7"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/icon_face_7" />
-
-        <ImageView
-            android:id="@+id/face_8"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/icon_face_8" />
     </LinearLayout>
 
 </LinearLayout>

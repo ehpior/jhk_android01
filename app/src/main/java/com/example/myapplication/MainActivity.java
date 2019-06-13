@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     int today_position = -100;
 
-    final int[] weather_final = new int[10];
+    static final int[] weather_final = new int[10];
 
     private Date date_selected = new Date();
 
@@ -1442,29 +1442,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.diary_weather_face.setVisibility(VISIBLE);
                     switch(cursor.getInt(5)){
                         case 1:
-                            holder.diary_face.setImageResource(R.drawable.icon_face_1);
+                            holder.diary_face.setImageResource(R.drawable.icon_face_11);
                             break;
                         case 2:
-                            holder.diary_face.setImageResource(R.drawable.icon_face_2);
+                            holder.diary_face.setImageResource(R.drawable.icon_face_22);
                             break;
                         case 3:
-                            holder.diary_face.setImageResource(R.drawable.icon_face_3);
+                            holder.diary_face.setImageResource(R.drawable.icon_face_33);
                             break;
                         case 4:
-                            holder.diary_face.setImageResource(R.drawable.icon_face_4);
+                            holder.diary_face.setImageResource(R.drawable.icon_face_44);
                             break;
                         case 5:
-                            holder.diary_face.setImageResource(R.drawable.icon_face_5);
+                            holder.diary_face.setImageResource(R.drawable.icon_face_55);
                             break;
                         case 6:
-                            holder.diary_face.setImageResource(R.drawable.icon_face_6);
+                            holder.diary_face.setImageResource(R.drawable.icon_face_66);
                             break;
-                        case 7:
+                        /*case 7:
                             holder.diary_face.setImageResource(R.drawable.icon_face_7);
                             break;
                         case 8:
                             holder.diary_face.setImageResource(R.drawable.icon_face_8);
-                            break;
+                            break;*/
                     }
                     switch(cursor.getInt(6)){
                         case 1:

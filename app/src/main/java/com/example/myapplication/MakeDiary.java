@@ -184,7 +184,7 @@ public class MakeDiary extends Activity {
                 summary.setText(cursor.getString(3));
 
                 switch(cursor.getInt(5)){
-                    case 1:
+                    /*case 1:
                         face=1;
                         state_face.setImageResource(R.drawable.icon_face_1);
                         break;
@@ -215,6 +215,30 @@ public class MakeDiary extends Activity {
                     case 8:
                         face=8;
                         state_face.setImageResource(R.drawable.icon_face_8);
+                        break;*/
+                    case 1:
+                        face=1;
+                        state_face.setImageResource(R.drawable.icon_face_11);
+                        break;
+                    case 2:
+                        face=2;
+                        state_face.setImageResource(R.drawable.icon_face_22);
+                        break;
+                    case 3:
+                        face=3;
+                        state_face.setImageResource(R.drawable.icon_face_33);
+                        break;
+                    case 4:
+                        face=4;
+                        state_face.setImageResource(R.drawable.icon_face_44);
+                        break;
+                    case 5:
+                        face=5;
+                        state_face.setImageResource(R.drawable.icon_face_55);
+                        break;
+                    case 6:
+                        face=6;
+                        state_face.setImageResource(R.drawable.icon_face_66);
                         break;
                 }
                 switch(cursor.getInt(6)){
@@ -308,7 +332,7 @@ public class MakeDiary extends Activity {
         if(requestCode==5){
             if(resultCode==RESULT_OK){
                 int a = data.getIntExtra("no",1);
-                switch(a){
+                /*switch(a){
                     case 1:
                         face=1;
                         state_face.setImageResource(R.drawable.icon_face_1);
@@ -340,6 +364,32 @@ public class MakeDiary extends Activity {
                     case 8:
                         face=8;
                         state_face.setImageResource(R.drawable.icon_face_8);
+                        break;
+                }*/
+                switch(a){
+                    case 1:
+                        face=1;
+                        state_face.setImageResource(R.drawable.icon_face_11);
+                        break;
+                    case 2:
+                        face=2;
+                        state_face.setImageResource(R.drawable.icon_face_22);
+                        break;
+                    case 3:
+                        face=3;
+                        state_face.setImageResource(R.drawable.icon_face_33);
+                        break;
+                    case 4:
+                        face=4;
+                        state_face.setImageResource(R.drawable.icon_face_44);
+                        break;
+                    case 5:
+                        face=5;
+                        state_face.setImageResource(R.drawable.icon_face_55);
+                        break;
+                    case 6:
+                        face=6;
+                        state_face.setImageResource(R.drawable.icon_face_66);
                         break;
                 }
             }

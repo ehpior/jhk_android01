@@ -84,7 +84,6 @@
             android:layout_weight="3"
             android:background="@drawable/black_all"
             android:orientation="horizontal"
-            android:layout_marginBottom="30dp"
             >
 
             <EditText
@@ -130,6 +129,8 @@
             android:layout_height="0dp"
             android:layout_weight="10"
             android:orientation="vertical"
+            android:background="@drawable/black_all"
+            android:paddingTop="30dp"
             >
 
             <LinearLayout

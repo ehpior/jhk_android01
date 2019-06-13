@@ -27,16 +27,16 @@ public class make_diary_select_face extends Activity implements View.OnClickList
         face4 = (ImageView)findViewById(R.id.face_4);
         face5 = (ImageView)findViewById(R.id.face_5);
         face6 = (ImageView)findViewById(R.id.face_6);
-        face7 = (ImageView)findViewById(R.id.face_7);
-        face8 = (ImageView)findViewById(R.id.face_8);
+        //face7 = (ImageView)findViewById(R.id.face_7);
+        //face8 = (ImageView)findViewById(R.id.face_8);
         face1.setOnClickListener(this);
         face2.setOnClickListener(this);
         face3.setOnClickListener(this);
         face4.setOnClickListener(this);
         face5.setOnClickListener(this);
         face6.setOnClickListener(this);
-        face7.setOnClickListener(this);
-        face8.setOnClickListener(this);
+        //face7.setOnClickListener(this);
+        //face8.setOnClickListener(this);
 
     }
 
@@ -62,12 +62,12 @@ public class make_diary_select_face extends Activity implements View.OnClickList
             case R.id.face_6:
                 intent.putExtra("no", 6);
                 break;
-            case R.id.face_7:
+            /*case R.id.face_7:
                 intent.putExtra("no", 7);
                 break;
             case R.id.face_8:
                 intent.putExtra("no", 8);
-                break;
+                break;*/
         }
         setResult(RESULT_OK,intent);
         finish();
