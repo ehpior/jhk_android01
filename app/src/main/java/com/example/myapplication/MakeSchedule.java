@@ -154,9 +154,9 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
             Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisdate + "') AND CONTENT = '"+ sch_content +"'", null);
 
             if(cursor.moveToNext()){
-                qwer.setBackgroundColor(cursor.getInt(4));
-                exist_flag=1;
                 color_final = cursor.getInt(4);
+                qwer.setBackgroundColor(color_final);
+                exist_flag=1;
             }
             cursor.close();
             db.close();
