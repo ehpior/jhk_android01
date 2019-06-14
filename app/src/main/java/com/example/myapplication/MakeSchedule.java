@@ -42,6 +42,7 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
     String thisdate = new String();
     String sch_content = "";
     int color_final=0;
+    int exist_flag;
 
     InputMethodManager imm;
 
@@ -50,6 +51,7 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_schedule);
+        exist_flag=0;
 
         txtText = (EditText)findViewById(R.id.schedule_et_date);
 
@@ -136,9 +138,6 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
         if(db == null){
             System.out.println("DB creation failed. " + file.getAbsolutePath());
         }
-        Random random = new Random();
-        qwer.setBackgroundColor(Color.rgb(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
-        color_final = ((ColorDrawable)qwer.getBackground()).getColor();
         return db;
     }
     private void init_tables(){
@@ -156,11 +155,17 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
 
             if(cursor.moveToNext()){
                 qwer.setBackgroundColor(cursor.getInt(4));
+                exist_flag=1;
+                color_final = cursor.getInt(4);
             }
             cursor.close();
             db.close();
         }
-
+        if(exist_flag!=1) {
+            Random random = new Random();
+            qwer.setBackgroundColor(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+            color_final = ((ColorDrawable) qwer.getBackground()).getColor();
+        }
         /*if (sqliteDB != null) {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             Cursor cursor = db.rawQuery("SELECT * FROM DIARY WHERE DATE = Date('" + thisdate + "') AND CONTENT = '"+ sch_content +"'", null);
@@ -200,8 +205,12 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
         value.put("CONTENT",content);
         value.put("COLOR",color_final);
 
-        db.insert("SCHEDULE",null,value);
-
+        if(exist_flag==0) {
+            db.insert("SCHEDULE", null, value);
+        }
+        else{
+            db.update("SCHEDULE",value,"DATE = '"+thisdate+"' AND CONTENT = '"+sch_content+"'",null);
+        }
         db.close();
         mOnClose();
     }
