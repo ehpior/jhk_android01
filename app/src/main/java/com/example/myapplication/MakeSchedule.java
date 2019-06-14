@@ -150,10 +150,16 @@ public class MakeSchedule extends AppCompatActivity implements  View.OnClickList
         editTextName.setText(sch_content);
         editdate.setText(thisdate);
 
-        /*if(sqliteDB != null){
+        if(sqliteDB != null){
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             Cursor cursor = db.rawQuery("SELECT * FROM SCHEDULE WHERE DATE = Date('" + thisdate + "') AND CONTENT = '"+ sch_content +"'", null);
-        }*/
+
+            if(cursor.moveToNext()){
+                qwer.setBackgroundColor(cursor.getInt(4));
+            }
+            cursor.close();
+            db.close();
+        }
 
         /*if (sqliteDB != null) {
             SQLiteDatabase db = dbHelper.getReadableDatabase();

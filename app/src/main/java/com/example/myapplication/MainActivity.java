@@ -1437,7 +1437,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         holder.imageView_diary.setImageBitmap(byteArrayToBitmap(cursor.getBlob(4)));
                     }
                     catch(NullPointerException e){
-                        holder.imageView_diary.setImageResource(R.color.black);
+                        holder.imageView_diary.setImageAlpha(1);
                     }
                     holder.diary_weather_face.setVisibility(VISIBLE);
                     switch(cursor.getInt(5)){
