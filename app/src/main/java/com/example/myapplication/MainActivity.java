@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -128,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private Calendar mCal;
 
+    Thread th_weather;
+    Thread th_weather2;
+
     public void grid_notifychange(){
         gridAdapter.notifyDataSetChanged();
     }
@@ -188,86 +193,85 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mContext = this;
 
         gestureDetector = new GestureDetector(this,new GestureListener());
+        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-
-        Thread th_weather = new Thread(new Runnable() {
-            @Override public void run() {
-                Logic_Weather zxc = new Logic_Weather();
-                ArrayList<Integer> qqq = zxc.getweather();
-                for(int i=0 ; i<8 ;i++){
-                    weather_final[i+2] = qqq.get(i);
-                }
-            }
-        });
-
-        Thread th_weather2 = new Thread(new Runnable() {
-            @Override public void run() {
-                Logic_Weather2 zxc = new Logic_Weather2();
-                ArrayList<Integer> qqq = zxc.getsky();
-                ArrayList<Integer> qqq2 = zxc.getpty();
-                int temp=0;
-                int temp2=0;
-                int j=0;
-                int[] sky = new int[3];
-                int[] pty = new int[3];
-                sky = weather_cal(qqq);
-                pty = weather_cal(qqq2);
-                for(int i=0 ; i<3 ; i++){//맑음:1, 구름:2, 비:3, 눈:4, 구름비:5, 구름눈:6
-                    if(pty[i]==0){
-                        if(sky[i]<=2){
-                            weather_final[i]=1;
-                        }
-                        else{
-                            weather_final[i]=2;
-                        }
-                    }
-                    else if(pty[i]<=2){
-                        if(sky[i]<=2){
-                            weather_final[i]=3;
-                        }
-                        else{
-                            weather_final[i]=5;
-                        }
-                    }
-                    else{
-                        if(sky[i]<=2){
-                            weather_final[i]=4;
-                        }
-                        else{
-                            weather_final[i]=6;
-                        }
+        if (activeNetwork != null) {
+            th_weather = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Logic_Weather zxc = new Logic_Weather();
+                    ArrayList<Integer> qqq = zxc.getweather();
+                    for (int i = 0; i < 8; i++) {
+                        weather_final[i + 2] = qqq.get(i);
                     }
                 }
-            }
-            private int[] weather_cal(ArrayList<Integer> qqq){
-                int temp=0;
-                int temp2=0;
-                int j=0;
-                int[] sky = new int[3];
+            });
 
-                for(int i=0 ; i<qqq.size() ; i++){
-                    if(qqq.get(i)==-1){
-                        sky[j] = (int)(Math.round(temp/(double)temp2));
-                        j++;
-                        temp=0;
-                        temp2=0;
-                    }
-                    else{
-                        temp += qqq.get(i);
-                        temp2++;
+            th_weather2 = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Logic_Weather2 zxc = new Logic_Weather2();
+                    ArrayList<Integer> qqq = zxc.getsky();
+                    ArrayList<Integer> qqq2 = zxc.getpty();
+                    int temp = 0;
+                    int temp2 = 0;
+                    int j = 0;
+                    int[] sky = new int[3];
+                    int[] pty = new int[3];
+                    sky = weather_cal(qqq);
+                    pty = weather_cal(qqq2);
+                    for (int i = 0; i < 3; i++) {//맑음:1, 구름:2, 비:3, 눈:4, 구름비:5, 구름눈:6
+                        if (pty[i] == 0) {
+                            if (sky[i] <= 2) {
+                                weather_final[i] = 1;
+                            } else {
+                                weather_final[i] = 2;
+                            }
+                        } else if (pty[i] <= 2) {
+                            if (sky[i] <= 2) {
+                                weather_final[i] = 3;
+                            } else {
+                                weather_final[i] = 5;
+                            }
+                        } else {
+                            if (sky[i] <= 2) {
+                                weather_final[i] = 4;
+                            } else {
+                                weather_final[i] = 6;
+                            }
+                        }
                     }
                 }
-                sky[2] = (int)(Math.round(temp/(double)temp2));
 
-                return sky;
+                private int[] weather_cal(ArrayList<Integer> qqq) {
+                    int temp = 0;
+                    int temp2 = 0;
+                    int j = 0;
+                    int[] sky = new int[3];
+
+                    for (int i = 0; i < qqq.size(); i++) {
+                        if (qqq.get(i) == -1) {
+                            sky[j] = (int) (Math.round(temp / (double) temp2));
+                            j++;
+                            temp = 0;
+                            temp2 = 0;
+                        } else {
+                            temp += qqq.get(i);
+                            temp2++;
+                        }
+                    }
+                    sky[2] = (int) (Math.round(temp / (double) temp2));
+
+                    return sky;
+                }
+            });
+            try {
+                th_weather.start();
+                th_weather2.start();
+            } catch (Exception e) {
+                Toast.makeText(this, "11111111111", Toast.LENGTH_SHORT).show();
             }
-        });
-        try {
-            th_weather.start();
-            th_weather2.start();
-        }
-        catch(Exception e){
-            Toast.makeText(this, "11111111111",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -313,13 +317,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /**
          * 그리드뷰 생성
          */
+        if (activeNetwork != null) {
+            try {
+                th_weather.join();
+                th_weather2.join();
+            } catch (InterruptedException e) {
 
-        try{
-            th_weather.join();
-            th_weather2.join();
-        }
-        catch(InterruptedException e){
-
+            }
         }
 
 
