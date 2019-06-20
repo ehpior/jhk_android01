@@ -100,8 +100,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                         db.execSQL(sqlInsert);*/
                         db.insert("SCHEDULE", null, value);
                         db.close();
-                        dismiss();
                         ((MainActivity)MainActivity.mContext).grid_notifychange();
+                        dismiss();
                 }
                 return false;
             }
@@ -209,9 +209,9 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     Intent intent = new Intent(MainActivity.mContext,MakeSchedule.class);
                     intent.putExtra("date",thisdate);
                     intent.putExtra("content",this_title);
-                    dismiss();
                     startActivity(intent);
                     ((MainActivity)MainActivity.mContext).grid_notifychange();
+                    dismiss();
                 }
             });
 
@@ -223,8 +223,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     db.execSQL("DELETE FROM SCHEDULE WHERE DATE = Date('" + thisdate + "') AND CONTENT = '"+ this_title +"'");
                     db.close();
 
-                    dismiss();
                     ((MainActivity)MainActivity.mContext).grid_notifychange();
+                    dismiss();
                 }
             });
 
