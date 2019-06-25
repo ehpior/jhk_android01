@@ -771,12 +771,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });*/
 
+        /**
+         * 좌측 슬라이드 메뉴(네비게이션)
+         */
+
         ImageButton btnOpenDrawer = (ImageButton) findViewById(R.id.btn_OpenDrawer);
         final NavigationView navigationView = findViewById(R.id.nav_view);
         btnOpenDrawer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawerLayout.openDrawer(navigationView);
+                Button btnOpenSign = (Button)findViewById(R.id.sign);
+                btnOpenSign.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        Intent k = new Intent(mContext,SignActivity.class);
+                        startActivity(k);
+                    }
+                });
             }
         });
         navigationView.setNavigationItemSelectedListener(this);
