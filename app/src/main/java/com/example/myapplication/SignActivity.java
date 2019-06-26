@@ -3,7 +3,9 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,7 @@ import java.net.URLEncoder;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import android.content.SharedPreferences;
 
 public class SignActivity extends Activity implements View.OnClickListener {
 
@@ -67,7 +70,10 @@ public class SignActivity extends Activity implements View.OnClickListener {
         switch(id){
             case R.id.sign_login:
                 if(sign_flag==0){ // 로그인 모드
-
+                    String Id = sign_id.getText().toString();
+                    String Pw = sign_pw.getText().toString();
+                    loginData task = new loginData();
+                    task.execute("http://" + IP_ADDRESS + "/login.php", Id, Pw);
                 }
                 else{ // 회원가입 모드
                     String Id = sign_id.getText().toString();
@@ -78,11 +84,18 @@ public class SignActivity extends Activity implements View.OnClickListener {
                     }
                     else{
                         InsertData task = new InsertData();
-                        task.execute("http://" + IP_ADDRESS + "/insert.php", Id, Pw);
-                        sign_layout_pwchk.setVisibility(GONE);
-                        sign_login.setText("Login");
-                        sign_join.setText("Sign up");
-                        sign_flag = 0;
+                        //task.execute("http://" + IP_ADDRESS + "/insert.php", Id, Pw);
+                        try {
+                            String result = task.execute("http://" + IP_ADDRESS + "/insert.php", Id, Pw).get();
+                            if(result.equals("0")) {
+                                sign_layout_pwchk.setVisibility(GONE);
+                                sign_login.setText("Login");
+                                sign_join.setText("Sign up");
+                                sign_flag = 0;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 break;
@@ -121,8 +134,33 @@ public class SignActivity extends Activity implements View.OnClickListener {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
+            Log.e(TAG, "POST response  - " + result);
 
-            Log.d(TAG, "POST response  - " + result);
+            String msg = "";
+
+            try {
+                switch (Integer.valueOf(result)) {
+                    case 0:
+                        msg = "성공입니다";
+                        break;
+                    case 1:
+                        msg = "id를 입력하세요";
+                        break;
+                    case 3:
+                        msg = "pw를 입력하세요";
+                        break;
+                    case 4:
+                        msg = "id또는pw를 확인하세요";
+                        break;
+                    case 5:
+                        msg = "알수없는 오류";
+                        break;
+                }
+            }
+            catch(Exception e){
+                msg = "알수없는 오류";
+            }
+            Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         }
 
 
@@ -155,7 +193,7 @@ public class SignActivity extends Activity implements View.OnClickListener {
 
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
+                Log.e(TAG, "POST response code - " + responseStatusCode);
 
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {
@@ -183,9 +221,129 @@ public class SignActivity extends Activity implements View.OnClickListener {
                 return sb.toString();
 
 
+
             } catch (Exception e) {
 
-                Log.d(TAG, "InsertData: Error ", e);
+                Log.e(TAG, "InsertData: Error ", e);
+
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    }
+
+
+    class loginData extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getApplicationContext());
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(SignActivity.this, "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+
+            Log.e(TAG, "Login response  - " + result);
+
+            String msg = "";
+
+            try{
+                switch(Integer.valueOf(result)){
+                    case 0:
+                        msg = "성공입니다";
+                        finish();
+                        break;
+                    case 1:
+                        msg = "id를 입력하세요";
+                        break;
+                    case 3:
+                        msg = "pw를 입력하세요";
+                        break;
+                    case 4:
+                        msg = "id또는pw를 확인하세요";
+                        break;
+                    case 5:
+                        msg = "알수없는 오류";
+                        break;
+                }
+            }
+            catch(Exception e){
+                msg = "알수없는 오류";
+            }
+            Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String u_id = (String)params[1];
+            String u_pw = (String)params[2];
+
+            String serverURL = (String)params[0];
+            String postParameters = "u_id=" + u_id + "&u_pw=" + u_pw;
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.e(TAG, "LOGIN response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString();
+
+
+
+            } catch (Exception e) {
+
+                Log.e(TAG, "InsertData: Error ", e);
 
                 return new String("Error: " + e.getMessage());
             }
