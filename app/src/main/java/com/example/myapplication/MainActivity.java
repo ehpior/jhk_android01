@@ -65,16 +65,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     Handler handler;
 
-    GestureDetector gestureDetector;
-
     String date_clicked = "";
 
     int view_flag = 0;
 
     SpannableStringBuilder sps;
-
-    RecyclerView mRecyclerView;
-    RecyclerView.LayoutManager mLayoutManager;
 
     public static Context mContext;
 
@@ -98,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String sToday_y = sdf_y.format(date_selected);
     String sToday_full = sdf_full.format(date_selected);
 
-    //PieChart pieChart;
     /**
      * db선언
      */
@@ -378,255 +372,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         /**
-         * 리사이클러뷰 생성
+         * 그리드뷰 클릭이벤트
          */
-
-        /*
-        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(this,2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        ArrayList<RecyclerItem> diarylist_recycle = new ArrayList<>();
-        diarylist_recycle.add(new RecyclerItem("1-1","1-2"));
-        diarylist_recycle.add(new RecyclerItem("2-1","2-2"));
-        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
-        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
-        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
-        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
-        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
-        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
-        diarylist_recycle.add(new RecyclerItem("3-1","3-2"));
-
-        RecyclerAdapter myRe = new RecyclerAdapter(diarylist_recycle);
-
-        mRecyclerView.setAdapter(myRe);
-        */
-
-
-        /**
-         * 차트생성
-         */
-
-        /*pieChart = (PieChart)findViewById(R.id.piechart);
-
-        pieChart.setUsePercentValues(true);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setExtraOffsets(5,5,5,5);
-
-        pieChart.setDragDecelerationFrictionCoef(0.95f);
-
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.setHoleColor(Color.WHITE);
-        pieChart.setTransparentCircleRadius(61f);
-
-        ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
-
-        yValues.add(new PieEntry(50f,"Meal"));
-        yValues.add(new PieEntry(10f,"Transportation"));
-        yValues.add(new PieEntry(8f,"Mobile Phone"));
-        yValues.add(new PieEntry(20f,"Dessert"));
-        yValues.add(new PieEntry(30f,"Clothes"));
-        yValues.add(new PieEntry(40f,"Activities"));
-
-        Description description = new Description();
-        description.setText("Accout Status"); //라벨
-        description.setTextSize(30);
-        pieChart.setDescription(description);
-
-        pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
-
-        PieDataSet dataSet = new PieDataSet(yValues,"Countries");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.PASTEL_COLORS);
-
-        PieData data = new PieData((dataSet));
-        data.setValueTextSize(13f);
-        data.setValueTextColor(Color.YELLOW);
-
-        pieChart.setData(data);
-
-        pieChart.setOnChartGestureListener(new OnChartGestureListener() {
-            @Override
-            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-            }
-
-            @Override
-            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-            }
-
-            @Override
-            public void onChartLongPressed(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartDoubleTapped(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartSingleTapped(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-            }
-
-            @Override
-            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-            }
-
-            @Override
-            public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-            }
-        });
-
-
-        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                //Object item = (Object)h.;
-                Log.e("qqq",h.toString());
-                Log.e("qqq",e.toString());
-            }
-
-            @Override
-            public void onNothingSelected() {
-                Log.e("qqq","nothing");
-
-            }
-        });*/
-
-
-        /**
-         * 제스처
-         */
-
-        /*detector = new GestureDetector(this, new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onShowPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-                float diffY = event2.getY() - event1.getY();
-                float diffX = event2.getX() - event1.getX();
-                if (abs(diffX) > abs(diffY)) {
-                    if (abs(diffX) > 100 && abs(velocityX) > 100) {
-                        if (diffX > 0) {
-                            lastMonth();
-                        } else {
-                            nextMonth();
-                        }
-                    }
-                } else {
-                    if (abs(diffY) > 100 && abs(velocityY) > 100) {
-                        if (diffY > 0) {
-                            //onSwipeBottom();
-                        } else {
-                            //onSwipeTop();
-                        }
-                    }
-                }
-                return true;
-            }
-        });*/
-
-        /*GestureDetector.SimpleOnGestureListener detector2 = new GestureDetector.SimpleOnGestureListener() {
-
-            @Override
-            public boolean onDown(MotionEvent ev) {
-                Log.w("TEST", "onDown = "+ev.toString());
-                return true;
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent ev) {
-                Log.w("TEST", "onSingleTapUp = "+ev.toString());
-                return true;
-            }
-
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent ev) {
-                Log.w("TEST", "onSingleTapConfirmed = "+ev.toString());
-                return true;
-            }
-
-            @Override
-            public boolean onDoubleTap(MotionEvent ev) {
-                Log.w("TEST", "onDoubleTap = "+ev.toString());
-                return true;
-            }
-
-            @Override
-            public boolean onDoubleTapEvent(MotionEvent ev) {
-                Log.w("TEST", "onDoubleTapEvent = "+ev.toString());
-                return true;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                Log.w("TEST", "onScroll / e1 = "+e1.toString());
-                Log.w("TEST", "onScroll / e2 = "+e2.toString());
-                return true;
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                Log.w("TEST", "onFling / e1 = "+e1.toString());
-                Log.w("TEST", "onFling / e2 = "+e2.toString());
-                return true;
-            }
-
-        };
-
-        detector = new GestureDetector(this, detector2);*/
-
-
-
-
-
-
-
-        /*gridView.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent event){
-                detector.onTouchEvent(event);
-                if(event.getAction() == MotionEvent.ACTION_MOVE){
-                    return true;
-                }
-                return false;
-            }
-        });*/
 
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -1204,28 +951,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     holder.dot2.setAlpha(zsr);
                 }
 
-
                 File file = new File(getFilesDir(), "schedule.db");
                 SQLiteDatabase sqliteDB = SQLiteDatabase.openOrCreateDatabase(file, null);
-
 
                 final String thisday = cal_thisdate(Integer.parseInt(getItem(position)),month_chk);
 
                 date_clicked = thisday;
-
-
-                /**
-                 * 더블클릭
-                 */
-
-                /*convertView.setOnTouchListener(new View.OnTouchListener() {//더블클릭
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        date_clicked = thisday;
-
-                        return gestureDetector.onTouchEvent(event);
-                    }
-                });*/
 
                 if (sToday_full.equals(thisday)) { //오늘 day 텍스트 컬러 변경
                     //holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
@@ -1699,46 +1430,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
-
-    /**
-     * 더블클릭
-     */
-    /*
-    public class GestureListener extends GestureDetector.SimpleOnGestureListener{
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            return super.onFling(e1, e2, velocityX, velocityY);
-        }
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
-            Bundle bundle = new Bundle();
-
-            bundle.putString("data1",date_clicked);
-            bottomSheetDialog.setArguments(bundle);
-            bottomSheetDialog.show(getSupportFragmentManager(),"bott");
-
-            return super.onSingleTapConfirmed(e);
-        }
-
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        // event when double tap occurs
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-
-            Intent intent = new Intent(mContext,MakeSchedule.class);
-            intent.putExtra("date",date_clicked);
-            startActivityForResult(intent,1);
-
-            return true;
-        }
-    }*/
-
-
 
 }
 

@@ -160,13 +160,6 @@
 
                 </com.github.mikephil.charting.charts.PieChart>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="invisible"
-                    />
-
 
             </FrameLayout>
 
@@ -231,60 +224,6 @@
         app:headerLayout="@layout/nav_header_main2"
         app:menu="@menu/activity_main2_drawer" />
 
-    <!--
-    <RelativeLayout
-        android:id="@+id/drawer"
-        android:layout_width="250dp"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:background="#B0000000"
-        android:layout_gravity="start"
-        android:clickable="true"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:gravity="center"
-                android:text="Options"
-                android:textColor="#f70"
-                android:textSize="24dp" />
-
-            <Button
-                android:id="@+id/open_calendar"
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Calendar" />
-
-            <Button
-                android:id="@+id/open_account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Account" />
-
-            <Button
-                android:id="@+id/open_diary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Diary" />
-        </LinearLayout>
-            <Button
-                android:id="@+id/btn_CloseDrawer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_alignParentBottom="true"
-                android:text="Close" />
-
-    </RelativeLayout>
-    -->
 
     <RelativeLayout
         android:id="@+id/drawer2"
