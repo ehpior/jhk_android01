@@ -16,14 +16,11 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -41,7 +38,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -66,9 +62,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import static android.view.View.VISIBLE;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
-    int previousposition = -1;
-    long mLastClickTime = 0;
 
     Handler handler;
 
@@ -201,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mContext = this;
 
-        gestureDetector = new GestureDetector(this,new GestureListener());
+        //gestureDetector = new GestureDetector(this,new GestureListener());
         ConnectivityManager cm = (ConnectivityManager)this.getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
@@ -409,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mRecyclerView.setAdapter(myRe);
         */
+
 
         /**
          * 차트생성
@@ -1706,6 +1700,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /**
+     * 더블클릭
+     */
+    /*
     public class GestureListener extends GestureDetector.SimpleOnGestureListener{
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -1738,7 +1736,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             return true;
         }
-    }
+    }*/
 
 
 

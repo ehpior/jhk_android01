@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.github.PhilJay:MpAndroidChart:v3.0.2'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
     implementation 'com.jaredrummler:colorpicker:1.1.0'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
 }
