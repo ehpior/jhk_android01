@@ -11,15 +11,19 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -62,6 +66,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import static android.view.View.VISIBLE;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    int previousposition = -1;
+    long mLastClickTime = 0;
+
+    Handler handler;
 
     GestureDetector gestureDetector;
 
@@ -196,6 +205,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ConnectivityManager cm = (ConnectivityManager)this.getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg){
+                grid_notifychange();
+            }
+        };
+
         if (activeNetwork != null) {
             th_weather = new Thread(new Runnable() {
                 @Override
@@ -205,6 +221,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (int i = 0; i < 8; i++) {
                         weather_final[i + 2] = qqq.get(i);
                     }
+                    Message message = Message.obtain();
+                    message.arg1 = 1;
+                    handler.sendMessage(message);
                 }
             });
 
@@ -242,6 +261,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         }
                     }
+                    Message message = Message.obtain();
+                    message.arg1 = 2;
+                    handler.sendMessage(message);
                 }
 
                 private int[] weather_cal(ArrayList<Integer> qqq) {
@@ -270,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 th_weather.start();
                 th_weather2.start();
             } catch (Exception e) {
-                Toast.makeText(this, "11111111111", Toast.LENGTH_SHORT).show();
+
             }
         }
 
@@ -317,14 +339,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /**
          * 그리드뷰 생성
          */
-        if (activeNetwork != null) {
+        /*if (activeNetwork != null) {
             try {
                 th_weather.join();
                 th_weather2.join();
             } catch (InterruptedException e) {
 
             }
-        }
+        }*/
 
 
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
@@ -353,10 +375,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        if (activeNetwork != null) {
+            try {
+                th_weather.start();
+                th_weather2.start();
+            } catch (Exception e) {
+
+            }
+        }
+
         /**
          * 리사이클러뷰 생성
          */
 
+        /*
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(this,2);
@@ -376,6 +408,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerAdapter myRe = new RecyclerAdapter(diarylist_recycle);
 
         mRecyclerView.setAdapter(myRe);
+        */
 
         /**
          * 차트생성
@@ -599,33 +632,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 return false;
             }
-        });
+        });*/
+
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            int month_chk = 0;
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
                 Bundle bundle = new Bundle();
-                if(position<7){
-                    return;
-                }
-                else if((position<=13)&&(Integer.parseInt(gridAdapter.getItem(position))>7)){
-                    month_chk = -1;
-                }
-                else if((position>=35)&&(Integer.parseInt(gridAdapter.getItem(position))<20)){
-                    month_chk = 1;
-                }
-                else{
-                    month_chk = 0;
-                }
-                bundle.putString("data1",cal_thisdate(Integer.parseInt(gridAdapter.getItem(position)),month_chk));
+
+                bundle.putString("data1",date_clicked);
                 bottomSheetDialog.setArguments(bundle);
                 bottomSheetDialog.show(getSupportFragmentManager(),"bott");
-                //mOnPopup(view, Integer.parseInt(gridAdapter.getItem(position)),month_chk);
             }
-        });*/
+        });
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(mContext,MakeSchedule.class);
+                intent.putExtra("date",date_clicked);
+                startActivityForResult(intent,1);
+                return true;
+            }
+        });
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -1187,16 +1217,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 final String thisday = cal_thisdate(Integer.parseInt(getItem(position)),month_chk);
 
+                date_clicked = thisday;
 
 
-                convertView.setOnTouchListener(new View.OnTouchListener() {//더블클릭
+                /**
+                 * 더블클릭
+                 */
+
+                /*convertView.setOnTouchListener(new View.OnTouchListener() {//더블클릭
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         date_clicked = thisday;
 
                         return gestureDetector.onTouchEvent(event);
                     }
-                });
+                });*/
 
                 if (sToday_full.equals(thisday)) { //오늘 day 텍스트 컬러 변경
                     //holder.tvItemGridView.setTextColor(Color.parseColor("#009999"));
