@@ -121,6 +121,7 @@ public class SignActivity extends Activity implements View.OnClickListener {
 
     class InsertData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
+        String msg = "";
 
         @Override
         protected void onPreExecute() {
@@ -133,33 +134,32 @@ public class SignActivity extends Activity implements View.OnClickListener {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
             Log.e(TAG, "POST response  - " + result);
 
-            String msg = "";
 
             try {
                 switch (Integer.valueOf(result)) {
                     case 0:
-                        msg = "성공입니다";
+                        msg += "이메일을 확인하세요";
                         break;
                     case 1:
-                        msg = "id를 입력하세요";
+                        msg = "ID를 입력하세요";
                         break;
                     case 3:
-                        msg = "pw를 입력하세요";
+                        msg = "PW를 입력하세요";
                         break;
                     case 4:
-                        msg = "id또는pw를 확인하세요";
+                        msg = "ID또는 PW를 확인하세요";
                         break;
                     case 5:
-                        msg = "알수없는 오류";
+                        msg = "중복된 ID가 있습니다.";
                         break;
                 }
             }
             catch(Exception e){
                 msg = "알수없는 오류";
             }
+            progressDialog.dismiss();
             Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         }
 
@@ -235,7 +235,7 @@ public class SignActivity extends Activity implements View.OnClickListener {
 
     class loginData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getApplicationContext());
+        String msg = "";
 
         @Override
         protected void onPreExecute() {
@@ -248,26 +248,24 @@ public class SignActivity extends Activity implements View.OnClickListener {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
 
             Log.e(TAG, "Login response  - " + result);
 
-            String msg = "";
 
             try{
                 switch(Integer.valueOf(result)){
                     case 0:
-                        msg = "성공입니다";
+                        msg = "로그인 되었습니다.";
                         finish();
                         break;
                     case 1:
-                        msg = "id를 입력하세요";
+                        msg = "ID를 입력하세요";
                         break;
                     case 3:
-                        msg = "pw를 입력하세요";
+                        msg = "PW를 입력하세요";
                         break;
                     case 4:
-                        msg = "id또는pw를 확인하세요";
+                        msg = "ID또는 PW를 확인하세요";
                         break;
                     case 5:
                         msg = "알수없는 오류";
@@ -277,6 +275,7 @@ public class SignActivity extends Activity implements View.OnClickListener {
             catch(Exception e){
                 msg = "알수없는 오류";
             }
+            progressDialog.dismiss();
             Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
 
 
